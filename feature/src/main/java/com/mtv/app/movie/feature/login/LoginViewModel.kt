@@ -13,22 +13,18 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val getNamePrediction: GetPopularMoviesUseCase
 ) : BaseViewModel() {
 
     val loginState = MutableStateFlow<Resource<LoginResponse>>(Resource.Loading)
-    val prediction = MutableStateFlow<Resource<PredictionData>>(Resource.Loading)
 
-    fun doLogin(loginRequest: LoginRequest) {
+    fun doLogin(username: String, password: String) {
         launchUseCase(loginState) {
-            loginUseCase(loginRequest)
+            loginUseCase(
+                LoginRequest(
+                    username = username,
+                    password = password
+                )
+            )
         }
     }
-
-    fun load() {
-        launchUseCase(prediction) {
-            getNamePrediction(Unit)
-        }
-    }
-
 }

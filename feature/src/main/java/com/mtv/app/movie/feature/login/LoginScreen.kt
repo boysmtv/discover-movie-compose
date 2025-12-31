@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mtv.app.movie.feature.login.model.LoginRequest
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.loading.LoadingV2
@@ -47,13 +47,27 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
     val loginState by viewModel.loginState.collectAsState()
-    val predictionState by viewModel.prediction.collectAsState()
-
     val baseUiState by viewModel.baseUiState.collectAsState()
+
+    LaunchedEffect(loginState) {
+        if (loginState is Resource.Success) {
+            Toast.makeText(
+                context,
+                "Login Success",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            navController.navigate("home") {
+                popUpTo("login") { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -73,27 +87,6 @@ fun LoginScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            when (val data = loginState) {
-                is Resource.Success -> {
-                    Toast.makeText(
-                        LocalContext.current,
-                        "Success - ${data.data.firstName}",
-                        Toast.LENGTH_LONG
-                    )
-
-                }
-
-                else -> {}
-            }
-
-            when (val data = predictionState) {
-                is Resource.Success -> {
-                    navController.navigate("home")
-                }
-
-                else -> {}
-            }
 
             if (baseUiState.isLoading) {
                 Box(
@@ -122,7 +115,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Username
             OutlinedTextField(
                 value = username.value,
                 onValueChange = { username.value = it },
@@ -142,7 +134,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Password
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { password.value = it },
@@ -163,16 +154,12 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Login Button
             Button(
                 onClick = {
-//                    viewModel.doLogin(
-//                        loginRequest = LoginRequest(
-//                            username = "boys",
-//                            password = "mtv"
-//                        )
-//                    )
-                    viewModel.load()
+                    viewModel.doLogin(
+                        username = username.value,
+                        password = password.value
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -203,13 +190,12 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Social Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
-                    onClick = { },
+                    onClick = {},
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF1877F2)
@@ -220,7 +206,7 @@ fun LoginScreen(
                 }
 
                 Button(
-                    onClick = { },
+                    onClick = {},
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFDB4437)

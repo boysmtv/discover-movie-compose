@@ -8,6 +8,10 @@ object TmdbApi {
 
     const val postUser = "user"
 
-    const val postLogin = "login"
+    const val postLogin = "auth/login"
+
+    const val postCheck = "auth/check"
+
+    const val postLogout = "auth/logout"
 
 }
