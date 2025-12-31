@@ -13,15 +13,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mtv.app.movie.data.model.CountryProbability
@@ -35,14 +42,99 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val predictionState by viewModel.prediction.collectAsState()
+    val checkState by viewModel.checkState.collectAsState()
+    val logoutState by viewModel.logoutState.collectAsState()
     val baseUiState by viewModel.baseUiState.collectAsState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    LaunchedEffect(Unit) {
+        viewModel.check("Boys")
+    }
 
-        when (val current = predictionState) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF7986CB),
+                        Color(0xFF5C6BC0)
+                    )
+                )
+            )
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            Text(
+                text = "Home",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            when (val data = checkState) {
+                is Resource.Success -> {
+                    Text(
+                        text = "Last Check-in",
+                        fontSize = 16.sp,
+                        color = Color.White.copy(alpha = 0.8f)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = data.data.lastCheckin,
+                        fontSize = 14.sp,
+                        color = Color.White
+                    )
+                }
+
+                is Resource.Error -> {
+                    Text(
+                        text = "Failed to load session",
+                        color = Color.White
+                    )
+                }
+
+                else -> {}
+            }
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            Button(
+                onClick = {
+                    viewModel.logout("Boys")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFD32F2F)
+                )
+            ) {
+                Text(
+                    text = "Logout",
+                    fontSize = 16.sp
+                )
+            }
+        }
+
+        when (logoutState) {
             is Resource.Success -> {
-                PredictionContent(current.data)
+                LaunchedEffect(Unit) {
+                    navController.navigate("login") {
+                        popUpTo("home") { inclusive = true }
+                    }
+                }
             }
 
             else -> {}
@@ -50,9 +142,7 @@ fun HomeScreen(
 
         if (baseUiState.isLoading) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.2f)),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 LoadingV2()
@@ -65,65 +155,5 @@ fun HomeScreen(
                 onDismiss = viewModel::dismissError
             )
         }
-    }
-}
-
-@Composable
-private fun PredictionContent(
-    data: PredictionData
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Name: ${data.name}",
-            style = MaterialTheme.typography.headlineSmall
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Count: ${data.count}",
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Country Probability",
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        CountryList(data.country)
-    }
-}
-
-@Composable
-private fun CountryList(
-    countries: List<CountryProbability>
-) {
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(vertical = 4.dp)
-    ) {
-        items(
-            items = countries,
-            key = { it.countryId }
-        ) { country ->
-            CountryItem(country)
-        }
-    }
-}
-
-@Composable
-private fun CountryItem(
-    country: CountryProbability
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(text = country.countryId, style = MaterialTheme.typography.bodyMedium)
-        Text(text = "${(country.probability * 100).toInt()}%", style = MaterialTheme.typography.bodyMedium)
     }
 }

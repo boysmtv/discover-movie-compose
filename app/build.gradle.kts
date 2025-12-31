@@ -22,7 +22,7 @@ android {
 
     buildTypes {
         release {
-            buildConfigField("String", "BASE_URL", "\"https://api.prod.com/api/\"")
+            buildConfigField("String", "BASE_URL", "\"https://api.prod.com/\"")
             buildConfigField("Boolean", "USE_KTOR", "true")
             isMinifyEnabled = false
             proguardFiles(
@@ -31,7 +31,7 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.0.50:8080/api/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.0.50:8080/\"")
             buildConfigField("Boolean", "USE_KTOR", "false")
         }
     }

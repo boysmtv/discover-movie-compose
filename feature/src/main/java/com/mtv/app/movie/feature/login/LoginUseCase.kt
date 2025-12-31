@@ -13,10 +13,10 @@ import javax.inject.Inject
 class LoginUseCase @Inject constructor(
     private val repository: NetworkRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : BaseUseCase<LoginRequest, LoginResponse>(dispatcher, LoginResponse::class){
+) : BaseUseCase<LoginRequest, LoginResponse>(dispatcher, LoginResponse::class) {
 
     override suspend fun execute(param: LoginRequest): NetworkResponse {
-        return repository.get(TmdbApi.postLogin)
+        return repository.post(TmdbApi.postLogin, param)
     }
 
 }
