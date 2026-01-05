@@ -1,6 +1,6 @@
 /*
  * Project: M2U ID
- * File: NetworkConfigModule.kt
+ * File: AppNetworkConfigModule.kt
  *
  * Created by PT. Maybank Indonesia Tbk,
  * Copyright © 2025, https://www.maybank.co.id/corporateinformation.
@@ -11,8 +11,8 @@
 package com.mtv.app.movie.di
 
 import com.mtv.app.movie.config.AppNetworkConfigProvider
-import com.mtv.based.core.network.utils.NetworkConfig
-import com.mtv.based.core.network.utils.NetworkConfigProvider
+import com.mtv.based.core.network.config.NetworkConfig
+import com.mtv.based.core.network.config.NetworkConfigProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

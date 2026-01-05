@@ -31,7 +31,7 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.0.50:8080/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.68.123:8080/\"")
             buildConfigField("Boolean", "USE_KTOR", "false")
         }
     }

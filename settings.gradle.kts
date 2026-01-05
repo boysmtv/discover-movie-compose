@@ -29,7 +29,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "android-mtv-based-app-movie"
+rootProject.name = "App Movie"
 include(":app")
 include(":feature")
 include(":data")
