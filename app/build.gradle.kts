@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlinx.serialization)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -31,8 +32,8 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.68.123:8080/\"")
-            buildConfigField("Boolean", "USE_KTOR", "false")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.68.127:8080/\"")
+            buildConfigField("Boolean", "USE_KTOR", "true")
         }
     }
 
@@ -109,6 +110,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
+    implementation("com.google.firebase:firebase-analytics")
 
     /* Maven Local Libraries (Core) */
     implementation("com.mtv.based.core:network:1.0.0")

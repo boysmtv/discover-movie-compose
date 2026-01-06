@@ -1,4 +1,4 @@
-package com.mtv.app.movie.data.remote.tmdb
+package com.mtv.app.movie.data.datasource.remote
 
 import com.mtv.based.core.network.endpoint.IApiEndPoint
 import com.mtv.based.core.network.utils.HttpMethod

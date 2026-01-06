@@ -1,8 +1,6 @@
 package com.mtv.app.movie.feature.login
 
 import com.mtv.app.core.provider.based.BaseViewModel
-import com.mtv.app.movie.data.model.PredictionData
-import com.mtv.app.movie.domain.usecase.GetPopularMoviesUseCase
 import com.mtv.app.movie.feature.login.model.LoginRequest
 import com.mtv.app.movie.feature.login.model.LoginResponse
 import com.mtv.based.core.network.utils.Resource
