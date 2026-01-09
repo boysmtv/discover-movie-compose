@@ -63,6 +63,9 @@ fun LoginScreen(
                     popUpTo("login") { inclusive = true }
                 }
             }
+
+            username.value = "Boys"
+            password.value = "Mtv"
         }
 
         Box(

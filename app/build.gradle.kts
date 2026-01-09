@@ -34,6 +34,10 @@ android {
         debug {
             buildConfigField("String", "BASE_URL", "\"http://192.168.68.127:8080/\"")
             buildConfigField("Boolean", "USE_KTOR", "true")
+
+            // Firebase
+            buildConfigField("String", "FIREBASE_PROJECT_ID", "\"app-movie-e85f3\"")
+            buildConfigField("String", "FIREBASE_DEFAULT_CONNECTION", "\"users\"")
         }
     }
 
@@ -112,8 +116,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
 
     /* Maven Local Libraries (Core) */
     implementation("com.mtv.based.core:network:1.0.0")

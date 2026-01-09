@@ -21,7 +21,7 @@ fun AppNavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "register"
     ) {
         composable("register") {
             RegisterRoute(navController)
