@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mtv.app.movie.feature.home.ui.HomeScreen
 import com.mtv.app.movie.feature.login.LoginScreen
+import com.mtv.app.movie.feature.register.RegisterRoute
 
 @Composable
 fun AppNavGraph() {
@@ -20,12 +21,14 @@ fun AppNavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "register"
     ) {
+        composable("register") {
+            RegisterRoute(navController)
+        }
         composable("login") {
             LoginScreen(navController)
         }
-
         composable("home") {
             HomeScreen(navController)
         }

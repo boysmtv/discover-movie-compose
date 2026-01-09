@@ -22,6 +22,8 @@ appcompat = "1.7.1"
 material = "1.13.0"
 gson = "2.10.1"
 navigationCompose = "2.8.0"
+google-services = "4.4.0"
+firebase-bom = "32.7.3"
 
 
 [libraries]
@@ -89,3 +91,4 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 maven-publish = { id = "maven-publish" }
 signing = { id = "signing" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }

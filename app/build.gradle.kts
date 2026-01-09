@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlinx.serialization)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -31,8 +32,12 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.68.123:8080/\"")
-            buildConfigField("Boolean", "USE_KTOR", "false")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.68.127:8080/\"")
+            buildConfigField("Boolean", "USE_KTOR", "true")
+
+            // Firebase
+            buildConfigField("String", "FIREBASE_PROJECT_ID", "\"app-movie-e85f3\"")
+            buildConfigField("String", "FIREBASE_DEFAULT_CONNECTION", "\"users\"")
         }
     }
 
@@ -109,6 +114,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
 
     /* Maven Local Libraries (Core) */
     implementation("com.mtv.based.core:network:1.0.0")

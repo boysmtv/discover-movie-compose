@@ -7,7 +7,7 @@
 
 package com.mtv.app.movie.feature.logout
 
-import com.mtv.app.movie.data.remote.tmdb.ApiEndPoint
+import com.mtv.app.movie.data.datasource.remote.ApiEndPoint
 import com.mtv.app.movie.feature.logout.model.LogoutRequest
 import com.mtv.app.movie.feature.logout.model.LogoutResponse
 import com.mtv.based.core.network.di.IoDispatcher
