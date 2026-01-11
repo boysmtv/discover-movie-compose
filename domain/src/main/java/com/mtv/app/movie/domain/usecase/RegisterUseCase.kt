@@ -21,8 +21,6 @@ class RegisterUseCase @Inject constructor(
 ) : BaseFirebaseUseCase<RegisterRequest, String>(dispatcher) {
 
     override fun execute(param: RegisterRequest): Flow<FirebaseResult<String>> = flow {
-        emit(FirebaseResult.Loading)
-
         val exists = dataSource.isExistByFields(
             collection = config.defaultCollection,
             data = mapOf(

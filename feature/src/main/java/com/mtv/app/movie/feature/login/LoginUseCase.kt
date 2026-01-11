@@ -1,8 +1,8 @@
 package com.mtv.app.movie.feature.login
 
 import com.mtv.app.movie.data.datasource.remote.ApiEndPoint
-import com.mtv.app.movie.feature.login.model.LoginRequest
-import com.mtv.app.movie.feature.login.model.LoginResponse
+import com.mtv.app.movie.domain.model.LoginRequest
+import com.mtv.app.movie.domain.model.LoginResponse
 import com.mtv.based.core.network.di.IoDispatcher
 import com.mtv.based.core.network.model.NetworkResponse
 import com.mtv.based.core.network.repository.NetworkRepository

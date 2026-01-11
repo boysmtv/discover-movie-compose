@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.based.BaseScreen
+import com.mtv.based.core.network.firebase.result.FirebaseResult
 import com.mtv.based.core.network.utils.Resource
 
 @Composable
@@ -50,7 +51,7 @@ fun LoginScreen(
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
-    val loginState by viewModel.loginState.collectAsState()
+    val loginState by viewModel.loginFirebase.collectAsState()
     val baseUiState by viewModel.baseUiState.collectAsState()
 
     BaseScreen(
@@ -58,14 +59,14 @@ fun LoginScreen(
         onDismissError = viewModel::dismissError
     ) {
         LaunchedEffect(loginState) {
-            if (loginState is Resource.Success) {
+            if (loginState is FirebaseResult.Success) {
                 navController.navigate("home") {
                     popUpTo("login") { inclusive = true }
                 }
             }
 
             username.value = "Boys"
-            password.value = "Mtv"
+            password.value = "Mbi123456."
         }
 
         Box(
@@ -137,7 +138,11 @@ fun LoginScreen(
 
                 Button(
                     onClick = {
-                        viewModel.doLogin(
+//                        viewModel.doLogin(
+//                            username = username.value,
+//                            password = password.value
+//                        )
+                        viewModel.doLoginFirebase(
                             username = username.value,
                             password = password.value
                         )

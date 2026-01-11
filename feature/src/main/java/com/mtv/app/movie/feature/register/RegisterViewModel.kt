@@ -3,6 +3,7 @@ package com.mtv.app.movie.feature.register
 import androidx.lifecycle.viewModelScope
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SessionManager
+import com.mtv.app.movie.common.utils.nowDb
 import com.mtv.app.movie.domain.model.RegisterRequest
 import com.mtv.app.movie.domain.usecase.RegisterUseCase
 import com.mtv.based.core.network.firebase.result.FirebaseResult
@@ -19,6 +20,10 @@ class RegisterViewModel @Inject constructor(
 
     val registerState = MutableStateFlow<FirebaseResult<String>>(FirebaseResult.Loading)
 
+    init {
+        observeRegisterState()
+    }
+
     fun doRegister(name: String, email: String, phone: String, password: String) {
         launchFirebaseUseCase(registerState) {
             registerUseCase(
@@ -27,11 +32,13 @@ class RegisterViewModel @Inject constructor(
                     email = email,
                     phone = phone,
                     password = password,
-                    createdAt = com.google.firebase.Timestamp.now().toString()
+                    createdAt = nowDb()
                 )
             )
         }
+    }
 
+    private fun observeRegisterState() {
         viewModelScope.launch {
             registerState.collect { result ->
                 if (result is FirebaseResult.Success) {
@@ -40,6 +47,5 @@ class RegisterViewModel @Inject constructor(
             }
         }
     }
-
 
 }
