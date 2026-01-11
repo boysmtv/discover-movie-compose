@@ -1,8 +1,6 @@
 package com.mtv.app.movie.domain.model
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import java.util.Date
 
 @Serializable
 data class RegisterRequest(
@@ -10,5 +8,5 @@ data class RegisterRequest(
     val email: String,
     val phone: String,
     val password: String,
-    @Contextual val date: Date = Date()
+    val createdAt: String
 )

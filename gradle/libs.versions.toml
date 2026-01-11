@@ -24,6 +24,7 @@ gson = "2.10.1"
 navigationCompose = "2.8.0"
 google-services = "4.4.0"
 firebase-bom = "32.7.3"
+firebaseCommonKtx = "21.0.0"
 
 
 [libraries]
@@ -80,6 +81,7 @@ material-icons-extended = { group = "androidx.compose.material", name = "materia
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
