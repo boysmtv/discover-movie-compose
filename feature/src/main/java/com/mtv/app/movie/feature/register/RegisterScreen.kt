@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,15 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mtv.app.movie.common.based.BaseScreen
 import com.mtv.based.core.network.firebase.result.FirebaseResult
-import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
 
@@ -52,19 +50,24 @@ fun RegisterRoute(
         )
     }
 
-    RegisterScreen(
-        registerState = registerState,
-        onRegisterClick = { name, email, phone, password ->
-            registerViewModel.doRegister(
-                name, email, phone, password
-            )
-        },
-        onRegisterSuccess = {
-            navController.navigate("login") {
-                popUpTo("login") { inclusive = true }
+    BaseScreen(
+        baseUiState = baseUiState,
+        onDismissError = registerViewModel::dismissError
+    ) {
+        RegisterScreen(
+            registerState = registerState,
+            onRegisterClick = { name, email, phone, password ->
+                registerViewModel.doRegister(
+                    name, email, phone, password
+                )
+            },
+            onRegisterSuccess = {
+                navController.navigate("login") {
+                    popUpTo("login") { inclusive = true }
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -87,7 +90,6 @@ fun RegisterScreen(
     val showPassword = remember { mutableStateOf(false) }
     val showSuccessDialog = remember { mutableStateOf(false) }
 
-    // Handle register success
     LaunchedEffect(registerState) {
         if (registerState is FirebaseResult.Success) {
             showSuccessDialog.value = true
@@ -153,7 +155,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // EMAIL
         OutlinedTextField(
             value = email.value,
             onValueChange = {
@@ -172,7 +173,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // PHONE
         OutlinedTextField(
             value = phone.value,
             onValueChange = {
@@ -191,7 +191,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // PASSWORD
         OutlinedTextField(
             value = password.value,
             onValueChange = {

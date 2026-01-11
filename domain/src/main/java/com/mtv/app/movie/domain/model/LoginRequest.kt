@@ -1,9 +1,9 @@
-package com.mtv.app.movie.feature.login.model
+package com.mtv.app.movie.domain.model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginRequest(
-    val username: String,
+    val name: String,
     val password: String
 )
