@@ -37,41 +37,6 @@ import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
 
 @Composable
-fun RegisterRoute(
-    navController: NavController,
-    registerViewModel: RegisterViewModel = hiltViewModel(),
-) {
-    val registerState by registerViewModel.registerState.collectAsState()
-    val baseUiState by registerViewModel.baseUiState.collectAsState()
-
-    baseUiState.errorDialog?.let {
-        DialogCenterV1(
-            state = it,
-            onDismiss = registerViewModel::dismissError
-        )
-    }
-
-    BaseScreen(
-        baseUiState = baseUiState,
-        onDismissError = registerViewModel::dismissError
-    ) {
-        RegisterScreen(
-            registerState = registerState,
-            onRegisterClick = { name, email, phone, password ->
-                registerViewModel.doRegister(
-                    name, email, phone, password
-                )
-            },
-            onRegisterSuccess = {
-                navController.navigate("login") {
-                    popUpTo("login") { inclusive = true }
-                }
-            }
-        )
-    }
-}
-
-@Composable
 fun RegisterScreen(
     registerState: ResourceFirebase<String>,
     onRegisterClick: (String, String, String, String) -> Unit,

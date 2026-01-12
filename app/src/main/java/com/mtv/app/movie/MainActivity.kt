@@ -3,6 +3,8 @@ package com.mtv.app.movie
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation.compose.rememberNavController
+import com.mtv.app.movie.nav.AppNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -12,9 +14,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AppNavGraph()
+            val navController = rememberNavController()
+            AppNavGraph(navController)
         }
-
     }
 
 }

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CheckRequest(
-    val username: String,
+    val email: String,
 )

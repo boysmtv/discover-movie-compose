@@ -3,6 +3,7 @@ package com.mtv.app.movie.feature.presentation
 import androidx.lifecycle.viewModelScope
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SessionManager
+import com.mtv.app.core.provider.utils.device.InstallationIdProvider
 import com.mtv.app.movie.common.utils.nowDb
 import com.mtv.app.movie.data.model.request.RegisterRequest
 import com.mtv.app.movie.domain.usecase.RegisterUseCase
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val installationIdProvider: InstallationIdProvider
 ) : BaseViewModel() {
 
     val registerState = MutableStateFlow<ResourceFirebase<String>>(ResourceFirebase.Loading)
@@ -28,6 +30,7 @@ class RegisterViewModel @Inject constructor(
         launchFirebaseUseCase(registerState) {
             registerUseCase(
                 RegisterRequest(
+                    deviceId = installationIdProvider.getInstallationId(),
                     name = name,
                     email = email,
                     phone = phone,

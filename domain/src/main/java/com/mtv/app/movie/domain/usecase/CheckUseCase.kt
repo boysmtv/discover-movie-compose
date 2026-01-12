@@ -1,22 +1,28 @@
 package com.mtv.app.movie.domain.usecase
 
-import com.mtv.app.core.provider.based.BaseUseCase
-import com.mtv.app.movie.data.datasource.ApiEndPoint
-import com.mtv.app.movie.data.model.request.CheckRequest
-import com.mtv.app.movie.data.model.response.CheckResponse
+import com.mtv.app.core.provider.based.BaseFirebaseUseCase
+import com.mtv.app.core.provider.utils.safeToDataClass
+import com.mtv.based.core.network.config.FirebaseConfig
+import com.mtv.based.core.network.datasource.FirebaseDataSource
 import com.mtv.based.core.network.di.IoDispatcher
-import com.mtv.based.core.network.model.NetworkResponse
-import com.mtv.based.core.network.repository.NetworkRepository
+import com.mtv.based.core.network.utils.ResourceFirebase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CheckUseCase @Inject constructor(
-    private val repository: NetworkRepository,
+class CheckUseCase<T : Any> @Inject constructor(
+    private val dataSource: FirebaseDataSource,
+    private val config: FirebaseConfig,
+    private val clazz: Class<T>,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : BaseUseCase<CheckRequest, CheckResponse>(dispatcher, CheckResponse::class) {
+) : BaseFirebaseUseCase<Map<String, Any>, T>(dispatcher) {
 
-    override suspend fun execute(param: CheckRequest): NetworkResponse {
-        return repository.request(ApiEndPoint.AuthCheck, param)
+    override fun execute(param: Map<String, Any>): Flow<ResourceFirebase<T>> {
+        return dataSource.getDocumentByFields(
+            collection = config.defaultCollection,
+            data = param,
+            mapper = { map -> map.safeToDataClass(clazz) }
+        )
     }
 
 }

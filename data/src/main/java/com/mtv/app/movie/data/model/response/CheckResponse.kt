@@ -11,5 +11,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CheckResponse(
-    val lastCheckin: String,
+    val name: String,
+    val email: String,
+    val phone: String,
+    val date: String,
 )
