@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mtv.app.movie.feature.home.ui.HomeScreen
-import com.mtv.app.movie.feature.login.LoginScreen
-import com.mtv.app.movie.feature.register.RegisterRoute
+import com.mtv.app.movie.feature.ui.home.HomeScreen
+import com.mtv.app.movie.feature.ui.login.LoginScreen
+import com.mtv.app.movie.feature.ui.register.RegisterRoute
 
 @Composable
 fun AppNavGraph() {
