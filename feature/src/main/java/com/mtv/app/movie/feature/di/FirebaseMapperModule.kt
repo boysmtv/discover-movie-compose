@@ -1,6 +1,6 @@
 package com.mtv.app.movie.feature.di
 
-import com.mtv.app.movie.domain.model.LoginResponse
+import com.mtv.app.movie.data.model.response.LoginResponse
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

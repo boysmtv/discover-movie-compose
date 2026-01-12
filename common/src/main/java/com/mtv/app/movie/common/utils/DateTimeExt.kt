@@ -3,7 +3,6 @@ package com.mtv.app.movie.common.utils
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.TimeZone
 
 // Formatter untuk format DB
 private val dbFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
