@@ -11,5 +11,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LogoutResponse(
-    val lastLogout: String,
+    val date: String,
 )

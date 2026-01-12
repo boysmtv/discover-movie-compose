@@ -37,6 +37,7 @@ class RegisterUseCase @Inject constructor(
         dataSource.addDocument(
             collection = config.defaultCollection,
             data = mapOf(
+                "deviceId" to param.deviceId,
                 "name" to param.name,
                 "email" to param.email,
                 "phone" to param.phone,

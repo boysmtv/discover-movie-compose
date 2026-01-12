@@ -1,38 +1,43 @@
 package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
-import com.mtv.app.movie.domain.usecase.CheckUseCase
+import com.mtv.app.core.provider.utils.toMap
 import com.mtv.app.movie.data.model.request.CheckRequest
-import com.mtv.app.movie.data.model.response.CheckResponse
-import com.mtv.app.movie.domain.usecase.LogoutUseCase
 import com.mtv.app.movie.data.model.request.LogoutRequest
+import com.mtv.app.movie.data.model.response.CheckResponse
 import com.mtv.app.movie.data.model.response.LogoutResponse
-import com.mtv.based.core.network.utils.Resource
+import com.mtv.app.movie.domain.usecase.CheckUseCase
+import com.mtv.app.movie.domain.usecase.LogoutUseCase
+import com.mtv.based.core.network.utils.ResourceFirebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val checkUseCase: CheckUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val checkUseCase: CheckUseCase<CheckResponse>,
+    private val logoutUseCase: LogoutUseCase<LogoutResponse>
 ) : BaseViewModel() {
 
-    val checkState = MutableStateFlow<Resource<CheckResponse>>(Resource.Loading)
-    val logoutState = MutableStateFlow<Resource<LogoutResponse>>(Resource.Loading)
+    val checkState = MutableStateFlow<ResourceFirebase<CheckResponse>>(ResourceFirebase.Loading)
+    val logoutState = MutableStateFlow<ResourceFirebase<LogoutResponse>>(ResourceFirebase.Loading)
 
-    fun check(username: String) {
-        launchUseCase(checkState) {
+    fun doCheck(email: String) {
+        launchFirebaseUseCase(checkState) {
             checkUseCase(
-                CheckRequest(username)
+                CheckRequest(
+                    email = email
+                ).toMap()
             )
         }
     }
 
-    fun logout(username: String) {
-        launchUseCase(logoutState) {
+    fun doLogout(email: String) {
+        launchFirebaseUseCase(logoutState) {
             logoutUseCase(
-                LogoutRequest(username)
+                LogoutRequest(
+                    email = email
+                ).toMap()
             )
         }
     }

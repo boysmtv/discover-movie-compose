@@ -1,6 +1,7 @@
 package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
+import com.mtv.app.core.provider.utils.device.InstallationIdProvider
 import com.mtv.app.core.provider.utils.toMap
 import com.mtv.app.movie.data.model.request.LoginRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
@@ -12,15 +13,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginFirebaseUseCase: LoginUseCase<LoginResponse>,
+    private val loginUseCase: LoginUseCase<LoginResponse>,
+    private val installationIdProvider: InstallationIdProvider
 ) : BaseViewModel() {
 
-    val loginFirebase = MutableStateFlow<ResourceFirebase<LoginResponse>>(ResourceFirebase.Loading)
+    val loginState = MutableStateFlow<ResourceFirebase<LoginResponse>>(ResourceFirebase.Loading)
 
-    fun doLoginFirebase(username: String, password: String) {
-        launchFirebaseUseCase(loginFirebase) {
-            loginFirebaseUseCase(
+    fun doLogin(username: String, password: String) {
+        launchFirebaseUseCase(loginState) {
+            loginUseCase(
                 LoginRequest(
+                    deviceId = installationIdProvider.getInstallationId(),
                     name = username,
                     password = password
                 ).toMap()
