@@ -5,7 +5,7 @@ import com.mtv.app.core.provider.utils.device.InstallationIdProvider
 import com.mtv.app.core.provider.utils.toMap
 import com.mtv.app.movie.data.model.request.LoginRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
-import com.mtv.app.movie.domain.usecase.LoginUseCase
+import com.mtv.app.movie.domain.user.LoginUseCase
 import com.mtv.based.core.network.utils.ResourceFirebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

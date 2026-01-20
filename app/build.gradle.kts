@@ -21,26 +21,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            buildConfigField("String", "BASE_URL", "\"https://api.prod.com/\"")
-            buildConfigField("Boolean", "USE_KTOR", "true")
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-        debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.68.127:8080/\"")
-            buildConfigField("Boolean", "USE_KTOR", "true")
-
-            // Firebase
-            buildConfigField("String", "FIREBASE_PROJECT_ID", "\"app-movie-e85f3\"")
-            buildConfigField("String", "FIREBASE_DEFAULT_CONNECTION", "\"users\"")
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -61,6 +41,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":common"))
+    implementation(project(":nav"))
     implementation(project(":feature"))
 
     // Kotlin Coroutines
@@ -107,8 +88,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.material.icons.extended)
 
     // Testing
     testImplementation(libs.junit)
