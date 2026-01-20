@@ -43,6 +43,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":common"))
+    implementation(project(":nav"))
 
     // Kotlin Coroutines
     implementation(libs.kotlinx.coroutines.core)
@@ -97,6 +98,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
 
+    implementation("io.coil-kt:coil-compose:2.7.0")
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

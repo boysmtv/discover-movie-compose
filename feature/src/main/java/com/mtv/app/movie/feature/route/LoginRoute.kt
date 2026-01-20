@@ -6,10 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.common.nav.AppDestinations
 import com.mtv.app.movie.feature.presentation.LoginViewModel
 import com.mtv.app.movie.feature.ui.login.LoginScreen
-import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
+import com.mtv.app.movie.nav.AppDestinations
 
 @Composable
 fun LoginRoute(
@@ -27,8 +26,8 @@ fun LoginRoute(
             loginState = loginState,
             onDoLogin = { username, password -> viewModel.doLogin(username, password) },
             onSuccessLogin = {
-                navController.navigate(AppDestinations.HOME) {
-                    popUpTo(AppDestinations.HOME) { inclusive = true }
+                navController.navigate(AppDestinations.HOME_GRAPH) {
+                    popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
                 }
             }
         )

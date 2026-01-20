@@ -1,4 +1,11 @@
-package com.mtv.app.movie.domain.usecase
+/*
+ * Project: Boys.mtv@gmail.com
+ * File: LogoutUseCase.kt
+ *
+ * Last modified by Dedy Wijaya on 31/12/2025 14.53
+ */
+
+package com.mtv.app.movie.domain.user
 
 import com.mtv.app.core.provider.based.BaseFirebaseUseCase
 import com.mtv.app.core.provider.utils.safeToDataClass
@@ -10,7 +17,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CheckUseCase<T : Any> @Inject constructor(
+class LogoutUseCase<T : Any> @Inject constructor(
     private val dataSource: FirebaseDataSource,
     private val config: FirebaseConfig,
     private val clazz: Class<T>,
@@ -24,5 +31,4 @@ class CheckUseCase<T : Any> @Inject constructor(
             mapper = { map -> map.safeToDataClass(clazz) }
         )
     }
-
 }

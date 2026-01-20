@@ -1,4 +1,4 @@
-package com.mtv.app.movie.domain.usecase
+package com.mtv.app.movie.domain.user
 
 import com.mtv.app.core.provider.based.BaseFirebaseUseCase
 import com.mtv.app.movie.data.model.request.RegisterRequest

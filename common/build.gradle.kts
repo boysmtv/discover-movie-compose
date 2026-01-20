@@ -24,20 +24,40 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("String", "BASE_URL", "\"https://api.prod.com/\"")
+            buildConfigField("Boolean", "USE_KTOR", "true")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+        debug {
+            buildConfigField("String", "BASE_URL", "\"http://192.168.68.127:8080/\"")
+            buildConfigField("Boolean", "USE_KTOR", "true")
+            // Tmdb Api
+            buildConfigField("String", "TMDB_URL", "\"https://api.themoviedb.org/\"")
+            buildConfigField("String", "TMDB_IMAGE_URL", "\"https://image.tmdb.org/t/p/w500/\"")
+
+            // Firebase
+            buildConfigField("String", "FIREBASE_PROJECT_ID", "\"app-movie-e85f3\"")
+            buildConfigField("String", "FIREBASE_DEFAULT_CONNECTION", "\"users\"")
+        }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
 }
 dependencies {
     // Kotlin Coroutines
@@ -84,7 +104,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
 
     // Testing
     testImplementation(libs.junit)

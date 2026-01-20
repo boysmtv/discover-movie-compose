@@ -10,18 +10,16 @@ package com.mtv.app.movie.nav
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.mtv.app.movie.common.nav.AppDestinations
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = AppDestinations.SPLASH
+        startDestination = AppDestinations.SPLASH_GRAPH
     ) {
         splashGraph(navController)
-        loginGraph(navController)
-        registerGraph(navController)
+        authGraph(navController)
         homeGraph(navController)
     }
 }

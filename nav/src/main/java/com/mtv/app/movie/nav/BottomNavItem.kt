@@ -1,7 +1,7 @@
 package com.mtv.app.movie.nav
 
 import androidx.annotation.DrawableRes
-import com.mtv.app.movie.R
+import com.mtv.app.movie.common.R
 
 sealed class BottomNavItem(
     val route: String,

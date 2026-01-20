@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.mtv.app.movie.common.nav.AppDestinations
 import com.mtv.app.movie.feature.route.HomeRoute
 
 @Composable
@@ -31,7 +30,7 @@ fun AppNavHost(navController: NavHostController) {
 //            ProfileScreen()
         }
 
-        composable(AppDestinations.LOGIN) {
+        composable(AppDestinations.LOGIN_GRAPH) {
 //            ProfileScreen()
         }
     }
