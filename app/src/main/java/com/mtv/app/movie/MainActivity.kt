@@ -1,5 +1,6 @@
 package com.mtv.app.movie
 
+import AppNavigation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,8 +15,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val navController = rememberNavController()
-            AppNavGraph(navController)
+            AppNavigation()
+
+//            val navController = rememberNavController()
+//            AppNavGraph(navController)
         }
     }
 

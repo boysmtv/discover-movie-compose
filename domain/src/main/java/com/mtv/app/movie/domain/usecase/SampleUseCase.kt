@@ -13,10 +13,9 @@ import javax.inject.Inject
 class SampleUseCase @Inject constructor(
     private val repository: NetworkRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : BaseUseCase<LoginRequest, LoginResponse>(dispatcher, LoginResponse::class) {
+) : BaseUseCase<LoginRequest, LoginResponse>(dispatcher) {
 
-    override suspend fun execute(param: LoginRequest): NetworkResponse {
-        return repository.request(ApiEndPoint.AuthLogin, param)
-    }
+    override suspend fun execute(param: LoginRequest) =
+        repository.request<LoginResponse>(ApiEndPoint.AuthLogin, param)
 
 }
