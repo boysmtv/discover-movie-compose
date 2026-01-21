@@ -52,13 +52,12 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun getNowPlayingUseCase() =
-        launchUseCase(nowPlayingState) { getNowPlayingUseCase(param = Unit) }
+    fun getNowPlaying() = launchUseCase(nowPlayingState) { getNowPlayingUseCase(param = Unit) }
 
-    fun getPopularMovies() = launchUseCase(popularState) { getPopularUseCase(param = Unit) }
+    fun getPopular() = launchUseCase(popularState) { getPopularUseCase(param = Unit) }
 
-    fun getTopRatedUseCase() = launchUseCase(topRatedState) { getTopRatedUseCase(param = Unit) }
+    fun getTopRated() = launchUseCase(topRatedState) { getTopRatedUseCase(param = Unit) }
 
-    fun getUpComingUseCase() = launchUseCase(upComingState) { getUpComingUseCase(param = Unit) }
+    fun getUpComing() = launchUseCase(upComingState) { getUpComingUseCase(param = Unit) }
 
 }

@@ -50,7 +50,7 @@ fun HomeFeaturedMovieCard(movie: MoviesItemResponse) {
 
         Box(
             modifier = Modifier
-                .align(Alignment.BottomStart)
+                .align(Alignment.BottomCenter)
                 .padding(6.dp)
                 .background(Color.Red, RoundedCornerShape(4.dp))
                 .padding(horizontal = 6.dp, vertical = 2.dp)
