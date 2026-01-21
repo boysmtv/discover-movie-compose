@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -12,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mtv.app.movie.common.MovieCategory
 import com.mtv.app.movie.data.model.movie.MoviesItemResponse
 import com.mtv.app.movie.data.model.movie.MoviesResponse
 import com.mtv.app.movie.data.model.response.CheckResponse
@@ -120,6 +123,8 @@ fun HomeScreen(
         }
     }
 
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -133,11 +138,39 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        if (nowPlayingState is Resource.Success) {
-            HomeFeaturedSection(nowPlayingState.data.results)
-            HomeFeaturedSection(nowPlayingState.data.results)
-            HomeFeaturedSection(nowPlayingState.data.results)
-        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .verticalScroll(scrollState)
+        ) {
+            if (nowPlayingState is Resource.Success) {
+                HomeFeaturedSection(
+                    movieCategory = MovieCategory.NOW_PLAYING,
+                    movies = nowPlayingState.data.results
+                )
+            }
 
+            if (popularState is Resource.Success) {
+                HomeFeaturedSection(
+                    movieCategory = MovieCategory.POPULAR,
+                    movies = popularState.data.results
+                )
+            }
+
+            if (topRatedState is Resource.Success) {
+                HomeFeaturedSection(
+                    movieCategory = MovieCategory.TOP_RATED,
+                    movies = topRatedState.data.results
+                )
+            }
+
+            if (upComingState is Resource.Success) {
+                HomeFeaturedSection(
+                    movieCategory = MovieCategory.UP_COMING,
+                    movies = upComingState.data.results
+                )
+            }
+        }
     }
 }

@@ -38,7 +38,12 @@ fun HomeRoute(
             upComingState = upComingState,
             onDoCheck = { email -> viewModel.doCheck(email) },
             onDoLogout = { email -> viewModel.doLogout(email) },
-            onDoGetNowPlaying = { viewModel.getNowPlayingUseCase() },
+            onDoGetNowPlaying = {
+                viewModel.getNowPlaying()
+                viewModel.getPopular()
+                viewModel.getTopRated()
+                viewModel.getUpComing()
+            },
             onSuccessLogout = {
                 navController.navigate(AppDestinations.LOGIN_GRAPH) {
                     popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }

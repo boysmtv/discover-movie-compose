@@ -16,18 +16,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mtv.app.movie.common.MovieCategory
 import com.mtv.app.movie.data.model.movie.MoviesItemResponse
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewHomeFeaturedSection() {
     HomeFeaturedSection(
+        movieCategory = MovieCategory.NOW_PLAYING,
         movies = mockMoviesResponse.results
     )
 }
 
 @Composable
-fun HomeFeaturedSection(movies: List<MoviesItemResponse>) {
+fun HomeFeaturedSection(
+    movieCategory: MovieCategory,
+    movies: List<MoviesItemResponse>
+) {
 
     if (movies.isEmpty()) return
 
@@ -35,7 +40,7 @@ fun HomeFeaturedSection(movies: List<MoviesItemResponse>) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Featured",
+            text = movieCategory.title,
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color.White,
@@ -49,9 +54,7 @@ fun HomeFeaturedSection(movies: List<MoviesItemResponse>) {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(movies.size) { index ->
-                val movie = movies[index]
-
-                HomeFeaturedMovieCard(movie = movie)
+                HomeFeaturedMovieCard(movie = movies[index])
             }
         }
 
