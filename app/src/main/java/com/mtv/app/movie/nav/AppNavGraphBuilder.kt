@@ -25,29 +25,20 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
     }
 }
 
-
 fun NavGraphBuilder.homeGraph(navController: NavHostController) {
     navigation(
         startDestination = BottomNavItem.Home.route,
         route = AppDestinations.HOME_GRAPH
     ) {
-
-        // HOME
         composable(BottomNavItem.Home.route) {
             HomeRoute(navController)
         }
-
-        // PLAY
         composable(BottomNavItem.Play.route) {
-//            PlayScreenRoute(navController)
-        }
 
-        // SEARCH
+        }
         composable(BottomNavItem.Search.route) {
 //            SearchScreenRoute(navController)
         }
-
-        // PROFILE
         composable(BottomNavItem.Profile.route) {
 //            ProfileScreenRoute(navController)
         }

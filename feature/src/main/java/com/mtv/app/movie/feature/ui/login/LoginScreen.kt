@@ -1,6 +1,7 @@
 package com.mtv.app.movie.feature.ui.login
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -28,29 +31,65 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.data.model.response.LoginResponse
+import com.mtv.app.movie.feature.event.login.LoginEventListener
+import com.mtv.app.movie.feature.event.login.LoginNavigationListener
+import com.mtv.app.movie.feature.event.login.LoginStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLoginScreen() {
+    LoginScreen(
+        uiState = LoginStateListener(
+            loginState = ResourceFirebase.Success(
+                LoginResponse(
+                    name = "Dedy Wijaya",
+                    email = "Dedy.wijaya@ikonsultan.com",
+                    phone = "08158844424",
+                    date = "21/12/26"
+                )
+            ),
+        ),
+        uiEvent = LoginEventListener(
+            onLoginClicked = { _, _ -> }
+        ),
+        uiNavigation = LoginNavigationListener(
+            onNavigateToHome = {},
+            onNavigateToSignUpByEmail = {},
+            onNavigateToSignUpByGoogle = {},
+            onNavigateToSignUpByFacebook = {},
+            onNavigateToForgotPassword = {},
+        )
+    )
+}
 
 @Composable
 fun LoginScreen(
-    loginState: ResourceFirebase<LoginResponse>,
-    onDoLogin: (username: String, password: String) -> Unit,
-    onSuccessLogin: () -> Unit,
+    uiState: LoginStateListener,
+    uiEvent: LoginEventListener,
+    uiNavigation: LoginNavigationListener
 ) {
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val passwordVisible = remember { mutableStateOf(false) }
 
-    LaunchedEffect(loginState) {
-        if (loginState is ResourceFirebase.Success) {
-            onSuccessLogin()
+    LaunchedEffect(Unit) {
+        username.value = Constant.TestData.NAME
+        password.value = Constant.TestData.PASSWORD
+    }
+
+    LaunchedEffect(uiState.loginState) {
+        if (uiState.loginState is ResourceFirebase.Success) {
+            uiNavigation.onNavigateToHome()
         }
-        username.value = "Boys"
-        password.value = "Mbi123456."
     }
 
     Box(
@@ -73,7 +112,7 @@ fun LoginScreen(
         ) {
 
             Text(
-                text = "Login",
+                text = Constant.Title.LOGIN,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -85,9 +124,13 @@ fun LoginScreen(
                 value = username.value,
                 onValueChange = { username.value = it },
                 leadingIcon = {
-                    Icon(Icons.Default.Person, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
                 },
-                placeholder = { Text("User") },
+                placeholder = { Text(Constant.Title.USERNAME) },
                 shape = RoundedCornerShape(50),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -104,10 +147,13 @@ fun LoginScreen(
                 value = password.value,
                 onValueChange = { password.value = it },
                 leadingIcon = {
-                    Icon(Icons.Default.Lock, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
                 },
-                placeholder = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
+                placeholder = { Text(Constant.Title.PASSWORD) },
                 shape = RoundedCornerShape(50),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -115,14 +161,33 @@ fun LoginScreen(
                     unfocusedBorderColor = Color.Transparent,
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
-                )
+                ),
+                trailingIcon = {
+                    val icon = if (passwordVisible.value)
+                        Icons.Default.Visibility
+                    else
+                        Icons.Default.VisibilityOff
+
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = if (passwordVisible.value) "Hide Password" else "Show Password",
+                        modifier = Modifier
+                            .clickable {
+                                passwordVisible.value = !passwordVisible.value
+                            }
+                            .padding(end = 12.dp)
+                    )
+                },
+                visualTransformation =
+                    if (passwordVisible.value) VisualTransformation.None
+                    else PasswordVisualTransformation(),
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = {
-                    onDoLogin(username.value, password.value)
+                    uiEvent.onLoginClicked(username.value, password.value)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -132,21 +197,24 @@ fun LoginScreen(
                     containerColor = Color(0xFF5C6BC0)
                 )
             ) {
-                Text("Login", fontSize = 16.sp)
+                Text(Constant.Title.LOGIN, fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Forgot your password?",
+                text = Constant.Description.FORGOT_YOUR_PASSWORD,
                 color = Color.White,
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                modifier = Modifier.clickable {
+                    uiNavigation.onNavigateToForgotPassword()
+                }
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "or connect with",
+                text = Constant.Description.OR_CONNECT_WITH,
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 12.sp
             )
@@ -158,25 +226,25 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
-                    onClick = {},
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF1877F2)
                     ),
-                    shape = RoundedCornerShape(50)
+                    shape = RoundedCornerShape(50),
+                    onClick = { uiNavigation.onNavigateToSignUpByFacebook() },
                 ) {
-                    Text("Facebook")
+                    Text(Constant.Title.FACEBOOK)
                 }
 
                 Button(
-                    onClick = {},
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFDB4437)
                     ),
-                    shape = RoundedCornerShape(50)
+                    shape = RoundedCornerShape(50),
+                    onClick = { uiNavigation.onNavigateToSignUpByGoogle() },
                 ) {
-                    Text("Google")
+                    Text(Constant.Title.GOOGLE)
                 }
             }
 
@@ -184,15 +252,18 @@ fun LoginScreen(
 
             Row {
                 Text(
-                    text = "Don't have account? ",
+                    text = Constant.Description.DONT_HAVE_ACCOUNT,
                     color = Color.White,
                     fontSize = 12.sp
                 )
                 Text(
-                    text = "Sign up!",
+                    text = Constant.Description.SIGN_UP,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    modifier = Modifier.clickable {
+                        uiNavigation.onNavigateToSignUpByEmail()
+                    }
                 )
             }
         }

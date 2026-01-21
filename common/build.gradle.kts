@@ -41,7 +41,8 @@ android {
 
             // Firebase
             buildConfigField("String", "FIREBASE_PROJECT_ID", "\"app-movie-e85f3\"")
-            buildConfigField("String", "FIREBASE_DEFAULT_CONNECTION", "\"users\"")
+            buildConfigField("String", "FIREBASE_USERS_COLLECTION", "\"users\"")
+            buildConfigField("String", "FIREBASE_DEVICE_COLLECTION", "\"device\"")
         }
     }
 

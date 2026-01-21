@@ -14,14 +14,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.common.MovieCategory
 import com.mtv.app.movie.data.model.movie.MoviesItemResponse
 import com.mtv.app.movie.data.model.movie.MoviesResponse
 import com.mtv.app.movie.data.model.response.CheckResponse
 import com.mtv.app.movie.data.model.response.LogoutResponse
 import com.mtv.app.movie.common.R
+import com.mtv.app.movie.data.model.response.LoginResponse
+import com.mtv.app.movie.feature.event.home.HomeDataListener
+import com.mtv.app.movie.feature.event.home.HomeEventListener
+import com.mtv.app.movie.feature.event.home.HomeNavigationListener
+import com.mtv.app.movie.feature.event.home.HomeStateListener
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.core.network.utils.ResourceFirebase
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 val mockMoviesResponse = MoviesResponse(
     page = 1,
@@ -79,46 +86,65 @@ val mockMoviesResponse = MoviesResponse(
     )
 )
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewHomeScreen() {
     HomeScreen(
-        checkState = ResourceFirebase.Success(CheckResponse("", "", "", "")),
-        logoutState = ResourceFirebase.Success(LogoutResponse("")),
-        nowPlayingState = Resource.Success(mockMoviesResponse),
-        popularState = Resource.Success(mockMoviesResponse),
-        topRatedState = Resource.Success(mockMoviesResponse),
-        upComingState = Resource.Success(mockMoviesResponse),
-        onDoCheck = {},
-        onDoLogout = {},
-        onDoGetNowPlaying = {},
-        onSuccessLogout = {}
+        uiState = HomeStateListener(
+            checkState = ResourceFirebase.Success(
+                data = CheckResponse(
+                    name = "Dedy Wijaya",
+                    email = "Dedy.wijaya@ikonsultan.com",
+                    phone = "08158844424",
+                    date = "21/12/26"
+                )
+            ),
+            logoutState = ResourceFirebase.Success(
+                data =
+                    LogoutResponse(
+                        date = "21/12/26"
+                    )
+            ),
+            nowPlayingState = Resource.Success(mockMoviesResponse),
+            popularState = Resource.Success(mockMoviesResponse),
+            topRatedState = Resource.Success(mockMoviesResponse),
+            upComingState = Resource.Success(mockMoviesResponse),
+        ),
+        uiData = HomeDataListener(
+            loginResponse = LoginResponse(
+                name = "Dedy Wijaya",
+                email = "Dedy.wijaya@ikonsultan.com",
+                phone = "08158844424",
+                date = "21/12/26"
+            )
+        ),
+        uiEvent = HomeEventListener(
+            onCheck = {},
+            onLogout = {},
+            onLoadMovies = {}
+        ),
+        uiNavigation = HomeNavigationListener(
+            onNavigateToLogin = {}
+        )
     )
 }
 
 @Composable
 fun HomeScreen(
-    checkState: ResourceFirebase<CheckResponse>,
-    logoutState: ResourceFirebase<LogoutResponse>,
-    nowPlayingState: Resource<MoviesResponse>,
-    popularState: Resource<MoviesResponse>,
-    topRatedState: Resource<MoviesResponse>,
-    upComingState: Resource<MoviesResponse>,
-    onDoCheck: (email: String) -> Unit,
-    onDoLogout: (email: String) -> Unit,
-    onDoGetNowPlaying: () -> Unit,
-    onSuccessLogout: () -> Unit,
+    uiState: HomeStateListener,
+    uiData: HomeDataListener,
+    uiEvent: HomeEventListener,
+    uiNavigation: HomeNavigationListener
 ) {
     if (!LocalInspectionMode.current) {
         LaunchedEffect(Unit) {
-            onDoCheck("Boys.mtv@gmail.com")
-            onDoGetNowPlaying()
+            uiEvent.onCheck(Constant.TestData.EMAIL)
+            uiEvent.onLoadMovies()
         }
 
-        LaunchedEffect(logoutState) {
-            if (logoutState is ResourceFirebase.Success) {
-                onSuccessLogout()
+        LaunchedEffect(uiState.logoutState) {
+            if (uiState.logoutState is ResourceFirebase.Success) {
+                uiNavigation.onNavigateToLogin()
             }
         }
     }
@@ -131,7 +157,7 @@ fun HomeScreen(
             .background(Color.Black)
     ) {
         HomeHeader(
-            userName = "William B.",
+            userName = uiData.loginResponse?.name ?: EMPTY_STRING,
             profileImage = R.drawable.ic_avatar,
             onNotificationClick = { /* TODO */ }
         )
@@ -144,31 +170,31 @@ fun HomeScreen(
                 .background(Color.Black)
                 .verticalScroll(scrollState)
         ) {
-            if (nowPlayingState is Resource.Success) {
+            if (uiState.nowPlayingState is Resource.Success) {
                 HomeFeaturedSection(
                     movieCategory = MovieCategory.NOW_PLAYING,
-                    movies = nowPlayingState.data.results
+                    movies = uiState.nowPlayingState.data.results
                 )
             }
 
-            if (popularState is Resource.Success) {
+            if (uiState.popularState is Resource.Success) {
                 HomeFeaturedSection(
                     movieCategory = MovieCategory.POPULAR,
-                    movies = popularState.data.results
+                    movies = uiState.popularState.data.results
                 )
             }
 
-            if (topRatedState is Resource.Success) {
+            if (uiState.topRatedState is Resource.Success) {
                 HomeFeaturedSection(
                     movieCategory = MovieCategory.TOP_RATED,
-                    movies = topRatedState.data.results
+                    movies = uiState.topRatedState.data.results
                 )
             }
 
-            if (upComingState is Resource.Success) {
+            if (uiState.upComingState is Resource.Success) {
                 HomeFeaturedSection(
                     movieCategory = MovieCategory.UP_COMING,
-                    movies = upComingState.data.results
+                    movies = uiState.upComingState.data.results
                 )
             }
         }

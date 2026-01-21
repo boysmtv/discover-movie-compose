@@ -6,6 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.based.BaseScreen
+import com.mtv.app.movie.feature.event.home.HomeEventListener
+import com.mtv.app.movie.feature.event.home.HomeNavigationListener
 import com.mtv.app.movie.feature.presentation.HomeViewModel
 import com.mtv.app.movie.feature.ui.home.HomeScreen
 import com.mtv.app.movie.nav.AppDestinations
@@ -16,39 +18,33 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val baseUiState by viewModel.baseUiState.collectAsState()
-
-    val checkState by viewModel.checkState.collectAsState()
-    val logoutState by viewModel.logoutState.collectAsState()
-
-    val nowPlayingState by viewModel.nowPlayingState.collectAsState()
-    val popularState by viewModel.popularState.collectAsState()
-    val topRatedState by viewModel.topRatedState.collectAsState()
-    val upComingState by viewModel.upComingState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    val uiData by viewModel.uiData.collectAsState()
 
     BaseScreen(
         baseUiState = baseUiState,
         onDismissError = viewModel::dismissError
     ) {
         HomeScreen(
-            checkState = checkState,
-            logoutState = logoutState,
-            nowPlayingState = nowPlayingState,
-            popularState = popularState,
-            topRatedState = topRatedState,
-            upComingState = upComingState,
-            onDoCheck = { email -> viewModel.doCheck(email) },
-            onDoLogout = { email -> viewModel.doLogout(email) },
-            onDoGetNowPlaying = {
-                viewModel.getNowPlaying()
-                viewModel.getPopular()
-                viewModel.getTopRated()
-                viewModel.getUpComing()
-            },
-            onSuccessLogout = {
-                navController.navigate(AppDestinations.LOGIN_GRAPH) {
-                    popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
+            uiState = uiState,
+            uiData = uiData,
+            uiEvent = HomeEventListener(
+                onCheck = viewModel::doCheck,
+                onLogout = viewModel::doLogout,
+                onLoadMovies = {
+                    viewModel.getNowPlaying()
+                    viewModel.getPopular()
+                    viewModel.getTopRated()
+                    viewModel.getUpComing()
                 }
-            }
+            ),
+            uiNavigation = HomeNavigationListener(
+                onNavigateToLogin = {
+                    navController.navigate(AppDestinations.LOGIN_GRAPH) {
+                        popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
+                    }
+                }
+            )
         )
     }
 

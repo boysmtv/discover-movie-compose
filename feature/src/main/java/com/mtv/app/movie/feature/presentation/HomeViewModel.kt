@@ -1,11 +1,14 @@
 package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
+import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.core.provider.utils.toMap
-import com.mtv.app.movie.data.model.movie.MoviesResponse
+import com.mtv.app.movie.common.ConstantPreferences
+import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.CheckRequest
 import com.mtv.app.movie.data.model.request.LogoutRequest
 import com.mtv.app.movie.data.model.response.CheckResponse
+import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.data.model.response.LogoutResponse
 import com.mtv.app.movie.domain.usecase.movie.MoviesNowPlayingUseCase
 import com.mtv.app.movie.domain.usecase.movie.MoviesPopularUseCase
@@ -13,10 +16,12 @@ import com.mtv.app.movie.domain.usecase.movie.MoviesTopRatedUseCase
 import com.mtv.app.movie.domain.usecase.movie.MoviesUpComingUseCase
 import com.mtv.app.movie.domain.user.CheckUseCase
 import com.mtv.app.movie.domain.user.LogoutUseCase
-import com.mtv.based.core.network.utils.Resource
-import com.mtv.based.core.network.utils.ResourceFirebase
+import com.mtv.app.movie.feature.event.home.HomeDataListener
+import com.mtv.app.movie.feature.event.home.HomeStateListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,38 +31,84 @@ class HomeViewModel @Inject constructor(
     private val getNowPlayingUseCase: MoviesNowPlayingUseCase,
     private val getPopularUseCase: MoviesPopularUseCase,
     private val getTopRatedUseCase: MoviesTopRatedUseCase,
-    private val getUpComingUseCase: MoviesUpComingUseCase
+    private val getUpComingUseCase: MoviesUpComingUseCase,
+    securePrefs: SecurePrefs
 ) : BaseViewModel() {
 
-    val checkState = MutableStateFlow<ResourceFirebase<CheckResponse>>(ResourceFirebase.Loading)
-    val logoutState = MutableStateFlow<ResourceFirebase<LogoutResponse>>(ResourceFirebase.Loading)
-    val nowPlayingState = MutableStateFlow<Resource<MoviesResponse>>(Resource.Loading)
-    val popularState = MutableStateFlow<Resource<MoviesResponse>>(Resource.Loading)
-    val topRatedState = MutableStateFlow<Resource<MoviesResponse>>(Resource.Loading)
-    val upComingState = MutableStateFlow<Resource<MoviesResponse>>(Resource.Loading)
+    /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
+    private val _uiState = MutableStateFlow(HomeStateListener())
+    val uiState: StateFlow<HomeStateListener> = _uiState
 
-    fun doCheck(email: String) = launchFirebaseUseCase(checkState) {
-        checkUseCase(
-            param = CheckRequest(
-                email = email
-            ).toMap()
+    /** UI DATA : DATA PERSIST (Prefs) */
+    private val _uiData = MutableStateFlow(HomeDataListener())
+    val uiData: StateFlow<HomeDataListener> = _uiData
+
+    init {
+        val account = securePrefs.getObject(
+            key = ConstantPreferences.USER_ACCOUNT,
+            clazz = LoginResponse::class.java
         )
+        updateData { copy(loginResponse = account) }
     }
 
-    fun doLogout(email: String) = launchFirebaseUseCase(logoutState) {
-        logoutUseCase(
-            param = LogoutRequest(
-                email = email
-            ).toMap()
-        )
+    /** GENERIC UPDATE DATA */
+    private fun updateData(block: HomeDataListener.() -> HomeDataListener) {
+        _uiData.update { it.block() }
     }
 
-    fun getNowPlaying() = launchUseCase(nowPlayingState) { getNowPlayingUseCase(param = Unit) }
 
-    fun getPopular() = launchUseCase(popularState) { getPopularUseCase(param = Unit) }
+    /** CHECK USER */
+    fun doCheck(email: String) = launchFirebaseUseCase(
+        target = _uiState.valueFlowOf(
+            get = { it.checkState },
+            set = { state -> copy(checkState = state) }
+        ),
+        block = { checkUseCase(CheckRequest(email).toMap()) }
+    )
 
-    fun getTopRated() = launchUseCase(topRatedState) { getTopRatedUseCase(param = Unit) }
+    /** LOGOUT */
+    fun doLogout(email: String) = launchFirebaseUseCase(
+        target = _uiState.valueFlowOf(
+            get = { it.logoutState },
+            set = { state -> copy(logoutState = state) }
+        ),
+        block = { logoutUseCase(LogoutRequest(email).toMap()) }
+    )
 
-    fun getUpComing() = launchUseCase(upComingState) { getUpComingUseCase(param = Unit) }
+    /** GET NOW PLAYING MOVIES */
+    fun getNowPlaying() = launchUseCase(
+        target = _uiState.valueFlowOf(
+            get = { it.nowPlayingState },
+            set = { state -> copy(nowPlayingState = state) }
+        ),
+        block = { getNowPlayingUseCase(Unit) }
+    )
+
+    /** GET POPULAR MOVIES */
+    fun getPopular() = launchUseCase(
+        target = _uiState.valueFlowOf(
+            get = { it.popularState },
+            set = { state -> copy(popularState = state) }
+        ),
+        block = { getPopularUseCase(Unit) }
+    )
+
+    /** GET TOP RATED MOVIES */
+    fun getTopRated() = launchUseCase(
+        target = _uiState.valueFlowOf(
+            get = { it.topRatedState },
+            set = { state -> copy(topRatedState = state) }
+        ),
+        block = { getTopRatedUseCase(Unit) }
+    )
+
+    /** GET UP COMING MOVIES */
+    fun getUpComing() = launchUseCase(
+        target = _uiState.valueFlowOf(
+            get = { it.upComingState },
+            set = { state -> copy(upComingState = state) }
+        ),
+        block = { getUpComingUseCase(Unit) }
+    )
 
 }

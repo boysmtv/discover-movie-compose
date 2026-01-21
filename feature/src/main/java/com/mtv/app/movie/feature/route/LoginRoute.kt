@@ -6,6 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.based.BaseScreen
+import com.mtv.app.movie.feature.event.login.LoginEventListener
+import com.mtv.app.movie.feature.event.login.LoginNavigationListener
 import com.mtv.app.movie.feature.presentation.LoginViewModel
 import com.mtv.app.movie.feature.ui.login.LoginScreen
 import com.mtv.app.movie.nav.AppDestinations
@@ -15,21 +17,37 @@ fun LoginRoute(
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val loginState by viewModel.loginState.collectAsState()
     val baseUiState by viewModel.baseUiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     BaseScreen(
         baseUiState = baseUiState,
         onDismissError = viewModel::dismissError
     ) {
         LoginScreen(
-            loginState = loginState,
-            onDoLogin = { username, password -> viewModel.doLogin(username, password) },
-            onSuccessLogin = {
-                navController.navigate(AppDestinations.HOME_GRAPH) {
-                    popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
-                }
-            }
+            uiState = uiState,
+            uiEvent = LoginEventListener(
+                onLoginClicked = viewModel::doLogin
+            ),
+            uiNavigation = LoginNavigationListener(
+                onNavigateToHome = {
+                    navController.navigate(AppDestinations.HOME_GRAPH) {
+                        popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
+                    }
+                },
+                onNavigateToSignUpByEmail = {
+                    navController.navigate(AppDestinations.REGISTER_GRAPH) {
+                        popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
+                    }
+                },
+                onNavigateToSignUpByGoogle = {},
+                onNavigateToSignUpByFacebook = {},
+                onNavigateToForgotPassword = {
+                    navController.navigate(AppDestinations.FORGOT_PASSWORD_GRAPH) {
+                        popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
+                    }
+                },
+            )
         )
     }
 
