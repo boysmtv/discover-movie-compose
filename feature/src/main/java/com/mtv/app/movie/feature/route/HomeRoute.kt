@@ -11,6 +11,7 @@ import com.mtv.app.movie.feature.event.home.HomeNavigationListener
 import com.mtv.app.movie.feature.presentation.HomeViewModel
 import com.mtv.app.movie.feature.ui.home.HomeScreen
 import com.mtv.app.movie.nav.AppDestinations
+import com.mtv.app.movie.nav.navigateAndPopHome
 
 @Composable
 fun HomeRoute(
@@ -40,9 +41,10 @@ fun HomeRoute(
             ),
             uiNavigation = HomeNavigationListener(
                 onNavigateToLogin = {
-                    navController.navigate(AppDestinations.LOGIN_GRAPH) {
-                        popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
-                    }
+                    navController.navigateAndPopHome(AppDestinations.LOGIN_GRAPH)
+                },
+                onNavigateToMovieDetail = { movie ->
+                    navController.navigate(AppDestinations.navigateToDetailMovies(movie.id))
                 }
             )
         )

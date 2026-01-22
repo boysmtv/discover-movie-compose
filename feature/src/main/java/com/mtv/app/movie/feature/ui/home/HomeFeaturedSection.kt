@@ -24,14 +24,16 @@ import com.mtv.app.movie.data.model.movie.MoviesItemResponse
 fun PreviewHomeFeaturedSection() {
     HomeFeaturedSection(
         movieCategory = MovieCategory.NOW_PLAYING,
-        movies = mockMoviesResponse.results
+        movies = mockMoviesResponse.results,
+        onClickedMovies = { }
     )
 }
 
 @Composable
 fun HomeFeaturedSection(
     movieCategory: MovieCategory,
-    movies: List<MoviesItemResponse>
+    movies: List<MoviesItemResponse>,
+    onClickedMovies: (MoviesItemResponse) -> Unit,
 ) {
 
     if (movies.isEmpty()) return
@@ -54,7 +56,10 @@ fun HomeFeaturedSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(movies.size) { index ->
-                HomeFeaturedMovieCard(movie = movies[index])
+                HomeFeaturedMovieCard(
+                    movie = movies[index],
+                    onClick = { onClickedMovies(it) }
+                )
             }
         }
 

@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SplashRequest(
-    val initDate: String,
-    val deviceInfo: DeviceInfo,
+    var initDate: String,
+    var deviceInfo: DeviceInfo,
 )

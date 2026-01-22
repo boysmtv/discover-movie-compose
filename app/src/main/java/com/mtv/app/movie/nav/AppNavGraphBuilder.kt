@@ -2,8 +2,11 @@ package com.mtv.app.movie.nav
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
+import com.mtv.app.movie.feature.route.movie.MovieDetailRoute
 import com.mtv.app.movie.feature.route.HomeRoute
 import com.mtv.app.movie.feature.route.LoginRoute
 import com.mtv.app.movie.feature.route.RegisterRoute
@@ -42,5 +45,18 @@ fun NavGraphBuilder.homeGraph(navController: NavHostController) {
         composable(BottomNavItem.Profile.route) {
 //            ProfileScreenRoute(navController)
         }
+    }
+}
+
+fun NavGraphBuilder.detailMovieGraph(navController: NavHostController) {
+    composable(
+        route = AppDestinations.MOVIE_DETAIL_ROUTE,
+        arguments = listOf(
+            navArgument("movieId") {
+                type = NavType.IntType
+            }
+        )
+    ) {
+        MovieDetailRoute(navController = navController)
     }
 }

@@ -54,7 +54,7 @@ fun PreviewLoginScreen() {
                     name = "Dedy Wijaya",
                     email = "Dedy.wijaya@ikonsultan.com",
                     phone = "08158844424",
-                    date = "21/12/26"
+                    createdAt = "21/12/26"
                 )
             ),
         ),

@@ -2,6 +2,7 @@ package com.mtv.app.movie.feature.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -27,20 +28,26 @@ import com.mtv.app.movie.data.model.movie.MoviesItemResponse
 @Composable
 fun PreviewHomeFeaturedMovieCard() {
     HomeFeaturedMovieCard(
-        movie = mockMoviesResponse.results[0]
+        movie = mockMoviesResponse.results[0],
+        onClick = { }
     )
 }
 
 @Composable
-fun HomeFeaturedMovieCard(movie: MoviesItemResponse) {
+fun HomeFeaturedMovieCard(
+    movie: MoviesItemResponse,
+    onClick: (MoviesItemResponse) -> Unit
+) {
 
     Box(
         modifier = Modifier
             .width(120.dp)
             .height(170.dp)
             .clip(RoundedCornerShape(8.dp))
+            .clickable {
+                onClick(movie)
+            }
     ) {
-
         Image(
             painter = rememberAsyncImagePainter(BuildConfig.TMDB_IMAGE_URL + movie.posterPath),
             contentDescription = movie.title,
