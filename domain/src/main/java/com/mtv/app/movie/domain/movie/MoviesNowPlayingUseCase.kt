@@ -1,4 +1,4 @@
-package com.mtv.app.movie.domain.usecase.movie
+package com.mtv.app.movie.domain.movie
 
 import com.mtv.app.core.provider.based.BaseUseCase
 import com.mtv.app.movie.data.datasource.TmdbApi
@@ -15,7 +15,6 @@ class MoviesNowPlayingUseCase @Inject constructor(
 
     override suspend fun execute(param: Unit) = repository.request<MoviesResponse>(
         endpoint = TmdbApi.GetNowPlaying,
-        body = param
     )
 
 }

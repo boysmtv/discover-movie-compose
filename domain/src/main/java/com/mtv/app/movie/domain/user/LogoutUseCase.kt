@@ -9,6 +9,8 @@ package com.mtv.app.movie.domain.user
 
 import com.mtv.app.core.provider.based.BaseFirebaseUseCase
 import com.mtv.app.core.provider.utils.safeToDataClass
+import com.mtv.app.core.provider.utils.toMap
+import com.mtv.app.movie.data.model.request.LogoutRequest
 import com.mtv.based.core.network.config.FirebaseConfig
 import com.mtv.based.core.network.datasource.FirebaseDataSource
 import com.mtv.based.core.network.di.IoDispatcher
@@ -22,12 +24,12 @@ class LogoutUseCase<T : Any> @Inject constructor(
     private val config: FirebaseConfig,
     private val clazz: Class<T>,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : BaseFirebaseUseCase<Map<String, Any>, T>(dispatcher) {
+) : BaseFirebaseUseCase<LogoutRequest, T>(dispatcher) {
 
-    override fun execute(param: Map<String, Any>): Flow<ResourceFirebase<T>> {
+    override fun execute(param: LogoutRequest): Flow<ResourceFirebase<T>> {
         return dataSource.getDocumentByFields(
             collection = config.defaultCollection,
-            data = param,
+            data = param.toMap(),
             mapper = { map -> map.safeToDataClass(clazz) }
         )
     }

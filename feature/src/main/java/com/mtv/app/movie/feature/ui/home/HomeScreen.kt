@@ -96,7 +96,7 @@ fun PreviewHomeScreen() {
                     name = "Dedy Wijaya",
                     email = "Dedy.wijaya@ikonsultan.com",
                     phone = "08158844424",
-                    date = "21/12/26"
+                    createdAt = "21/12/26"
                 )
             ),
             logoutState = ResourceFirebase.Success(
@@ -115,7 +115,7 @@ fun PreviewHomeScreen() {
                 name = "Dedy Wijaya",
                 email = "Dedy.wijaya@ikonsultan.com",
                 phone = "08158844424",
-                date = "21/12/26"
+                createdAt = "21/12/26"
             )
         ),
         uiEvent = HomeEventListener(
@@ -124,7 +124,8 @@ fun PreviewHomeScreen() {
             onLoadMovies = {}
         ),
         uiNavigation = HomeNavigationListener(
-            onNavigateToLogin = {}
+            onNavigateToLogin = {},
+            onNavigateToMovieDetail = {},
         )
     )
 }
@@ -173,28 +174,32 @@ fun HomeScreen(
             if (uiState.nowPlayingState is Resource.Success) {
                 HomeFeaturedSection(
                     movieCategory = MovieCategory.NOW_PLAYING,
-                    movies = uiState.nowPlayingState.data.results
+                    movies = uiState.nowPlayingState.data.results,
+                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
             }
 
             if (uiState.popularState is Resource.Success) {
                 HomeFeaturedSection(
                     movieCategory = MovieCategory.POPULAR,
-                    movies = uiState.popularState.data.results
+                    movies = uiState.popularState.data.results,
+                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
             }
 
             if (uiState.topRatedState is Resource.Success) {
                 HomeFeaturedSection(
                     movieCategory = MovieCategory.TOP_RATED,
-                    movies = uiState.topRatedState.data.results
+                    movies = uiState.topRatedState.data.results,
+                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
             }
 
             if (uiState.upComingState is Resource.Success) {
                 HomeFeaturedSection(
                     movieCategory = MovieCategory.UP_COMING,
-                    movies = uiState.upComingState.data.results
+                    movies = uiState.upComingState.data.results,
+                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
             }
         }

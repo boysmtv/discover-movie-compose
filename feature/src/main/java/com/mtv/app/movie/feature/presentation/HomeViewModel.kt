@@ -2,7 +2,6 @@ package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
-import com.mtv.app.core.provider.utils.toMap
 import com.mtv.app.movie.common.ConstantPreferences
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.CheckRequest
@@ -10,10 +9,10 @@ import com.mtv.app.movie.data.model.request.LogoutRequest
 import com.mtv.app.movie.data.model.response.CheckResponse
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.data.model.response.LogoutResponse
-import com.mtv.app.movie.domain.usecase.movie.MoviesNowPlayingUseCase
-import com.mtv.app.movie.domain.usecase.movie.MoviesPopularUseCase
-import com.mtv.app.movie.domain.usecase.movie.MoviesTopRatedUseCase
-import com.mtv.app.movie.domain.usecase.movie.MoviesUpComingUseCase
+import com.mtv.app.movie.domain.movie.MoviesNowPlayingUseCase
+import com.mtv.app.movie.domain.movie.MoviesPopularUseCase
+import com.mtv.app.movie.domain.movie.MoviesTopRatedUseCase
+import com.mtv.app.movie.domain.movie.MoviesUpComingUseCase
 import com.mtv.app.movie.domain.user.CheckUseCase
 import com.mtv.app.movie.domain.user.LogoutUseCase
 import com.mtv.app.movie.feature.event.home.HomeDataListener
@@ -63,7 +62,7 @@ class HomeViewModel @Inject constructor(
             get = { it.checkState },
             set = { state -> copy(checkState = state) }
         ),
-        block = { checkUseCase(CheckRequest(email).toMap()) }
+        block = { checkUseCase(CheckRequest(email)) }
     )
 
     /** LOGOUT */
@@ -72,7 +71,7 @@ class HomeViewModel @Inject constructor(
             get = { it.logoutState },
             set = { state -> copy(logoutState = state) }
         ),
-        block = { logoutUseCase(LogoutRequest(email).toMap()) }
+        block = { logoutUseCase(LogoutRequest(email)) }
     )
 
     /** GET NOW PLAYING MOVIES */

@@ -11,6 +11,7 @@ import com.mtv.app.movie.feature.event.splash.SplashNavigationListener
 import com.mtv.app.movie.feature.presentation.SplashViewModel
 import com.mtv.app.movie.feature.ui.splash.SplashScreen
 import com.mtv.app.movie.nav.AppDestinations
+import com.mtv.app.movie.nav.navigateAndPopSplash
 
 @Composable
 fun SplashRoute(
@@ -31,9 +32,7 @@ fun SplashRoute(
             ),
             uiNavigation = SplashNavigationListener(
                 onNavigateToLogin = {
-                    navController.navigate(AppDestinations.LOGIN_GRAPH) {
-                        popUpTo(AppDestinations.SPLASH_GRAPH) { inclusive = true }
-                    }
+                    navController.navigateAndPopSplash(AppDestinations.LOGIN_GRAPH)
                 }
             ),
         )

@@ -30,4 +30,9 @@ class TmdbApi {
         override val method = HttpMethod.Get
     }
 
+    class GetDetailMovies(movieId: Int) : IApiEndPoint {
+        override val path = "$API_VERSION/$PATH_MOVIE/$movieId"
+        override val method = HttpMethod.Get
+    }
+
 }

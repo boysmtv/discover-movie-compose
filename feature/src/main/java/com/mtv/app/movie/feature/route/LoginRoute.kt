@@ -11,6 +11,7 @@ import com.mtv.app.movie.feature.event.login.LoginNavigationListener
 import com.mtv.app.movie.feature.presentation.LoginViewModel
 import com.mtv.app.movie.feature.ui.login.LoginScreen
 import com.mtv.app.movie.nav.AppDestinations
+import com.mtv.app.movie.nav.navigateAndPopLogin
 
 @Composable
 fun LoginRoute(
@@ -31,24 +32,17 @@ fun LoginRoute(
             ),
             uiNavigation = LoginNavigationListener(
                 onNavigateToHome = {
-                    navController.navigate(AppDestinations.HOME_GRAPH) {
-                        popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
-                    }
+                    navController.navigateAndPopLogin(AppDestinations.HOME_GRAPH)
                 },
                 onNavigateToSignUpByEmail = {
-                    navController.navigate(AppDestinations.REGISTER_GRAPH) {
-                        popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
-                    }
+                    navController.navigateAndPopLogin(AppDestinations.REGISTER_GRAPH)
                 },
                 onNavigateToSignUpByGoogle = {},
                 onNavigateToSignUpByFacebook = {},
                 onNavigateToForgotPassword = {
-                    navController.navigate(AppDestinations.FORGOT_PASSWORD_GRAPH) {
-                        popUpTo(AppDestinations.LOGIN_GRAPH) { inclusive = true }
-                    }
-                },
+                    navController.navigateAndPopLogin(AppDestinations.FORGOT_PASSWORD_GRAPH)
+                }
             )
         )
     }
-
 }

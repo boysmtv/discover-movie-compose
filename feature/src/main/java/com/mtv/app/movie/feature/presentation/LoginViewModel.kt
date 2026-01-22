@@ -49,7 +49,7 @@ class LoginViewModel @Inject constructor(
                         deviceId = installationIdProvider.getInstallationId(),
                         name = username,
                         password = password
-                    ).toMap()
+                    )
                 )
             }
         )

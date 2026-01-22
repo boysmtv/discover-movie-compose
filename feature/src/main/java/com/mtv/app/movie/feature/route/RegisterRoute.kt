@@ -11,6 +11,7 @@ import com.mtv.app.movie.feature.event.register.RegisterNavigationListener
 import com.mtv.app.movie.feature.presentation.RegisterViewModel
 import com.mtv.app.movie.feature.ui.register.RegisterScreen
 import com.mtv.app.movie.nav.AppDestinations
+import com.mtv.app.movie.nav.navigateAndPopRegister
 
 @Composable
 fun RegisterRoute(
@@ -31,9 +32,7 @@ fun RegisterRoute(
             ),
             uiNavigation = RegisterNavigationListener(
                 onNavigateToLogin = {
-                    navController.navigate(AppDestinations.LOGIN_GRAPH) {
-                        popUpTo(AppDestinations.REGISTER_GRAPH) { inclusive = true }
-                    }
+                    navController.navigateAndPopRegister(AppDestinations.LOGIN_GRAPH)
                 },
                 onRegisterByGoogle = {},
                 onRegisterByFacebook = {},

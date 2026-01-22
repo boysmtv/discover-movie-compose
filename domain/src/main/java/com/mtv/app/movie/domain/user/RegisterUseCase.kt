@@ -1,6 +1,7 @@
 package com.mtv.app.movie.domain.user
 
 import com.mtv.app.core.provider.based.BaseFirebaseUseCase
+import com.mtv.app.core.provider.utils.toMap
 import com.mtv.app.movie.data.model.request.RegisterRequest
 import com.mtv.based.core.network.config.FirebaseConfig
 import com.mtv.based.core.network.datasource.FirebaseDataSource
@@ -36,14 +37,7 @@ class RegisterUseCase @Inject constructor(
 
         dataSource.addDocument(
             collection = config.defaultCollection,
-            data = mapOf(
-                "deviceId" to param.deviceId,
-                "name" to param.name,
-                "email" to param.email,
-                "phone" to param.phone,
-                "password" to param.password,
-                "date" to param.createdAt
-            )
+            data = param.toMap()
         ).collect { result ->
             emit(result)
         }
