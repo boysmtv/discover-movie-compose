@@ -8,13 +8,14 @@ import androidx.navigation.NavController
 import com.mtv.app.movie.common.based.BaseScreen
 import com.mtv.app.movie.feature.event.detail.DetailEventListener
 import com.mtv.app.movie.feature.event.detail.DetailNavigationListener
-import com.mtv.app.movie.feature.presentation.MoviesDetailViewModel
+import com.mtv.app.movie.feature.presentation.MovieDetailViewModel
 import com.mtv.app.movie.feature.ui.detail.DetailMovieScreen
+import com.mtv.app.movie.nav.AppDestinations
 
 @Composable
 fun MovieDetailRoute(
     navController: NavController,
-    viewModel: MoviesDetailViewModel = hiltViewModel(),
+    viewModel: MovieDetailViewModel = hiltViewModel(),
 ) {
     val baseUiState by viewModel.baseUiState.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
@@ -27,15 +28,17 @@ fun MovieDetailRoute(
             uiState = uiState,
             uiEvent = DetailEventListener(
                 onLoadMovies = viewModel::loadDetailMovies,
-                onPlayMovies = {}
+                onPlayMovies = viewModel::loadDetailVideos,
+                onConsumePlayEvent = viewModel::onConsumePlayEvent
             ),
             uiNavigation = DetailNavigationListener(
                 onNavigateToBack = {
                     navController.popBackStack()
                 },
-                onNavigateToPlayMovie = {}
+                onNavigateToPlayMovie = { key ->
+                    navController.navigate(AppDestinations.navigateToPlayMovie(key))
+                }
             )
         )
-
     }
 }

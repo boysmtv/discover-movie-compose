@@ -82,7 +82,7 @@ fun LoginScreen(
     val passwordVisible = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        username.value = Constant.TestData.NAME
+        username.value = Constant.TestData.EMAIL
         password.value = Constant.TestData.PASSWORD
     }
 

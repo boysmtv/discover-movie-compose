@@ -11,6 +11,7 @@ import com.mtv.app.movie.feature.route.HomeRoute
 import com.mtv.app.movie.feature.route.LoginRoute
 import com.mtv.app.movie.feature.route.RegisterRoute
 import com.mtv.app.movie.feature.route.SplashRoute
+import com.mtv.app.movie.feature.route.movie.PlayMovieRoute
 
 fun NavGraphBuilder.splashGraph(navController: NavHostController) {
     composable(AppDestinations.SPLASH_GRAPH) {
@@ -58,5 +59,18 @@ fun NavGraphBuilder.detailMovieGraph(navController: NavHostController) {
         )
     ) {
         MovieDetailRoute(navController = navController)
+    }
+}
+
+fun NavGraphBuilder.playMovieGraph(navController: NavHostController) {
+    composable(
+        route = AppDestinations.MOVIE_PLAY_ROUTE,
+        arguments = listOf(
+            navArgument("key") {
+                type = NavType.StringType
+            }
+        )
+    ) {
+        PlayMovieRoute(navController = navController)
     }
 }

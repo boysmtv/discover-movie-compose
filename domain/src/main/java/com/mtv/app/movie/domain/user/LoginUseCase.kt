@@ -62,7 +62,10 @@ class LoginUseCase<T : Any> @Inject constructor(
     ): Flow<ResourceFirebase<T>> {
         return dataSource.getDocumentByFields(
             collection = config.defaultCollection,
-            data = param.toMap(),
+            data = mapOf(
+                "email" to param.email,
+                "password" to param.password
+            ),
             mapper = { it.safeToDataClass(clazz) }
         )
     }

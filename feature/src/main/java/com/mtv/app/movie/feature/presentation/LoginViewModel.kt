@@ -3,7 +3,6 @@ package com.mtv.app.movie.feature.presentation
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.core.provider.utils.device.InstallationIdProvider
-import com.mtv.app.core.provider.utils.toMap
 import com.mtv.app.movie.common.ConstantPreferences
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.LoginRequest
@@ -46,9 +45,10 @@ class LoginViewModel @Inject constructor(
             block = {
                 loginUseCase(
                     LoginRequest(
+                        email = username,
+                        password = password,
                         deviceId = installationIdProvider.getInstallationId(),
-                        name = username,
-                        password = password
+                        createdAt = System.currentTimeMillis().toString(),
                     )
                 )
             }

@@ -73,6 +73,8 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.common.ktx)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
@@ -99,6 +101,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
 
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

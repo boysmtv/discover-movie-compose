@@ -12,9 +12,11 @@ import com.mtv.based.core.network.utils.UiErrorFirebase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 import javax.inject.Inject
 
 class SplashUseCase @Inject constructor(
@@ -30,13 +32,10 @@ class SplashUseCase @Inject constructor(
                 )
             )
 
-        param.initDate = System.currentTimeMillis().toString()
-
-        return getDevice(deviceId, param)
+        return observeDevice(deviceId, param)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getDevice(
+    private fun observeDevice(
         deviceId: String,
         param: SplashRequest
     ): Flow<ResourceFirebase<String>> {
@@ -59,7 +58,6 @@ class SplashUseCase @Inject constructor(
             }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun handleExistingDevice(
         data: Map<String, Any>,
         param: SplashRequest
@@ -73,49 +71,74 @@ class SplashUseCase @Inject constructor(
             )
 
         return logDevice(param)
-            .flatMapLatest {
-                updateDevice(docId, param)
+            .flatMapLatest { logResult ->
+                when (logResult) {
+                    is ResourceFirebase.Loading ->
+                        flowOf(ResourceFirebase.Loading)
+
+                    is ResourceFirebase.Error ->
+                        flowOf(logResult)
+
+                    is ResourceFirebase.Success ->
+                        updateDevice(docId, param)
+                            .map { updateResult ->
+                                when (updateResult) {
+                                    is ResourceFirebase.Loading ->
+                                        ResourceFirebase.Loading
+
+                                    is ResourceFirebase.Error ->
+                                        updateResult
+
+                                    is ResourceFirebase.Success ->
+                                        ResourceFirebase.Success(docId)
+                                }
+                            }
+                }
             }
-            .map { ResourceFirebase.Success(docId) }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun handleNewDevice(
         param: SplashRequest
     ): Flow<ResourceFirebase<String>> {
 
         return logDevice(param)
-            .flatMapLatest {
-                insertDevice(param)
+            .flatMapLatest { logResult ->
+                when (logResult) {
+                    is ResourceFirebase.Loading ->
+                        flowOf(ResourceFirebase.Loading)
+
+                    is ResourceFirebase.Error ->
+                        flowOf(logResult)
+
+                    is ResourceFirebase.Success ->
+                        insertDevice(param)
+                }
             }
     }
 
     private fun logDevice(
         param: SplashRequest
-    ): Flow<ResourceFirebase<String>> {
-        return dataSource.addDocument(
+    ): Flow<ResourceFirebase<String>> =
+        dataSource.addDocument(
             collection = BuildConfig.FIREBASE_DEVICE_LOG_COLLECTION,
             data = param.toMap()
         )
-    }
 
     private fun updateDevice(
         docId: String,
         param: SplashRequest
-    ): Flow<ResourceFirebase<Unit>> {
-        return dataSource.updateDocument(
+    ): Flow<ResourceFirebase<Unit>> =
+        dataSource.updateDocument(
             collection = BuildConfig.FIREBASE_DEVICE_COLLECTION,
             documentId = docId,
             data = param.toMap()
         )
-    }
 
     private fun insertDevice(
         param: SplashRequest
-    ): Flow<ResourceFirebase<String>> {
-        return dataSource.addDocument(
+    ): Flow<ResourceFirebase<String>> =
+        dataSource.addDocument(
             collection = BuildConfig.FIREBASE_DEVICE_COLLECTION,
             data = param.toMap()
         )
-    }
 }

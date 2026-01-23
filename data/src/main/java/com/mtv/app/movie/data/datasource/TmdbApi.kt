@@ -8,6 +8,7 @@ class TmdbApi {
     companion object {
         const val API_VERSION = 3
         const val PATH_MOVIE = "movie"
+        const val PATH_VIDEOS = "videos"
     }
 
     object GetNowPlaying : IApiEndPoint {
@@ -32,6 +33,11 @@ class TmdbApi {
 
     class GetDetailMovies(movieId: Int) : IApiEndPoint {
         override val path = "$API_VERSION/$PATH_MOVIE/$movieId"
+        override val method = HttpMethod.Get
+    }
+
+    class GetDetailVideos(movieId: Int) : IApiEndPoint {
+        override val path = "$API_VERSION/$PATH_MOVIE/$movieId/$PATH_VIDEOS"
         override val method = HttpMethod.Get
     }
 
