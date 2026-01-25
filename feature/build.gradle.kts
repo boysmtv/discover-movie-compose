@@ -102,7 +102,7 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.7.0")
 
-    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.2")
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:13.0.0")
 
     // Testing
     testImplementation(libs.junit)
