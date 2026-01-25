@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.signing)
     alias(libs.plugins.hilt.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinx.serialization)
 }
 
@@ -42,6 +42,7 @@ android {
 
             // Credential
             buildConfigField("String", "TMDB_BEARER", "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmIzYTg2OWRkYTIyNjRjNDQ4MjYxY2Q4YWRlMjExMCIsIm5iZiI6MTY2MDA0NTA3My44ODgsInN1YiI6IjYyZjI0NzExMTUxMWFhMDA3YTdjZjNlZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.B_f1VYeJoWUsgw6h2T91pfBIgLkIOwogLR7k6dxM4pU\"")
+            buildConfigField("String", "TMDB_YOUTUBE_URL", "\"https://www.youtube.com/watch?v=\"")
 
             // Firebase
             buildConfigField("String", "FIREBASE_PROJECT_ID", "\"app-movie-e85f3\"")
@@ -94,7 +95,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     // AndroidX Lifecycle

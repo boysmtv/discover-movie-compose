@@ -42,12 +42,12 @@ class RegisterViewModel @Inject constructor(
             block = {
                 registerUseCase(
                     RegisterRequest(
-                        deviceId = installationIdProvider.getInstallationId(),
                         name = name,
                         email = email,
                         phone = phone,
                         password = password,
-                        createdAt = nowDb()
+                        deviceId = installationIdProvider.getInstallationId(),
+                        createdAt = System.currentTimeMillis().toString()
                     )
                 )
             }

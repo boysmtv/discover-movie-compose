@@ -40,7 +40,7 @@ fun LoginRoute(
                 onNavigateToSignUpByGoogle = {},
                 onNavigateToSignUpByFacebook = {},
                 onNavigateToForgotPassword = {
-                    navController.navigateAndPopLogin(AppDestinations.FORGOT_PASSWORD_GRAPH)
+//                    navController.navigateAndPopLogin(AppDestinations.FORGOT_PASSWORD_GRAPH)
                 }
             )
         )

@@ -102,7 +102,7 @@ fun PreviewHomeScreen() {
             logoutState = ResourceFirebase.Success(
                 data =
                     LogoutResponse(
-                        date = "21/12/26"
+                        createdAt = "21/12/26"
                     )
             ),
             nowPlayingState = Resource.Success(mockMoviesResponse),

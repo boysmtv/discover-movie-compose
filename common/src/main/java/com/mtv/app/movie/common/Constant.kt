@@ -2,6 +2,11 @@ package com.mtv.app.movie.common
 
 class Constant {
 
+    object SharedParam {
+        const val MOVIE_ID = "movieId"
+        const val VIDEOS_KEY = "videosKey"
+    }
+
     object Title {
         const val LOGIN = "Login"
         const val USERNAME = "Username"

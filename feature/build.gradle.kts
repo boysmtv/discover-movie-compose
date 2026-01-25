@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.signing)
     alias(libs.plugins.hilt.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinx.serialization)
 }
 
@@ -73,7 +73,9 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.common.ktx)
-    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     // AndroidX Lifecycle
@@ -99,6 +101,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
 
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.2")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

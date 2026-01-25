@@ -2,7 +2,6 @@ package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.device.DeviceInfoProvider
-import com.mtv.app.core.provider.utils.toMap
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.SplashRequest
 import com.mtv.app.movie.domain.user.SplashUseCase
@@ -32,11 +31,13 @@ class SplashViewModel @Inject constructor(
             block = {
                 splashUseCase(
                     SplashRequest(
-                        initDate = "Today",
+                        deviceId = deviceInfoProvider.getAllDeviceInfo().deviceId.orEmpty(),
+                        createdAt = System.currentTimeMillis().toString(),
                         deviceInfo = deviceInfoProvider.getAllDeviceInfo()
                     )
                 )
-            }
+            },
+            loading = false,
         )
     }
 

@@ -1,7 +1,9 @@
 package com.mtv.app.movie.feature.ui.detail
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +20,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ThumbUp
@@ -30,7 +32,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,10 +48,45 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mtv.app.movie.common.BuildConfig
+import com.mtv.app.movie.common.formatDateAutoLegacy
+import com.mtv.app.movie.data.model.movie.GenreItem
+import com.mtv.app.movie.data.model.movie.MovieDetailResponse
 import com.mtv.app.movie.feature.event.detail.DetailEventListener
 import com.mtv.app.movie.feature.event.detail.DetailNavigationListener
 import com.mtv.app.movie.feature.event.detail.DetailStateListener
 import com.mtv.based.core.network.utils.Resource
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
+
+private val previewMovieDetail = MovieDetailResponse(
+    adult = false,
+    backdropPath = "/xDMIl84Qo5Tsu62c9DGWhmPI67A.jpg",
+    belongsToCollection = null,
+    budget = 100_000_000,
+    genres = listOf(
+        GenreItem(1, "Drama"),
+        GenreItem(2, "Action")
+    ),
+    homepage = "https://example.com",
+    id = 1,
+    imdbId = "tt1234567",
+    originalLanguage = "en",
+    originalTitle = "The Last of Us",
+    overview = "Twenty years after modern civilization has been destroyed...",
+    popularity = 999.9,
+    posterPath = "/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg",
+    productionCompanies = emptyList(),
+    productionCountries = emptyList(),
+    releaseDate = "2023-01-15",
+    revenue = 500_000_000,
+    runtime = 120,
+    spokenLanguages = emptyList(),
+    status = "Released",
+    tagline = "Hope survives.",
+    title = "The Last of Us",
+    video = false,
+    voteAverage = 8.9,
+    voteCount = 12345
+)
 
 @Preview(
     showBackground = true,
@@ -61,15 +97,16 @@ import com.mtv.based.core.network.utils.Resource
 @Composable
 fun SeriesDetailScreenPreview() {
     MaterialTheme {
-        DetailMovieScreen(
-            uiState = DetailStateListener(
-
-            ),
+        DetailMovieContent(
+            uiState = DetailStateListener(detailState = Resource.Success(previewMovieDetail)),
             uiNavigation = DetailNavigationListener(
-                {}, {}
+                onNavigateToBack = {},
+                onNavigateToPlayMovie = {}
             ),
             uiEvent = DetailEventListener(
-                {}, {}
+                onLoadMovies = {},
+                onPlayMovies = {},
+                onConsumePlayEvent = {}
             )
         )
     }
@@ -78,14 +115,39 @@ fun SeriesDetailScreenPreview() {
 @Composable
 fun DetailMovieScreen(
     uiState: DetailStateListener,
+    uiEvent: DetailEventListener,
     uiNavigation: DetailNavigationListener,
-    uiEvent: DetailEventListener
 ) {
-    val movie = (uiState.detailState as? Resource.Success)?.data
-
     LaunchedEffect(Unit) {
         uiEvent.onLoadMovies()
     }
+
+    LaunchedEffect(uiState.videosState) {
+        val state = uiState.videosState
+        if (state is Resource.Success) {
+            val key = state.data.results.firstOrNull()?.key
+            if (!key.isNullOrEmpty()) {
+                uiNavigation.onNavigateToPlayMovie(key)
+                uiEvent.onConsumePlayEvent()
+            }
+        }
+    }
+
+    DetailMovieContent(
+        uiState = uiState,
+        uiEvent = uiEvent,
+        uiNavigation = uiNavigation
+    )
+}
+
+@Composable
+fun DetailMovieContent(
+    uiState: DetailStateListener,
+    uiEvent: DetailEventListener,
+    uiNavigation: DetailNavigationListener
+) {
+    val movie = (uiState.detailState as? Resource.Success)?.data
+    val video = (uiState.videosState as? Resource.Success)?.data
 
     LazyColumn(
         modifier = Modifier
@@ -96,28 +158,29 @@ fun DetailMovieScreen(
             VideoHeader(
                 posterUrl = (BuildConfig.TMDB_IMAGE_URL + movie?.posterPath),
                 onBack = uiNavigation.onNavigateToBack,
-                onPlay = uiEvent.onPlayMovies
+                onPlay = {
+                    uiNavigation.onNavigateToPlayMovie(video?.results[0]?.key ?: EMPTY_STRING)
+                },
             )
         }
 
         item {
             MovieInfoSection(
-                title = movie?.title ?: "",
-                year = "2025",
-                age = "13+",
-                duration = "1h 54m"
+                title = movie?.title.orEmpty(),
+                year = movie?.releaseDate?.formatDateAutoLegacy("yyyy").orEmpty(),
+                age = if (movie?.adult == true) "Adult" else "Child",
+                rating = movie?.voteAverage?.toString().orEmpty()
             )
         }
 
         item {
             PlayDownloadSection(
                 onPlay = uiEvent.onPlayMovies,
-                onDownload = {}
             )
         }
 
         item {
-            DescriptionSection(movie?.overview ?: "")
+            DescriptionSection(movie?.overview.orEmpty())
         }
 
         item {
@@ -184,13 +247,17 @@ fun VideoHeader(
         }
 
         Icon(
-            Icons.Default.PlayArrow,
+            imageVector = Icons.Default.PlayArrow,
             contentDescription = null,
             tint = Color.White,
             modifier = Modifier
                 .size(72.dp)
                 .align(Alignment.Center)
+                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                .padding(12.dp)
+                .clickable { onPlay() }
         )
+
     }
 }
 
@@ -200,7 +267,7 @@ fun MovieInfoSection(
     title: String,
     year: String,
     age: String,
-    duration: String
+    rating: String
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
@@ -217,7 +284,7 @@ fun MovieInfoSection(
             Spacer(modifier = Modifier.width(8.dp))
             Text(age, color = Color.Gray, fontSize = 12.sp)
             Spacer(modifier = Modifier.width(8.dp))
-            Text(duration, color = Color.Gray, fontSize = 12.sp)
+            Text(rating, color = Color.Gray, fontSize = 12.sp)
         }
     }
 }
@@ -225,7 +292,6 @@ fun MovieInfoSection(
 @Composable
 fun PlayDownloadSection(
     onPlay: () -> Unit,
-    onDownload: () -> Unit
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Button(
@@ -236,17 +302,6 @@ fun PlayDownloadSection(
             Icon(Icons.Default.PlayArrow, null, tint = Color.Black)
             Spacer(modifier = Modifier.width(8.dp))
             Text("Play", color = Color.Black)
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedButton(
-            onClick = onDownload,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(Icons.Default.Download, null)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Download")
         }
     }
 }

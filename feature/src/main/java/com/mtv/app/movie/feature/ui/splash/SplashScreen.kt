@@ -9,19 +9,36 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.feature.event.splash.SplashEventListener
 import com.mtv.app.movie.feature.event.splash.SplashNavigationListener
 import com.mtv.app.movie.feature.event.splash.SplashStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
+
+@Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview() {
+    SplashScreen(
+        uiState = SplashStateListener(),
+        uiEvent = SplashEventListener {},
+        uiNavigation = SplashNavigationListener {}
+    )
+}
 
 @Composable
 fun SplashScreen(
@@ -51,7 +68,6 @@ fun SplashScreen(
         }
     }
 
-    // UI Layout
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -70,11 +86,26 @@ fun SplashScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            Text(
-                text = "Loading...",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f * alpha.value)
-            )
+            PulsingLoadingText()
         }
     }
+}
+
+@Composable
+fun PulsingLoadingText(text: String = "Loading") {
+    val alpha = remember { Animatable(0.3f) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            alpha.animateTo(1f, tween(600))
+            alpha.animateTo(0.3f, tween(600))
+        }
+    }
+
+    Text(
+        text = text,
+        fontSize = 14.sp,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onBackground.copy(alpha = alpha.value)
+    )
 }
