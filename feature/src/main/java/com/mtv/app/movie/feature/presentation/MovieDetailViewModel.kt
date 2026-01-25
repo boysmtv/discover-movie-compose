@@ -2,6 +2,7 @@ package com.mtv.app.movie.feature.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import com.mtv.app.core.provider.based.BaseViewModel
+import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.domain.movie.MoviesDetailUseCase
 import com.mtv.app.movie.domain.movie.MoviesVideosUseCase
@@ -25,7 +26,7 @@ class MovieDetailViewModel @Inject constructor(
     val uiState: StateFlow<DetailStateListener> = _uiState
 
     /** MOVIE ID FROM STATE */
-    private val movieId: Int = checkNotNull(savedStateHandle["movieId"])
+    private val movieId: Int = checkNotNull(savedStateHandle[Constant.SharedParam.MOVIE_ID])
 
     /** GET DETAIL MOVIES */
     fun loadDetailMovies() = launchUseCase(

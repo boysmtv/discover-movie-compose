@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -89,9 +91,9 @@ fun PlayMovieScreen(
         if (isPreview) {
             PreviewPlaceholder()
         } else {
-            YoutubePlayerViewComposable(
-                key = key,
-                lifecycle = lifecycle
+            YouTubePlayerCompose(
+                videoId = key,
+                lifecycleOwner = lifecycle
             )
         }
 
@@ -111,29 +113,42 @@ fun PlayMovieScreen(
 }
 
 @Composable
-private fun YoutubePlayerViewComposable(
-    key: String,
-    lifecycle: androidx.lifecycle.Lifecycle
+fun YouTubePlayerCompose(
+    videoId: String,
+    lifecycleOwner: Lifecycle
 ) {
+    val context = LocalContext.current
+
+    val youTubePlayerView = remember {
+        YouTubePlayerView(context).apply {
+            enableAutomaticInitialization = false
+        }
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        lifecycleOwner.addObserver(youTubePlayerView)
+
+        onDispose {
+            lifecycleOwner.removeObserver(youTubePlayerView)
+        }
+    }
+
     AndroidView(
         modifier = Modifier.fillMaxSize(),
-        factory = { context ->
-            YouTubePlayerView(context).apply {
-                enableAutomaticInitialization = false
-                lifecycle.addObserver(this)
-
+        factory = {
+            youTubePlayerView.apply {
                 initialize(
                     object : AbstractYouTubePlayerListener() {
-                        override fun onReady(youTubePlayer: YouTubePlayer) {
-                            youTubePlayer.loadVideo(key, 0f)
+                        override fun onReady(player: YouTubePlayer) {
+                            player.loadVideo(videoId, 0f)
                         }
                     }
                 )
             }
-
         }
     )
 }
+
 
 @Composable
 private fun PreviewPlaceholder() {
