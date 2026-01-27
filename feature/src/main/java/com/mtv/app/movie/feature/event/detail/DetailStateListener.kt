@@ -7,4 +7,12 @@ import com.mtv.based.core.network.utils.Resource
 data class DetailStateListener(
     val detailState: Resource<MovieDetailResponse> = Resource.Loading,
     val videosState: Resource<MovieVideoResponse> = Resource.Loading,
+    val addMyListState: AddActionState = AddActionState.None,
+    val addMyLikeState: AddActionState = AddActionState.None
 )
+
+sealed class AddActionState {
+    object None : AddActionState()
+    object Success : AddActionState()
+    data class Error(val message: String) : AddActionState()
+}

@@ -1,13 +1,11 @@
 package com.mtv.app.movie.feature.ui.detail
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,9 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -51,10 +46,15 @@ import com.mtv.app.movie.common.BuildConfig
 import com.mtv.app.movie.common.formatDateAutoLegacy
 import com.mtv.app.movie.data.model.movie.GenreItem
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
+import com.mtv.app.movie.data.model.movie.MovieVideoItem
+import com.mtv.app.movie.data.model.movie.MovieVideoResponse
+import com.mtv.app.movie.feature.event.detail.AddActionState
 import com.mtv.app.movie.feature.event.detail.DetailEventListener
 import com.mtv.app.movie.feature.event.detail.DetailNavigationListener
 import com.mtv.app.movie.feature.event.detail.DetailStateListener
 import com.mtv.based.core.network.utils.Resource
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 private val previewMovieDetail = MovieDetailResponse(
@@ -88,6 +88,48 @@ private val previewMovieDetail = MovieDetailResponse(
     voteCount = 12345
 )
 
+val previewVideoResponse = MovieVideoResponse(
+    movieId = 12345,
+    results = listOf(
+        MovieVideoItem(
+            iso6391 = "en",
+            iso31661 = "US",
+            name = "Official Trailer 1",
+            key = "dummyKey1",
+            site = "YouTube",
+            size = 1080,
+            type = "Trailer",
+            official = true,
+            publishedAt = "2026-01-20T10:00:00Z",
+            id = "vid_1"
+        ),
+        MovieVideoItem(
+            iso6391 = "en",
+            iso31661 = "US",
+            name = "Teaser",
+            key = "dummyKey2",
+            site = "YouTube",
+            size = 720,
+            type = "Teaser",
+            official = true,
+            publishedAt = "2026-01-18T08:00:00Z",
+            id = "vid_2"
+        ),
+        MovieVideoItem(
+            iso6391 = "en",
+            iso31661 = "US",
+            name = "Behind the Scenes",
+            key = "dummyKey3",
+            site = "YouTube",
+            size = 480,
+            type = "Featurette",
+            official = true,
+            publishedAt = "2026-01-15T12:00:00Z",
+            id = "vid_3"
+        )
+    )
+)
+
 @Preview(
     showBackground = true,
     backgroundColor = 0xFF000000,
@@ -99,15 +141,8 @@ fun SeriesDetailScreenPreview() {
     MaterialTheme {
         DetailMovieContent(
             uiState = DetailStateListener(detailState = Resource.Success(previewMovieDetail)),
-            uiNavigation = DetailNavigationListener(
-                onNavigateToBack = {},
-                onNavigateToPlayMovie = {}
-            ),
-            uiEvent = DetailEventListener(
-                onLoadMovies = {},
-                onPlayMovies = {},
-                onConsumePlayEvent = {}
-            )
+            uiNavigation = DetailNavigationListener({}, {}),
+            uiEvent = DetailEventListener({}, {}, {}, {}, {}, {}, {}, {})
         )
     }
 }
@@ -118,26 +153,35 @@ fun DetailMovieScreen(
     uiEvent: DetailEventListener,
     uiNavigation: DetailNavigationListener,
 ) {
-    LaunchedEffect(Unit) {
-        uiEvent.onLoadMovies()
-    }
+    LaunchedEffect(Unit) { uiEvent.onLoadMovies() }
 
     LaunchedEffect(uiState.videosState) {
-        val state = uiState.videosState
-        if (state is Resource.Success) {
-            val key = state.data.results.firstOrNull()?.key
-            if (!key.isNullOrEmpty()) {
-                uiNavigation.onNavigateToPlayMovie(key)
-                uiEvent.onConsumePlayEvent()
-            }
+        val key = (uiState.videosState as? Resource.Success)?.data?.results?.firstOrNull()?.key
+        if (!key.isNullOrEmpty()) {
+            uiNavigation.onNavigateToPlayMovie(key)
+            uiEvent.onConsumePlayEvent()
         }
     }
 
-    DetailMovieContent(
-        uiState = uiState,
-        uiEvent = uiEvent,
-        uiNavigation = uiNavigation
-    )
+    HandleAddState(uiState.addMyListState, "Movie added to your list") { uiEvent.onDismissAddMyList() }
+    HandleAddState(uiState.addMyLikeState, "Movie added to your liked") { uiEvent.onDismissAddMyLike() }
+
+    DetailMovieContent(uiState, uiEvent, uiNavigation)
+}
+
+@Composable
+fun HandleAddState(state: AddActionState, successMessage: String, onDismiss: () -> Unit) {
+    when (state) {
+        is AddActionState.Success -> DialogCenterV1(
+            state = ErrorDialogStateV1(title = "Success", message = successMessage, primaryButtonText = "OK"),
+            onDismiss = onDismiss
+        )
+        is AddActionState.Error -> DialogCenterV1(
+            state = ErrorDialogStateV1(title = "Error", message = state.message, primaryButtonText = "OK"),
+            onDismiss = onDismiss
+        )
+        AddActionState.None -> {}
+    }
 }
 
 @Composable
@@ -146,105 +190,44 @@ fun DetailMovieContent(
     uiEvent: DetailEventListener,
     uiNavigation: DetailNavigationListener
 ) {
-    val movie = (uiState.detailState as? Resource.Success)?.data
-    val video = (uiState.videosState as? Resource.Success)?.data
+    val movie = (uiState.detailState as? Resource.Success)?.data ?: previewMovieDetail
+    val video = (uiState.videosState as? Resource.Success)?.data ?: previewVideoResponse
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        item {
-            VideoHeader(
-                posterUrl = (BuildConfig.TMDB_IMAGE_URL + movie?.posterPath),
-                onBack = uiNavigation.onNavigateToBack,
-                onPlay = {
-                    uiNavigation.onNavigateToPlayMovie(video?.results[0]?.key ?: EMPTY_STRING)
-                },
-            )
-        }
-
-        item {
-            MovieInfoSection(
-                title = movie?.title.orEmpty(),
-                year = movie?.releaseDate?.formatDateAutoLegacy("yyyy").orEmpty(),
-                age = if (movie?.adult == true) "Adult" else "Child",
-                rating = movie?.voteAverage?.toString().orEmpty()
-            )
-        }
-
-        item {
-            PlayDownloadSection(
-                onPlay = uiEvent.onPlayMovies,
-            )
-        }
-
-        item {
-            DescriptionSection(movie?.overview.orEmpty())
-        }
-
-        item {
-            ActionButtons()
-        }
-
-        item {
-            Text(
-                "More Like This",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-
-        item {
-            MoreLikeThisSection(emptyList())
-        }
+        item { VideoHeader(movie.posterPath ?: EMPTY_STRING, uiNavigation, video) }
+        item { MovieInfoSection(movie) }
+        item { PlayDownloadSection { uiEvent.onPlayMovies() } }
+        item { DescriptionSection(movie.overview) }
+        item { ActionButtons(uiEvent, movie) }
     }
 }
 
 @Composable
 fun VideoHeader(
-    posterUrl: String,
-    onBack: () -> Unit,
-    onPlay: () -> Unit
+    posterPath: String,
+    uiNavigation: DetailNavigationListener,
+    video: MovieVideoResponse
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(420.dp)
-    ) {
+    Box(modifier = Modifier.fillMaxWidth().height(420.dp)) {
         AsyncImage(
-            model = posterUrl,
+            model = BuildConfig.TMDB_IMAGE_URL + posterPath,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black
-                        )
-                    )
-                )
-        )
-
-        IconButton(
-            onClick = onBack,
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.TopStart)
-        ) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
-                tint = Color.White
+            modifier = Modifier.fillMaxSize().background(
+                Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black))
             )
-        }
+        )
+        IconButton(
+            onClick = { uiNavigation.onNavigateToBack() },
+            modifier = Modifier.padding(16.dp).align(Alignment.TopStart)
+        ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White) }
 
         Icon(
             imageVector = Icons.Default.PlayArrow,
@@ -255,50 +238,30 @@ fun VideoHeader(
                 .align(Alignment.Center)
                 .background(Color.Black.copy(alpha = 0.5f), CircleShape)
                 .padding(12.dp)
-                .clickable { onPlay() }
+                .clickable { video.results.getOrNull(0)?.key?.let { uiNavigation.onNavigateToPlayMovie(it) } }
         )
-
     }
 }
 
-
 @Composable
-fun MovieInfoSection(
-    title: String,
-    year: String,
-    age: String,
-    rating: String
-) {
+fun MovieInfoSection(movie: MovieDetailResponse) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = title,
-            color = Color.White,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
-
+        Text(movie.title, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
-
         Row {
-            Text(year, color = Color.Gray, fontSize = 12.sp)
+            Text(movie.releaseDate.formatDateAutoLegacy("yyyy"), color = Color.Gray, fontSize = 12.sp)
             Spacer(modifier = Modifier.width(8.dp))
-            Text(age, color = Color.Gray, fontSize = 12.sp)
+            Text(if (movie.adult) "Adult" else "Child", color = Color.Gray, fontSize = 12.sp)
             Spacer(modifier = Modifier.width(8.dp))
-            Text(rating, color = Color.Gray, fontSize = 12.sp)
+            Text(movie.voteAverage.toString(), color = Color.Gray, fontSize = 12.sp)
         }
     }
 }
 
 @Composable
-fun PlayDownloadSection(
-    onPlay: () -> Unit,
-) {
+fun PlayDownloadSection(onPlay: () -> Unit) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        Button(
-            onClick = onPlay,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
-        ) {
+        Button(onClick = onPlay, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(containerColor = Color.White)) {
             Icon(Icons.Default.PlayArrow, null, tint = Color.Black)
             Spacer(modifier = Modifier.width(8.dp))
             Text("Play", color = Color.Black)
@@ -308,56 +271,23 @@ fun PlayDownloadSection(
 
 @Composable
 fun DescriptionSection(description: String) {
-    Text(
-        text = description,
-        color = Color.White,
-        fontSize = 14.sp,
-        modifier = Modifier.padding(16.dp)
-    )
+    Text(description, color = Color.White, fontSize = 14.sp, modifier = Modifier.padding(16.dp))
 }
 
-
 @Composable
-fun ActionButtons() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        ActionItem(Icons.Default.Add, "My List")
-        ActionItem(Icons.Default.ThumbUp, "Rate")
-        ActionItem(Icons.Default.Share, "Share")
+fun ActionButtons(uiEvent: DetailEventListener, movie: MovieDetailResponse) {
+    Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+        ActionItem(Icons.Default.Add, "My List") { uiEvent.onAddToMyList(movie) }
+        ActionItem(Icons.Default.ThumbUp, "Rate") { uiEvent.onAddToMyLike(movie) }
+        ActionItem(Icons.Default.Share, "Share") { uiEvent.onShareMovie(movie) }
     }
 }
 
 @Composable
-fun ActionItem(icon: ImageVector, text: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(icon, null, tint = Color.White)
+fun ActionItem(icon: ImageVector, text: String, onClick: () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { onClick() }) {
+        Icon(icon, contentDescription = null, tint = Color.White)
         Spacer(modifier = Modifier.height(4.dp))
         Text(text, color = Color.White, fontSize = 12.sp)
-    }
-}
-
-@Composable
-fun MoreLikeThisSection(movies: List<String>) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(600.dp),
-        contentPadding = PaddingValues(8.dp)
-    ) {
-        items(movies) { poster ->
-            AsyncImage(
-                model = poster,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(4.dp)
-                    .height(180.dp)
-            )
-        }
     }
 }
