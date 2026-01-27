@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RegisterRequest(
+    var uid: String,
     val deviceId: String,
     val name: String,
     val email: String,

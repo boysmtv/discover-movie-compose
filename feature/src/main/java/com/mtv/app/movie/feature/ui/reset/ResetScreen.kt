@@ -1,4 +1,4 @@
-package com.mtv.app.movie.feature.ui.password
+package com.mtv.app.movie.feature.ui.reset
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,28 +30,60 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mtv.app.movie.common.Constant
+import com.mtv.app.movie.feature.event.register.RegisterEventListener
+import com.mtv.app.movie.feature.event.register.RegisterNavigationListener
+import com.mtv.app.movie.feature.event.register.RegisterStateListener
+import com.mtv.app.movie.feature.event.reset.ResetEventListener
+import com.mtv.app.movie.feature.event.reset.ResetNavigationListener
+import com.mtv.app.movie.feature.event.reset.ResetStateListener
+import com.mtv.based.core.network.utils.ResourceFirebase
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewResetPasswordScreen() {
-    ResetPasswordScreen(
-        onSendResetClicked = {},
-        onNavigateToLogin = {},
-        onResetByGoogle = {},
-        onResetByFacebook = {},
+fun PreviewResetScreen() {
+    ResetScreen(
+        uiState = ResetStateListener(),
+        uiEvent = ResetEventListener(
+            onResetPasswordClicked = { _ -> }
+        ),
+        uiNavigation = ResetNavigationListener(
+            onNavigateToLogin = {},
+            onRegisterByGoogle = {},
+            onRegisterByFacebook = {},
+        )
     )
 }
 
 @Composable
-fun ResetPasswordScreen(
-    onSendResetClicked: (email: String) -> Unit,
-    onNavigateToLogin: () -> Unit,
-    onResetByGoogle: () -> Unit,
-    onResetByFacebook: () -> Unit,
+fun ResetScreen(
+    uiState: ResetStateListener,
+    uiEvent: ResetEventListener,
+    uiNavigation: ResetNavigationListener
 ) {
     val email = remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        email.value = Constant.TestData.EMAIL
+    }
+
+    if (uiState.resetPasswordState is ResourceFirebase.Success) {
+        DialogCenterV1(
+            state = ErrorDialogStateV1(
+                title = "Warning",
+                message = "Reset Password Successfully",
+                primaryButtonText = "OK"
+            ),
+            onDismiss = {
+                uiNavigation.onNavigateToLogin()
+            }
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -69,7 +102,7 @@ fun ResetPasswordScreen(
         ) {
 
             Text(
-                text = "Forgot Password",
+                text = Constant.Title.FORGOT_PASSWORD,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -88,8 +121,16 @@ fun ResetPasswordScreen(
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { email.value = it },
-                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                placeholder = { Text("Email") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Email,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
+                },
+                placeholder = {
+                    Text(Constant.Title.EMAIL)
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(50),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -103,14 +144,18 @@ fun ResetPasswordScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { onSendResetClicked(email.value) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF5C6BC0)
-                )
+                ),
+                onClick = {
+                    uiEvent.onResetPasswordClicked(
+                        email.value
+                    )
+                },
             ) {
                 Text("Send Reset Link", fontSize = 16.sp)
             }
@@ -130,25 +175,29 @@ fun ResetPasswordScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
-                    onClick = { onResetByFacebook() },
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF1877F2)
-                    )
+                    ),
+                    onClick = {
+                        uiNavigation.onRegisterByFacebook()
+                    },
                 ) {
-                    Text("Facebook")
+                    Text(Constant.Title.FACEBOOK)
                 }
 
                 Button(
-                    onClick = { onResetByGoogle() },
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFDB4437)
-                    )
+                    ),
+                    onClick = {
+                        uiNavigation.onRegisterByGoogle()
+                    },
                 ) {
-                    Text("Google")
+                    Text(Constant.Title.GOOGLE)
                 }
             }
 
@@ -161,12 +210,12 @@ fun ResetPasswordScreen(
                     fontSize = 12.sp
                 )
                 Text(
-                    text = "Login",
+                    text = Constant.Title.LOGIN,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,
                     modifier = Modifier.clickable {
-                        onNavigateToLogin()
+                        uiNavigation.onNavigateToLogin()
                     }
                 )
             }

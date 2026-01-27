@@ -6,17 +6,17 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.register.RegisterEventListener
-import com.mtv.app.movie.feature.event.register.RegisterNavigationListener
-import com.mtv.app.movie.feature.presentation.RegisterViewModel
-import com.mtv.app.movie.feature.ui.register.RegisterScreen
+import com.mtv.app.movie.feature.event.reset.ResetEventListener
+import com.mtv.app.movie.feature.event.reset.ResetNavigationListener
+import com.mtv.app.movie.feature.presentation.ResetViewModel
+import com.mtv.app.movie.feature.ui.reset.ResetScreen
 import com.mtv.app.movie.nav.AppDestinations
 import com.mtv.app.movie.nav.navigateAndPopRegister
 
 @Composable
-fun RegisterRoute(
+fun ResetRoute(
     navController: NavController,
-    viewModel: RegisterViewModel = hiltViewModel(),
+    viewModel: ResetViewModel = hiltViewModel(),
 ) {
     val baseUiState by viewModel.baseUiState.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
@@ -25,12 +25,12 @@ fun RegisterRoute(
         baseUiState = baseUiState,
         onDismissError = viewModel::dismissError
     ) {
-        RegisterScreen(
+        ResetScreen(
             uiState = uiState,
-            uiEvent = RegisterEventListener(
-                onRegisterClicked = viewModel::doRegister,
+            uiEvent = ResetEventListener(
+                onResetPasswordClicked = viewModel::resetPassword,
             ),
-            uiNavigation = RegisterNavigationListener(
+            uiNavigation = ResetNavigationListener(
                 onNavigateToLogin = {
                     navController.navigateAndPopRegister(AppDestinations.LOGIN_GRAPH)
                 },

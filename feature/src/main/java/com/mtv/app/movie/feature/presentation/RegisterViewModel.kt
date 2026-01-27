@@ -8,6 +8,7 @@ import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.RegisterRequest
 import com.mtv.app.movie.domain.user.RegisterUseCase
 import com.mtv.app.movie.feature.event.register.RegisterStateListener
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,6 +43,7 @@ class RegisterViewModel @Inject constructor(
             block = {
                 registerUseCase(
                     RegisterRequest(
+                        uid = EMPTY_STRING,
                         name = name,
                         email = email,
                         phone = phone,
