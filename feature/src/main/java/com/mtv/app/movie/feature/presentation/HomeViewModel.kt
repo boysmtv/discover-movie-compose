@@ -55,7 +55,6 @@ class HomeViewModel @Inject constructor(
         _uiData.update { it.block() }
     }
 
-
     /** CHECK USER */
     fun doCheck(email: String) = launchFirebaseUseCase(
         target = _uiState.valueFlowOf(

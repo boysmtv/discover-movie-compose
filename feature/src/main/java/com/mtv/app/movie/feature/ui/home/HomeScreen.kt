@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -137,6 +139,8 @@ fun HomeScreen(
     uiEvent: HomeEventListener,
     uiNavigation: HomeNavigationListener
 ) {
+    val scrollState = rememberScrollState()
+
     if (!LocalInspectionMode.current) {
         LaunchedEffect(Unit) {
             uiEvent.onCheck(Constant.TestData.EMAIL)
@@ -149,8 +153,6 @@ fun HomeScreen(
             }
         }
     }
-
-    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier

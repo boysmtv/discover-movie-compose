@@ -29,7 +29,12 @@ fun MovieDetailRoute(
             uiEvent = DetailEventListener(
                 onLoadMovies = viewModel::loadDetailMovies,
                 onPlayMovies = viewModel::loadDetailVideos,
-                onConsumePlayEvent = viewModel::onConsumePlayEvent
+                onConsumePlayEvent = viewModel::onConsumePlayEvent,
+                onAddToMyList = viewModel::onAddToMyList,
+                onAddToMyLike = viewModel::onAddToMyLike,
+                onShareMovie = viewModel::onShareMovie,
+                onDismissAddMyList = viewModel::onDismissAddMyList,
+                onDismissAddMyLike = viewModel::onDismissAddMyLike,
             ),
             uiNavigation = DetailNavigationListener(
                 onNavigateToBack = {
