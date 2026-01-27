@@ -16,6 +16,7 @@ class Constant {
         const val FACEBOOK = "Facebook"
         const val GOOGLE = "Google"
         const val SIGN_UP = "Sign Up"
+        const val FORGOT_PASSWORD = "Forgot Password"
     }
 
     object Description {
@@ -34,7 +35,7 @@ class Constant {
     object TestData {
         const val USERNAME = "Boys"
         const val NAME = "Dedy Wijaya"
-        const val EMAIL = "Dedy.wijaya@ikonsultan.com"
+        const val EMAIL = "Boys.mtv@gmail.com"
         const val PHONE = "08158844424"
         const val PASSWORD = "Mbi123456."
     }

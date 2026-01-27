@@ -2,6 +2,7 @@ package com.mtv.app.movie.di
 
 import android.content.Context
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,4 +22,11 @@ object FirebaseInitModule {
         return FirebaseApp.initializeApp(context)
             ?: throw IllegalStateException("FirebaseApp init failed")
     }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
+
 }

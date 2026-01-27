@@ -32,15 +32,21 @@ fun LoginRoute(
             ),
             uiNavigation = LoginNavigationListener(
                 onNavigateToHome = {
-                    navController.navigateAndPopLogin(AppDestinations.HOME_GRAPH)
+                    navController.navigateAndPopLogin(
+                        route = AppDestinations.HOME_GRAPH
+                    )
                 },
                 onNavigateToSignUpByEmail = {
-                    navController.navigateAndPopLogin(AppDestinations.REGISTER_GRAPH)
+                    navController.navigateAndPopLogin(
+                        route = AppDestinations.REGISTER_GRAPH
+                    )
                 },
                 onNavigateToSignUpByGoogle = {},
                 onNavigateToSignUpByFacebook = {},
                 onNavigateToForgotPassword = {
-//                    navController.navigateAndPopLogin(AppDestinations.FORGOT_PASSWORD_GRAPH)
+                    navController.navigateAndPopLogin(
+                        route = AppDestinations.RESET_GRAPH
+                    )
                 }
             )
         )

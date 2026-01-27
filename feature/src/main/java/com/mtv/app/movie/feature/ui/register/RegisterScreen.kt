@@ -93,11 +93,11 @@ fun RegisterScreen(
                 title = "Success",
                 message = "Success Register",
                 primaryButtonText = "OK"
-            )
-
-        ) {
-            uiNavigation.onNavigateToLogin()
-        }
+            ),
+            onDismiss = {
+                uiNavigation.onNavigateToLogin()
+            }
+        )
     }
 
     Box(

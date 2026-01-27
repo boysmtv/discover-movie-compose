@@ -7,7 +7,7 @@ object AppDestinations {
     const val LOGIN_GRAPH = "LOGIN_GRAPH"
     const val REGISTER_GRAPH = "REGISTER_GRAPH"
     const val HOME_GRAPH = "HOME_GRAPH"
-    const val FORGOT_PASSWORD_GRAPH = "FORGOT_PASSWORD_GRAPH"
+    const val RESET_GRAPH = "FORGOT_GRAPH"
     const val MOVIE_DETAIL_ROUTE = "MOVIE_DETAIL_ROUTE/{${Constant.SharedParam.MOVIE_ID}}"
     const val MOVIE_PLAY_ROUTE = "MOVIE_PLAY_ROUTE/{${Constant.SharedParam.VIDEOS_KEY}}"
 
