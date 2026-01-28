@@ -1,8 +1,11 @@
 package com.mtv.app.movie.feature.presentation
 
+import androidx.navigation.NavController
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.movie.common.ConstantPreferences
+import com.mtv.app.movie.common.UiOwner
+import com.mtv.app.movie.common.updateUiDataListener
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.CheckRequest
 import com.mtv.app.movie.data.model.request.LogoutRequest
@@ -16,7 +19,11 @@ import com.mtv.app.movie.domain.movie.MoviesUpComingUseCase
 import com.mtv.app.movie.domain.user.CheckUseCase
 import com.mtv.app.movie.domain.user.LogoutUseCase
 import com.mtv.app.movie.feature.event.home.HomeDataListener
+import com.mtv.app.movie.feature.event.home.HomeEventListener
+import com.mtv.app.movie.feature.event.home.HomeNavigationListener
 import com.mtv.app.movie.feature.event.home.HomeStateListener
+import com.mtv.app.movie.nav.AppDestinations
+import com.mtv.app.movie.nav.navigateAndPopHome
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,32 +39,23 @@ class HomeViewModel @Inject constructor(
     private val getTopRatedUseCase: MoviesTopRatedUseCase,
     private val getUpComingUseCase: MoviesUpComingUseCase,
     securePrefs: SecurePrefs
-) : BaseViewModel() {
-
-    /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
-    private val _uiState = MutableStateFlow(HomeStateListener())
-    val uiState: StateFlow<HomeStateListener> = _uiState
+) : BaseViewModel(), UiOwner<HomeStateListener, HomeDataListener> {
 
     /** UI DATA : DATA PERSIST (Prefs) */
-    private val _uiData = MutableStateFlow(HomeDataListener())
-    val uiData: StateFlow<HomeDataListener> = _uiData
+    override val uiState = MutableStateFlow(HomeStateListener())
+    override val uiData = MutableStateFlow(HomeDataListener())
 
     init {
         val account = securePrefs.getObject(
             key = ConstantPreferences.USER_ACCOUNT,
             clazz = LoginResponse::class.java
         )
-        updateData { copy(loginResponse = account) }
-    }
-
-    /** GENERIC UPDATE DATA */
-    private fun updateData(block: HomeDataListener.() -> HomeDataListener) {
-        _uiData.update { it.block() }
+        updateUiDataListener(uiData) { copy(loginResponse = account) }
     }
 
     /** CHECK USER */
     fun doCheck(email: String) = launchFirebaseUseCase(
-        target = _uiState.valueFlowOf(
+        target = uiState.valueFlowOf(
             get = { it.checkState },
             set = { state -> copy(checkState = state) }
         ),
@@ -66,7 +64,7 @@ class HomeViewModel @Inject constructor(
 
     /** LOGOUT */
     fun doLogout(email: String) = launchFirebaseUseCase(
-        target = _uiState.valueFlowOf(
+        target = uiState.valueFlowOf(
             get = { it.logoutState },
             set = { state -> copy(logoutState = state) }
         ),
@@ -75,7 +73,7 @@ class HomeViewModel @Inject constructor(
 
     /** GET NOW PLAYING MOVIES */
     fun getNowPlaying() = launchUseCase(
-        target = _uiState.valueFlowOf(
+        target = uiState.valueFlowOf(
             get = { it.nowPlayingState },
             set = { state -> copy(nowPlayingState = state) }
         ),
@@ -84,7 +82,7 @@ class HomeViewModel @Inject constructor(
 
     /** GET POPULAR MOVIES */
     fun getPopular() = launchUseCase(
-        target = _uiState.valueFlowOf(
+        target = uiState.valueFlowOf(
             get = { it.popularState },
             set = { state -> copy(popularState = state) }
         ),
@@ -93,7 +91,7 @@ class HomeViewModel @Inject constructor(
 
     /** GET TOP RATED MOVIES */
     fun getTopRated() = launchUseCase(
-        target = _uiState.valueFlowOf(
+        target = uiState.valueFlowOf(
             get = { it.topRatedState },
             set = { state -> copy(topRatedState = state) }
         ),
@@ -102,7 +100,7 @@ class HomeViewModel @Inject constructor(
 
     /** GET UP COMING MOVIES */
     fun getUpComing() = launchUseCase(
-        target = _uiState.valueFlowOf(
+        target = uiState.valueFlowOf(
             get = { it.upComingState },
             set = { state -> copy(upComingState = state) }
         ),
