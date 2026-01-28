@@ -10,6 +10,7 @@ import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.feature.route.movie.MovieDetailRoute
 import com.mtv.app.movie.feature.route.HomeRoute
 import com.mtv.app.movie.feature.route.LoginRoute
+import com.mtv.app.movie.feature.route.ProfileRoute
 import com.mtv.app.movie.feature.route.RegisterRoute
 import com.mtv.app.movie.feature.route.ResetRoute
 import com.mtv.app.movie.feature.route.SplashRoute
@@ -50,7 +51,7 @@ fun NavGraphBuilder.homeGraph(navController: NavHostController) {
 //            SearchScreenRoute(navController)
         }
         composable(BottomNavItem.Profile.route) {
-//            ProfileScreenRoute(navController)
+            ProfileRoute(navController)
         }
     }
 }
