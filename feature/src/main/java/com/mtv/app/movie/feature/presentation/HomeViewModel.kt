@@ -1,3 +1,11 @@
+/*
+ * Project: App Movie Compose
+ * Author: Boys.mtv@gmail.com
+ * File: HomeViewModel.kt
+ *
+ * Last modified by Dedy Wijaya on 29/01/26 10.50
+ */
+
 package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
@@ -34,7 +42,7 @@ class HomeViewModel @Inject constructor(
     securePrefs: SecurePrefs
 ) : BaseViewModel(), UiOwner<HomeStateListener, HomeDataListener> {
 
-    /** UI DATA : DATA PERSIST (Prefs) */
+    /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
     override val uiState = MutableStateFlow(HomeStateListener())
 
     /** UI DATA : DATA PERSIST (Prefs) */
@@ -101,5 +109,13 @@ class HomeViewModel @Inject constructor(
         ),
         block = { getUpComingUseCase(Unit) }
     )
+
+    /** GET ALL MOVIES */
+    fun getMovies() {
+        getNowPlaying()
+        getPopular()
+        getTopRated()
+        getUpComing()
+    }
 
 }

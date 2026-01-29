@@ -1,3 +1,11 @@
+/*
+ * Project: App Movie Compose
+ * Author: Boys.mtv@gmail.com
+ * File: HomeRoute.kt
+ *
+ * Last modified by Dedy Wijaya on 29/01/26 10.50
+ */
+
 package com.mtv.app.movie.feature.route
 
 import androidx.compose.runtime.Composable
@@ -30,12 +38,7 @@ fun HomeRoute(nav: NavController) {
 private fun homeEvent(vm: HomeViewModel) = HomeEventListener(
     onCheck = vm::doCheck,
     onLogout = vm::doLogout,
-    onLoadMovies = {
-        vm.getNowPlaying()
-        vm.getPopular()
-        vm.getTopRated()
-        vm.getUpComing()
-    }
+    onLoadMovies = vm::getMovies
 )
 
 private fun homeNavigation(nav: NavController) = HomeNavigationListener(

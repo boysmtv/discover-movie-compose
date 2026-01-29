@@ -117,6 +117,7 @@ fun PreviewHomeScreen() {
                 name = "Dedy Wijaya",
                 email = "Dedy.wijaya@ikonsultan.com",
                 phone = "08158844424",
+                photoUrl = "https://i.pinimg.com/736x/41/66/b0/4166b08e8d32aff9e00f2bee5e2dc4dd.jpg",
                 createdAt = "21/12/26"
             )
         ),

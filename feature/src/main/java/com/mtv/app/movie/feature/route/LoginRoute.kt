@@ -1,25 +1,16 @@
 package com.mtv.app.movie.feature.route
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.home.HomeDataListener
-import com.mtv.app.movie.feature.event.home.HomeStateListener
 import com.mtv.app.movie.feature.event.login.LoginEventListener
 import com.mtv.app.movie.feature.event.login.LoginNavigationListener
 import com.mtv.app.movie.feature.event.login.LoginStateListener
-import com.mtv.app.movie.feature.event.splash.SplashEventListener
-import com.mtv.app.movie.feature.event.splash.SplashNavigationListener
-import com.mtv.app.movie.feature.presentation.HomeViewModel
 import com.mtv.app.movie.feature.presentation.LoginViewModel
-import com.mtv.app.movie.feature.presentation.SplashViewModel
 import com.mtv.app.movie.feature.ui.login.LoginScreen
 import com.mtv.app.movie.nav.AppDestinations
 import com.mtv.app.movie.nav.navigateAndPopLogin
-import com.mtv.app.movie.nav.navigateAndPopSplash
 
 @Composable
 fun LoginRoute(nav: NavController) {
