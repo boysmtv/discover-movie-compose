@@ -7,5 +7,6 @@ data class LoginResponse(
     val name: String,
     val email: String,
     val phone: String,
+    val photoUrl: String,
     val createdAt: String
 )

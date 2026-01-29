@@ -12,14 +12,14 @@ import com.mtv.app.movie.feature.presentation.ProfileViewModel
 import com.mtv.app.movie.feature.ui.profile.ProfileScreen
 
 @Composable
-fun ProfileRoute(navController: NavController) {
+fun ProfileRoute(nav: NavController) {
     BaseRoute<ProfileViewModel, ProfileStateListener, ProfileDataListener> { vm, base, uiState, uiData ->
         BaseScreen(baseUiState = base, onDismissError = vm::dismissError) {
             ProfileScreen(
                 uiState = uiState,
                 uiData = uiData,
                 uiEvent = profileEvent(vm),
-                uiNavigation = profileNavigation(navController)
+                uiNavigation = profileNavigation(nav)
             )
         }
     }

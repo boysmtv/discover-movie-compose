@@ -2,6 +2,7 @@ package com.mtv.app.movie.feature.ui.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -71,15 +72,15 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(48.dp))
 
         ProfileHeaderSection(
-            name = uiData.userDummy.name,
-            email = uiData.userDummy.email,
-            photoUrl = uiData.userDummy.photoUrl
+            name = uiData.userAccount?.name ?: uiData.userDummy.name,
+            email = uiData.userAccount?.email ?: uiData.userDummy.email,
+            photoUrl = uiData.userAccount?.photoUrl ?: uiData.userDummy.photoUrl
         )
 
-        Spacer(Modifier.height(48.dp))
+        Spacer(Modifier.height(108.dp))
 
         ProfileMenuCard(
             uiEvent = uiEvent,
@@ -151,9 +152,7 @@ fun ProfileMenuCard(
     uiNavigation: ProfileNavigationListener
 ) {
     Card(
-        modifier = Modifier
-            .align(Alignment.BottomCenter)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
