@@ -2,9 +2,12 @@ package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.device.DeviceInfoProvider
+import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.SplashRequest
 import com.mtv.app.movie.domain.user.SplashUseCase
+import com.mtv.app.movie.feature.event.home.HomeDataListener
+import com.mtv.app.movie.feature.event.home.HomeStateListener
 import com.mtv.app.movie.feature.event.splash.SplashStateListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,16 +18,18 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val splashUseCase: SplashUseCase,
     private val deviceInfoProvider: DeviceInfoProvider
-) : BaseViewModel() {
+) : BaseViewModel(), UiOwner<SplashStateListener, Unit>  {
 
     /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
-    private val _uiState = MutableStateFlow(SplashStateListener())
-    val uiState: StateFlow<SplashStateListener> = _uiState
+    override val uiState = MutableStateFlow(SplashStateListener())
+
+    /** UI DATA : DATA PERSIST (Prefs) */
+    override val uiData = MutableStateFlow(Unit)
 
     /** SPLASH */
     fun doSplash() {
         launchFirebaseUseCase(
-            target = _uiState.valueFlowOf(
+            target = uiState.valueFlowOf(
                 get = { it.splashState },
                 set = { state -> copy(splashState = state) }
             ),

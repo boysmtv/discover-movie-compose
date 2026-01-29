@@ -4,10 +4,13 @@ import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.core.provider.utils.device.InstallationIdProvider
 import com.mtv.app.movie.common.ConstantPreferences
+import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.LoginRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.LoginUseCase
+import com.mtv.app.movie.feature.event.home.HomeDataListener
+import com.mtv.app.movie.feature.event.home.HomeStateListener
 import com.mtv.app.movie.feature.event.login.LoginStateListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,16 +22,18 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase<LoginResponse>,
     private val installationIdProvider: InstallationIdProvider,
     private val securePrefs: SecurePrefs
-) : BaseViewModel() {
+) : BaseViewModel(), UiOwner<LoginStateListener, Unit> {
 
-    /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
-    private val _uiState = MutableStateFlow(LoginStateListener())
-    val uiState: StateFlow<LoginStateListener> = _uiState
+    /** UI DATA : DATA PERSIST (Prefs) */
+    override val uiState = MutableStateFlow(LoginStateListener())
+
+    /** UI DATA : DATA PERSIST (Prefs) */
+    override val uiData = MutableStateFlow(Unit)
 
     /** INIT */
     init {
         collectFieldSuccess(
-            parent = _uiState,
+            parent = uiState,
             selector = { it.loginState }
         ) { data ->
             securePrefs.putObject(ConstantPreferences.USER_ACCOUNT, data)
@@ -38,7 +43,7 @@ class LoginViewModel @Inject constructor(
     /** LOGIN */
     fun doLogin(username: String, password: String) {
         launchFirebaseUseCase(
-            target = _uiState.valueFlowOf(
+            target = uiState.valueFlowOf(
                 get = { it.loginState },
                 set = { state -> copy(loginState = state) }
             ),

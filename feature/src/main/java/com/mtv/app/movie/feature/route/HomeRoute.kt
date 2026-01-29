@@ -14,14 +14,14 @@ import com.mtv.app.movie.nav.AppDestinations
 import com.mtv.app.movie.nav.navigateAndPopHome
 
 @Composable
-fun HomeRoute(navController: NavController) {
+fun HomeRoute(nav: NavController) {
     BaseRoute<HomeViewModel, HomeStateListener, HomeDataListener> { vm, base, uiState, uiData ->
         BaseScreen(baseUiState = base, onDismissError = vm::dismissError) {
             HomeScreen(
                 uiState = uiState,
                 uiData = uiData,
                 uiEvent = homeEvent(vm),
-                uiNavigation = homeNavigation(navController)
+                uiNavigation = homeNavigation(nav)
             )
         }
     }
