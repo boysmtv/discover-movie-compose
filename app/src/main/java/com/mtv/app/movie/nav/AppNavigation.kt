@@ -19,7 +19,7 @@ fun AppNavigation() {
 
     val bottomRoutes = listOf(
         BottomNavItem.Home.route,
-        BottomNavItem.Play.route,
+        BottomNavItem.Like.route,
         BottomNavItem.Search.route,
         BottomNavItem.Profile.route
     )

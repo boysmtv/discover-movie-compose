@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.gson.reflect.TypeToken
 import com.mtv.app.core.provider.based.BaseUiState
 import com.mtv.app.core.provider.based.BaseViewModel
+import com.mtv.app.core.provider.utils.SecurePrefs
 import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +27,13 @@ fun <S, T> MutableStateFlow<S>.valueFlowOf(
                 parent.value = parent.value.set(v)
             }
     }
+}
+
+inline fun <reified T> SecurePrefs.getList(key: String): MutableList<T> {
+    return getObject(key, ArrayList::class.java)
+        ?.filterIsInstance<T>()
+        ?.toMutableList()
+        ?: mutableListOf()
 }
 
 /** UiStateOwner */

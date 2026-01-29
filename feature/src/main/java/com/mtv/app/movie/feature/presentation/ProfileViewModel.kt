@@ -17,8 +17,10 @@ class ProfileViewModel @Inject constructor(
     securePrefs: SecurePrefs
 ) : BaseViewModel(), UiOwner<ProfileStateListener, ProfileDataListener> {
 
-    /** UI DATA : DATA PERSIST (Prefs) */
+    /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
     override val uiState = MutableStateFlow(ProfileStateListener())
+
+    /** UI DATA : DATA PERSIST (Prefs) */
     override val uiData = MutableStateFlow(ProfileDataListener())
 
     init {

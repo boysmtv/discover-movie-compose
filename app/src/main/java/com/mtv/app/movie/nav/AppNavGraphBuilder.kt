@@ -9,12 +9,14 @@ import androidx.navigation.navArgument
 import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.feature.route.movie.MovieDetailRoute
 import com.mtv.app.movie.feature.route.HomeRoute
+import com.mtv.app.movie.feature.route.LikedRoute
 import com.mtv.app.movie.feature.route.LoginRoute
 import com.mtv.app.movie.feature.route.ProfileRoute
 import com.mtv.app.movie.feature.route.RegisterRoute
 import com.mtv.app.movie.feature.route.ResetRoute
 import com.mtv.app.movie.feature.route.SplashRoute
 import com.mtv.app.movie.feature.route.movie.PlayMovieRoute
+import com.mtv.app.movie.feature.route.SearchRoute
 
 fun NavGraphBuilder.splashGraph(navController: NavHostController) {
     composable(AppDestinations.SPLASH_GRAPH) {
@@ -36,22 +38,22 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
     }
 }
 
-fun NavGraphBuilder.homeGraph(navController: NavHostController) {
+fun NavGraphBuilder.homeGraph(nav: NavHostController) {
     navigation(
         startDestination = BottomNavItem.Home.route,
         route = AppDestinations.HOME_GRAPH
     ) {
         composable(BottomNavItem.Home.route) {
-            HomeRoute(navController)
-        }
-        composable(BottomNavItem.Play.route) {
-
+            HomeRoute(nav)
         }
         composable(BottomNavItem.Search.route) {
-//            SearchScreenRoute(navController)
+            SearchRoute(nav)
+        }
+        composable(BottomNavItem.Like.route) {
+            LikedRoute(nav)
         }
         composable(BottomNavItem.Profile.route) {
-            ProfileRoute(navController)
+            ProfileRoute(nav)
         }
     }
 }

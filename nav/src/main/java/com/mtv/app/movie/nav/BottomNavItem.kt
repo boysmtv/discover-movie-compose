@@ -9,8 +9,8 @@ sealed class BottomNavItem(
     val label: String
 ) {
     object Home : BottomNavItem("home", R.drawable.ic_avatar, "Home")
-    object Play : BottomNavItem("play", R.drawable.ic_avatar, "Play")
     object Search : BottomNavItem("search", R.drawable.ic_avatar, "Search")
+    object Like : BottomNavItem("like", R.drawable.ic_avatar, "Like")
     object Profile : BottomNavItem("profile", R.drawable.ic_avatar, "Profile")
 }
 

@@ -24,7 +24,7 @@ class LoginViewModel @Inject constructor(
     private val securePrefs: SecurePrefs
 ) : BaseViewModel(), UiOwner<LoginStateListener, Unit> {
 
-    /** UI DATA : DATA PERSIST (Prefs) */
+    /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
     override val uiState = MutableStateFlow(LoginStateListener())
 
     /** UI DATA : DATA PERSIST (Prefs) */
