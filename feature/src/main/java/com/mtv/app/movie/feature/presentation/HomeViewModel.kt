@@ -1,6 +1,5 @@
 package com.mtv.app.movie.feature.presentation
 
-import androidx.navigation.NavController
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.movie.common.ConstantPreferences
@@ -19,15 +18,9 @@ import com.mtv.app.movie.domain.movie.MoviesUpComingUseCase
 import com.mtv.app.movie.domain.user.CheckUseCase
 import com.mtv.app.movie.domain.user.LogoutUseCase
 import com.mtv.app.movie.feature.event.home.HomeDataListener
-import com.mtv.app.movie.feature.event.home.HomeEventListener
-import com.mtv.app.movie.feature.event.home.HomeNavigationListener
 import com.mtv.app.movie.feature.event.home.HomeStateListener
-import com.mtv.app.movie.nav.AppDestinations
-import com.mtv.app.movie.nav.navigateAndPopHome
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +36,8 @@ class HomeViewModel @Inject constructor(
 
     /** UI DATA : DATA PERSIST (Prefs) */
     override val uiState = MutableStateFlow(HomeStateListener())
+
+    /** UI DATA : DATA PERSIST (Prefs) */
     override val uiData = MutableStateFlow(HomeDataListener())
 
     init {
