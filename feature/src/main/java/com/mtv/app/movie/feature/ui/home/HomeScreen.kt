@@ -28,65 +28,10 @@ import com.mtv.app.movie.feature.event.home.HomeDataListener
 import com.mtv.app.movie.feature.event.home.HomeEventListener
 import com.mtv.app.movie.feature.event.home.HomeNavigationListener
 import com.mtv.app.movie.feature.event.home.HomeStateListener
+import com.mtv.app.movie.feature.utils.mockMoviesResponse
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
-
-val mockMoviesResponse = MoviesResponse(
-    page = 1,
-    totalPages = 55,
-    totalResults = 1099,
-    results = listOf(
-        MoviesItemResponse(
-            adult = false,
-            backdropPath = "/sK3z0Naed3H1Wuh7a21YRVMxYqt.jpg",
-            genreIds = listOf(9648, 53),
-            id = 1368166,
-            originalLanguage = "en",
-            originalTitle = "The Housemaid",
-            overview = "Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid...",
-            popularity = 167.0359,
-            posterPath = "/cWsBscZzwu5brg9YjNkGewRUvJX.jpg",
-            releaseDate = "2025-12-18",
-            title = "The Housemaid",
-            video = false,
-            voteAverage = 7.232,
-            voteCount = 321
-        ),
-        MoviesItemResponse(
-            adult = false,
-            backdropPath = "/mOeBBD49M72vCEXzgA1dS2MwGno.jpg",
-            genreIds = listOf(27, 53),
-            id = 1228246,
-            originalLanguage = "en",
-            originalTitle = "Five Nights at Freddy's 2",
-            overview = "One year since the supernatural nightmare at Freddy Fazbear's Pizza...",
-            popularity = 125.4234,
-            posterPath = "/udAxQEORq2I5wxI97N2TEqdhzBE.jpg",
-            releaseDate = "2025-12-03",
-            title = "Five Nights at Freddy's 2",
-            video = false,
-            voteAverage = 6.8,
-            voteCount = 571
-        ),
-        MoviesItemResponse(
-            adult = false,
-            backdropPath = "/tn95fumbkVAgXjOuw9CQOg0aYQz.jpg",
-            genreIds = listOf(28, 80, 53),
-            id = 1419406,
-            originalLanguage = "zh",
-            originalTitle = "捕风追影",
-            overview = "Macau Police brings the tracking expert police officer out of retirement...",
-            popularity = 103.6128,
-            posterPath = "/e0RU6KpdnrqFxDKlI3NOqN8nHL6.jpg",
-            releaseDate = "2025-08-16",
-            title = "The Shadow's Edge",
-            video = false,
-            voteAverage = 6.911,
-            voteCount = 241
-        )
-    )
-)
 
 @Preview(showBackground = true)
 @Composable

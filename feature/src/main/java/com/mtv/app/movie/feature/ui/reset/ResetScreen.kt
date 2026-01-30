@@ -43,6 +43,7 @@ import com.mtv.app.movie.feature.event.reset.ResetStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(showBackground = true)
 @Composable
@@ -66,7 +67,7 @@ fun ResetScreen(
     uiEvent: ResetEventListener,
     uiNavigation: ResetNavigationListener
 ) {
-    val email = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf(EMPTY_STRING) }
 
     LaunchedEffect(Unit) {
         email.value = Constant.TestData.EMAIL

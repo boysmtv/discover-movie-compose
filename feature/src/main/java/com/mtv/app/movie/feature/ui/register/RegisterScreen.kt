@@ -47,6 +47,7 @@ import com.mtv.app.movie.feature.event.register.RegisterStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(showBackground = true)
 @Composable
@@ -70,11 +71,11 @@ fun RegisterScreen(
     uiEvent: RegisterEventListener,
     uiNavigation: RegisterNavigationListener
 ) {
-    val name = remember { mutableStateOf("") }
-    val email = remember { mutableStateOf("") }
-    val phone = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val confirmPassword = remember { mutableStateOf("") }
+    val name = remember { mutableStateOf(EMPTY_STRING) }
+    val email = remember { mutableStateOf(EMPTY_STRING) }
+    val phone = remember { mutableStateOf(EMPTY_STRING) }
+    val password = remember { mutableStateOf(EMPTY_STRING) }
+    val confirmPassword = remember { mutableStateOf(EMPTY_STRING) }
 
     val passwordVisible = remember { mutableStateOf(false) }
     val confirmPasswordVisible = remember { mutableStateOf(false) }

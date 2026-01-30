@@ -18,23 +18,23 @@ import com.mtv.app.movie.feature.route.SplashRoute
 import com.mtv.app.movie.feature.route.movie.PlayMovieRoute
 import com.mtv.app.movie.feature.route.SearchRoute
 
-fun NavGraphBuilder.splashGraph(navController: NavHostController) {
+fun NavGraphBuilder.splashGraph(nav: NavHostController) {
     composable(AppDestinations.SPLASH_GRAPH) {
-        SplashRoute(navController)
+        SplashRoute(nav)
     }
 }
 
-fun NavGraphBuilder.authGraph(navController: NavHostController) {
+fun NavGraphBuilder.authGraph(nav: NavHostController) {
     composable(AppDestinations.LOGIN_GRAPH) {
-        LoginRoute(navController)
+        LoginRoute(nav)
     }
 
     composable(AppDestinations.REGISTER_GRAPH) {
-        RegisterRoute(navController)
+        RegisterRoute(nav)
     }
 
     composable(AppDestinations.RESET_GRAPH) {
-        ResetRoute(navController)
+        ResetRoute(nav)
     }
 }
 
@@ -58,7 +58,7 @@ fun NavGraphBuilder.homeGraph(nav: NavHostController) {
     }
 }
 
-fun NavGraphBuilder.detailMovieGraph(navController: NavHostController) {
+fun NavGraphBuilder.detailMovieGraph(nav: NavHostController) {
     composable(
         route = AppDestinations.MOVIE_DETAIL_ROUTE,
         arguments = listOf(
@@ -67,11 +67,11 @@ fun NavGraphBuilder.detailMovieGraph(navController: NavHostController) {
             }
         )
     ) {
-        MovieDetailRoute(navController = navController)
+        MovieDetailRoute(nav = nav)
     }
 }
 
-fun NavGraphBuilder.playMovieGraph(navController: NavHostController) {
+fun NavGraphBuilder.playMovieGraph(nav: NavHostController) {
     composable(
         route = AppDestinations.MOVIE_PLAY_ROUTE,
         arguments = listOf(
@@ -80,6 +80,6 @@ fun NavGraphBuilder.playMovieGraph(navController: NavHostController) {
             }
         )
     ) {
-        PlayMovieRoute(navController = navController)
+        PlayMovieRoute(nav = nav)
     }
 }

@@ -52,83 +52,12 @@ import com.mtv.app.movie.feature.event.detail.AddActionState
 import com.mtv.app.movie.feature.event.detail.DetailEventListener
 import com.mtv.app.movie.feature.event.detail.DetailNavigationListener
 import com.mtv.app.movie.feature.event.detail.DetailStateListener
+import com.mtv.app.movie.feature.utils.previewMovieDetail
+import com.mtv.app.movie.feature.utils.previewVideoResponse
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
-
-private val previewMovieDetail = MovieDetailResponse(
-    adult = false,
-    backdropPath = "/xDMIl84Qo5Tsu62c9DGWhmPI67A.jpg",
-    belongsToCollection = null,
-    budget = 100_000_000,
-    genres = listOf(
-        GenreItem(1, "Drama"),
-        GenreItem(2, "Action")
-    ),
-    homepage = "https://example.com",
-    id = 1,
-    imdbId = "tt1234567",
-    originalLanguage = "en",
-    originalTitle = "The Last of Us",
-    overview = "Twenty years after modern civilization has been destroyed...",
-    popularity = 999.9,
-    posterPath = "/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg",
-    productionCompanies = emptyList(),
-    productionCountries = emptyList(),
-    releaseDate = "2023-01-15",
-    revenue = 500_000_000,
-    runtime = 120,
-    spokenLanguages = emptyList(),
-    status = "Released",
-    tagline = "Hope survives.",
-    title = "The Last of Us",
-    video = false,
-    voteAverage = 8.9,
-    voteCount = 12345
-)
-
-val previewVideoResponse = MovieVideoResponse(
-    movieId = 12345,
-    results = listOf(
-        MovieVideoItem(
-            iso6391 = "en",
-            iso31661 = "US",
-            name = "Official Trailer 1",
-            key = "dummyKey1",
-            site = "YouTube",
-            size = 1080,
-            type = "Trailer",
-            official = true,
-            publishedAt = "2026-01-20T10:00:00Z",
-            id = "vid_1"
-        ),
-        MovieVideoItem(
-            iso6391 = "en",
-            iso31661 = "US",
-            name = "Teaser",
-            key = "dummyKey2",
-            site = "YouTube",
-            size = 720,
-            type = "Teaser",
-            official = true,
-            publishedAt = "2026-01-18T08:00:00Z",
-            id = "vid_2"
-        ),
-        MovieVideoItem(
-            iso6391 = "en",
-            iso31661 = "US",
-            name = "Behind the Scenes",
-            key = "dummyKey3",
-            site = "YouTube",
-            size = 480,
-            type = "Featurette",
-            official = true,
-            publishedAt = "2026-01-15T12:00:00Z",
-            id = "vid_3"
-        )
-    )
-)
 
 @Preview(
     showBackground = true,
@@ -140,7 +69,11 @@ val previewVideoResponse = MovieVideoResponse(
 fun SeriesDetailScreenPreview() {
     MaterialTheme {
         DetailMovieContent(
-            uiState = DetailStateListener(detailState = Resource.Success(previewMovieDetail)),
+            uiState = DetailStateListener(
+                detailState = Resource.Success(
+                    previewMovieDetail
+                )
+            ),
             uiNavigation = DetailNavigationListener({}, {}),
             uiEvent = DetailEventListener({}, {}, {}, {}, {}, {}, {}, {})
         )
@@ -176,10 +109,12 @@ fun HandleAddState(state: AddActionState, successMessage: String, onDismiss: () 
             state = ErrorDialogStateV1(title = "Success", message = successMessage, primaryButtonText = "OK"),
             onDismiss = onDismiss
         )
+
         is AddActionState.Error -> DialogCenterV1(
             state = ErrorDialogStateV1(title = "Error", message = state.message, primaryButtonText = "OK"),
             onDismiss = onDismiss
         )
+
         AddActionState.None -> {}
     }
 }
@@ -212,7 +147,11 @@ fun VideoHeader(
     uiNavigation: DetailNavigationListener,
     video: MovieVideoResponse
 ) {
-    Box(modifier = Modifier.fillMaxWidth().height(420.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(420.dp)
+    ) {
         AsyncImage(
             model = BuildConfig.TMDB_IMAGE_URL + posterPath,
             contentDescription = null,
@@ -220,13 +159,17 @@ fun VideoHeader(
             modifier = Modifier.fillMaxSize()
         )
         Box(
-            modifier = Modifier.fillMaxSize().background(
-                Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black))
-            )
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black))
+                )
         )
         IconButton(
             onClick = { uiNavigation.onNavigateToBack() },
-            modifier = Modifier.padding(16.dp).align(Alignment.TopStart)
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.TopStart)
         ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White) }
 
         Icon(
@@ -261,7 +204,11 @@ fun MovieInfoSection(movie: MovieDetailResponse) {
 @Composable
 fun PlayDownloadSection(onPlay: () -> Unit) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        Button(onClick = onPlay, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(containerColor = Color.White)) {
+        Button(
+            onClick = onPlay,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+        ) {
             Icon(Icons.Default.PlayArrow, null, tint = Color.Black)
             Spacer(modifier = Modifier.width(8.dp))
             Text("Play", color = Color.Black)
@@ -276,7 +223,11 @@ fun DescriptionSection(description: String) {
 
 @Composable
 fun ActionButtons(uiEvent: DetailEventListener, movie: MovieDetailResponse) {
-    Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp), horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
         ActionItem(Icons.Default.Add, "My List") { uiEvent.onAddToMyList(movie) }
         ActionItem(Icons.Default.ThumbUp, "Rate") { uiEvent.onAddToMyLike(movie) }
         ActionItem(Icons.Default.Share, "Share") { uiEvent.onShareMovie(movie) }

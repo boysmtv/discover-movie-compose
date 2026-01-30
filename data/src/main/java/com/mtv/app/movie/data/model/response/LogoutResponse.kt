@@ -8,9 +8,10 @@
 
 package com.mtv.app.movie.data.model.response
 
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class LogoutResponse(
-    val createdAt: String,
+    val createdAt: String = EMPTY_STRING
 )

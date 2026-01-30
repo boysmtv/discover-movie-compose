@@ -18,7 +18,7 @@ fun MovieDetailRoute(nav: NavController) {
             DetailMovieScreen(
                 uiState = uiState,
                 uiEvent = detailEvent(vm),
-                uiNavigation = homeNavigation(nav)
+                uiNavigation = detailNavigation(nav)
             )
         }
     }
@@ -35,7 +35,7 @@ private fun detailEvent(vm: MovieDetailViewModel) = DetailEventListener(
     onDismissAddMyLike = vm::onDismissAddMyLike,
 )
 
-private fun homeNavigation(nav: NavController) = DetailNavigationListener(
+private fun detailNavigation(nav: NavController) = DetailNavigationListener(
     onNavigateToBack = {
         nav.popBackStack()
     },

@@ -11,10 +11,9 @@ import com.mtv.app.movie.feature.ui.play.PlayMovieScreen
 
 @Composable
 fun PlayMovieRoute(
-    navController: NavController,
+    nav: NavController,
     viewModel: PlayViewModel = hiltViewModel(),
 ) {
-
     val baseUiState by viewModel.baseUiState.collectAsState()
 
     BaseScreen(
@@ -24,7 +23,7 @@ fun PlayMovieRoute(
         PlayMovieScreen(
             key = viewModel.getKey(),
             onBack = {
-                navController.popBackStack()
+                nav.popBackStack()
             }
         )
     }
