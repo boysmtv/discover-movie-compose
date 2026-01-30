@@ -6,4 +6,5 @@ data class LikedEventListener(
     val onLoadLikedMovies: (movie: MovieDetailResponse) -> Unit,
     val onDeletedMovie: (movieId: String) -> Unit,
     val onDeletedAllMovies: () -> Unit,
+    val onDismissDeleteMovie: () -> Unit
 )
