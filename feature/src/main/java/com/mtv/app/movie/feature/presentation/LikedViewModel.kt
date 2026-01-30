@@ -41,7 +41,7 @@ class LikedViewModel @Inject constructor(
 
     fun doDeleteLikedMovies() = runCatching {
         movieLocalManager.clearMovies(
-            ConstantPreferences.MOVIE_LIKED_LIST
+            MOVIE_SAVED_LIST
         )
     }.onSuccess {
         uiState.update {
@@ -55,6 +55,10 @@ class LikedViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    fun onDismissDeleteMovie() {
+        uiState.update { it.copy(movieDeletedState = AddActionState.None) }
     }
 
 }

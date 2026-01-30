@@ -44,11 +44,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.common.R
+import com.mtv.app.movie.feature.event.detail.AddActionState
 import com.mtv.app.movie.feature.event.liked.LikedDataListener
 import com.mtv.app.movie.feature.event.liked.LikedEventListener
 import com.mtv.app.movie.feature.event.liked.LikedNavigationListener
 import com.mtv.app.movie.feature.event.liked.LikedStateListener
 import com.mtv.app.movie.feature.utils.previewMovieDetail
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(
@@ -71,7 +74,7 @@ fun PreviewLikedScreen() {
                 previewMovieDetail,
             )
         ),
-        uiEvent = LikedEventListener({}, {}, {}),
+        uiEvent = LikedEventListener({}, {}, {}, {}),
         uiNavigation = LikedNavigationListener {},
     )
 }
@@ -83,6 +86,33 @@ fun LikedScreen(
     uiEvent: LikedEventListener,
     uiNavigation: LikedNavigationListener
 ) {
+
+    when (uiState.movieDeletedState) {
+        is AddActionState.Success -> {
+            DialogCenterV1(
+                state = ErrorDialogStateV1(
+                    title = "Success",
+                    message = "Successfully clear your favorite",
+                    primaryButtonText = "OK"
+                ),
+                onDismiss = { uiEvent.onDismissDeleteMovie() }
+            )
+        }
+
+        is AddActionState.Error -> {
+            DialogCenterV1(
+                state = ErrorDialogStateV1(
+                    title = "Error",
+                    message = "Error Message : ${uiState.movieDeletedState.message}",
+                    primaryButtonText = "OK"
+                ),
+                onDismiss = { uiEvent.onDismissDeleteMovie() }
+            )
+        }
+
+        else -> {}
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

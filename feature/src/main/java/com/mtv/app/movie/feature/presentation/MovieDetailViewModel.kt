@@ -107,7 +107,6 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-
     fun onShareMovie(movie: MovieDetailResponse) {
 
     }

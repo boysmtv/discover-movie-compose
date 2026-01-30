@@ -48,6 +48,6 @@ class MovieLocalManager @Inject constructor(
     }
 
     fun clearMovies(key: String) {
-        return securePrefs.putList(key, emptyList())
+        return securePrefs.remove(key)
     }
 }

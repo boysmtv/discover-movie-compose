@@ -41,10 +41,15 @@ val json = Json {
 inline fun <reified T> SecurePrefs.getList(key: String): MutableList<T> {
     val data = getString(key) ?: return mutableListOf()
 
-    return json.decodeFromString(
-        ListSerializer(serializer<T>()),
-        data
-    ).toMutableList()
+    return runCatching {
+        json.decodeFromString(
+            ListSerializer(serializer<T>()),
+            data
+        )
+    }.getOrElse {
+        remove(key)
+        mutableListOf()
+    }.toMutableList()
 }
 
 inline fun <reified T> SecurePrefs.putList(key: String, value: List<T>) {
