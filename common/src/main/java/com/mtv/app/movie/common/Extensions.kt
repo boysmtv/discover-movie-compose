@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.gson.reflect.TypeToken
 import com.mtv.app.core.provider.based.BaseUiState
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
@@ -12,6 +11,10 @@ import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
+
 
 /** HELPER MAPPING FLOW */
 @OptIn(ExperimentalForInheritanceCoroutinesApi::class)
@@ -29,12 +32,29 @@ fun <S, T> MutableStateFlow<S>.valueFlowOf(
     }
 }
 
-inline fun <reified T> SecurePrefs.getList(key: String): MutableList<T> {
-    return getObject(key, ArrayList::class.java)
-        ?.filterIsInstance<T>()
-        ?.toMutableList()
-        ?: mutableListOf()
+val json = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+    explicitNulls = false
 }
+
+inline fun <reified T> SecurePrefs.getList(key: String): MutableList<T> {
+    val data = getString(key) ?: return mutableListOf()
+
+    return json.decodeFromString(
+        ListSerializer(serializer<T>()),
+        data
+    ).toMutableList()
+}
+
+inline fun <reified T> SecurePrefs.putList(key: String, value: List<T>) {
+    val data = json.encodeToString(
+        ListSerializer(serializer<T>()),
+        value
+    )
+    putString(key, data)
+}
+
 
 /** UiStateOwner */
 interface UiStateOwner<UI_STATE> {

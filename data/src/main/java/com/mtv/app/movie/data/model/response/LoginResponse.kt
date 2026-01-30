@@ -1,12 +1,13 @@
 package com.mtv.app.movie.data.model.response
 
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginResponse(
-    val name: String,
-    val email: String,
-    val phone: String,
-    val photoUrl: String,
-    val createdAt: String
+    val name: String = EMPTY_STRING,
+    val email: String = EMPTY_STRING,
+    val phone: String = EMPTY_STRING,
+    val photoUrl: String = EMPTY_STRING,
+    val createdAt: String = EMPTY_STRING
 )

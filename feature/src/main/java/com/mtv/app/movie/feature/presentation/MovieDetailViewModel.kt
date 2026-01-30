@@ -8,6 +8,7 @@
 
 package com.mtv.app.movie.feature.presentation
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.movie.common.Constant
@@ -96,15 +97,16 @@ class MovieDetailViewModel @Inject constructor(
         uiState.update {
             it.copy(addMyLikeState = AddActionState.Success)
         }
-    }.onFailure {
+    }.onFailure { throwable ->
         uiState.update {
             it.copy(
                 addMyLikeState = AddActionState.Error(
-                    ErrorMessages.GENERIC_ERROR
+                    throwable.message ?: ErrorMessages.GENERIC_ERROR
                 )
             )
         }
     }
+
 
     fun onShareMovie(movie: MovieDetailResponse) {
 

@@ -1,9 +1,7 @@
 package com.mtv.app.movie.feature.event.liked
 
+import com.mtv.app.movie.data.model.movie.MovieDetailResponse
+
 data class LikedNavigationListener(
-    val onNavigateToHome: () -> Unit,
-    val onNavigateToSignUpByEmail: () -> Unit,
-    val onNavigateToSignUpByGoogle: () -> Unit,
-    val onNavigateToSignUpByFacebook: () -> Unit,
-    val onNavigateToForgotPassword: () -> Unit,
+    val onNavigateToMovieDetail: (movie: MovieDetailResponse) -> Unit,
 )

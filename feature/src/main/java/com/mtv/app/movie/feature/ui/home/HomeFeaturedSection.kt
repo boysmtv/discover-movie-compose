@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.common.MovieCategory
 import com.mtv.app.movie.data.model.movie.MoviesItemResponse
+import com.mtv.app.movie.feature.utils.mockMoviesResponse
 
 @Preview(showBackground = true)
 @Composable

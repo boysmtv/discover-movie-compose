@@ -43,6 +43,7 @@ import com.mtv.app.movie.feature.event.login.LoginEventListener
 import com.mtv.app.movie.feature.event.login.LoginNavigationListener
 import com.mtv.app.movie.feature.event.login.LoginStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(showBackground = true)
 @Composable
@@ -54,6 +55,7 @@ fun PreviewLoginScreen() {
                     name = "Dedy Wijaya",
                     email = "Dedy.wijaya@ikonsultan.com",
                     phone = "08158844424",
+                    photoUrl = "https://i.pinimg.com/736x/41/66/b0/4166b08e8d32aff9e00f2bee5e2dc4dd.jpg",
                     createdAt = "21/12/26"
                 )
             ),
@@ -77,8 +79,8 @@ fun LoginScreen(
     uiEvent: LoginEventListener,
     uiNavigation: LoginNavigationListener
 ) {
-    val username = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
+    val username = remember { mutableStateOf(EMPTY_STRING) }
+    val password = remember { mutableStateOf(EMPTY_STRING) }
     val passwordVisible = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
