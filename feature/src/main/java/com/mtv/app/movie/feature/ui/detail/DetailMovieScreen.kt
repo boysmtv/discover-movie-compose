@@ -43,12 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mtv.app.movie.common.BuildConfig
+import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.common.formatDateAutoLegacy
-import com.mtv.app.movie.data.model.movie.GenreItem
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
-import com.mtv.app.movie.data.model.movie.MovieVideoItem
 import com.mtv.app.movie.data.model.movie.MovieVideoResponse
-import com.mtv.app.movie.feature.event.detail.AddActionState
 import com.mtv.app.movie.feature.event.detail.DetailEventListener
 import com.mtv.app.movie.feature.event.detail.DetailNavigationListener
 import com.mtv.app.movie.feature.event.detail.DetailStateListener
@@ -56,7 +54,8 @@ import com.mtv.app.movie.feature.utils.previewMovieDetail
 import com.mtv.app.movie.feature.utils.previewVideoResponse
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
-import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(
@@ -103,19 +102,29 @@ fun DetailMovieScreen(
 }
 
 @Composable
-fun HandleAddState(state: AddActionState, successMessage: String, onDismiss: () -> Unit) {
+fun HandleAddState(state: StateMovieResult, successMessage: String, onDismiss: () -> Unit) {
     when (state) {
-        is AddActionState.Success -> DialogCenterV1(
-            state = ErrorDialogStateV1(title = "Success", message = successMessage, primaryButtonText = "OK"),
+        is StateMovieResult.Success -> DialogCenterV1(
+            state = DialogStateV1(
+                type = DialogType.SUCCESS,
+                title = "Success",
+                message = successMessage,
+                primaryButtonText = "OK"
+            ),
             onDismiss = onDismiss
         )
 
-        is AddActionState.Error -> DialogCenterV1(
-            state = ErrorDialogStateV1(title = "Error", message = state.message, primaryButtonText = "OK"),
+        is StateMovieResult.Error -> DialogCenterV1(
+            state = DialogStateV1(
+                type = DialogType.ERROR,
+                title = "Error",
+                message = state.message,
+                primaryButtonText = "OK"
+            ),
             onDismiss = onDismiss
         )
 
-        AddActionState.None -> {}
+        StateMovieResult.None -> {}
     }
 }
 

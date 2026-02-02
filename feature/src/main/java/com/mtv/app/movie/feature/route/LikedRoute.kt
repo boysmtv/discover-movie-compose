@@ -36,13 +36,13 @@ fun LikedRoute(nav: NavController) {
 
 private fun likedEvent(vm: LikedViewModel) = LikedEventListener(
     onLoadLikedMovies = { },
-    onDeletedMovie = { },
-    onDeletedAllMovies = { vm.doDeleteLikedMovies() },
-    onDismissDeleteMovie = { vm.onDismissDeleteMovie() }
+    onDeletedMovie = vm::doDeleteLikedMoviesById,
+    onDeletedAllMovies = vm::doDeleteLikedMovies,
+    onDismissDeleteMovie = vm::onDismissDeleteMovie
 )
 
 private fun likedNavigation(nav: NavController) = LikedNavigationListener(
-    onNavigateToMovieDetail = { movie ->
-        nav.navigate(AppDestinations.navigateToDetailMovies(movie.id))
+    onNavigateToMovieDetail = { movieId ->
+        nav.navigate(AppDestinations.navigateToDetailMovies(movieId))
     }
 )

@@ -46,7 +46,8 @@ import com.mtv.app.movie.feature.event.register.RegisterNavigationListener
 import com.mtv.app.movie.feature.event.register.RegisterStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
-import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(showBackground = true)
@@ -90,7 +91,8 @@ fun RegisterScreen(
 
     if (uiState.registerState is ResourceFirebase.Success) {
         DialogCenterV1(
-            state = ErrorDialogStateV1(
+            state = DialogStateV1(
+                type = DialogType.SUCCESS,
                 title = "Success",
                 message = "Success Register",
                 primaryButtonText = "OK"

@@ -8,14 +8,15 @@
 
 package com.mtv.app.movie.feature.ui.liked
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -31,16 +32,16 @@ import com.mtv.app.movie.feature.utils.mockMovieDetailResponseList
 fun PreviewHomeFeaturedSection() {
     LikedFeaturedSection(
         movies = mockMovieDetailResponseList,
-        onClickedMovies = {
-
-        }
+        onClickDetail = { },
+        onClickDeleted = { }
     )
 }
 
 @Composable
 fun LikedFeaturedSection(
     movies: List<MovieDetailResponse>,
-    onClickedMovies: (MovieDetailResponse) -> Unit,
+    onClickDetail: (Int) -> Unit,
+    onClickDeleted: (Int) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
@@ -51,11 +52,21 @@ fun LikedFeaturedSection(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(bottom = 20.dp)
     ) {
-        items(movies) { movie ->
-            LikedFeatureMovieCard(
-                movie = movie,
-                onClick = { onClickedMovies(movie) }
-            )
+        items(
+            items = movies,
+            key = { it.id }
+        ) { movie ->
+            AnimatedVisibility(
+                visible = true,
+                exit = fadeOut() + scaleOut(),
+                enter = fadeIn() + scaleIn()
+            ) {
+                LikedFeatureMovieCard(
+                    movie = movie,
+                    onClickDetail = { onClickDetail(movie.id) },
+                    onClickDeleted = { onClickDeleted(movie.id) }
+                )
+            }
         }
     }
 }

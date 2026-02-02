@@ -8,20 +8,20 @@
 
 package com.mtv.app.movie.feature.presentation
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import com.mtv.app.core.provider.based.BaseViewModel
+import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.common.Constant
-import com.mtv.app.movie.common.ConstantPreferences
+import com.mtv.app.movie.common.ConstantPreferences.MOVIE_LIKED_LIST
+import com.mtv.app.movie.common.ConstantPreferences.MOVIE_SAVED_LIST
 import com.mtv.app.movie.common.UiOwner
+import com.mtv.app.movie.common.runStateWithActionMovieLocalManager
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
 import com.mtv.app.movie.domain.movie.MoviesDetailUseCase
 import com.mtv.app.movie.domain.movie.MoviesVideosUseCase
-import com.mtv.app.movie.feature.event.detail.AddActionState
 import com.mtv.app.movie.feature.event.detail.DetailStateListener
 import com.mtv.app.movie.feature.utils.MovieLocalManager
-import com.mtv.based.core.network.utils.ErrorMessages
 import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,54 +69,34 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    fun onAddToMyList(movie: MovieDetailResponse) = runCatching {
-        movieLocalManager.addMovie(
-            ConstantPreferences.MOVIE_SAVED_LIST,
-            movie
-        )
-    }.onSuccess {
-        uiState.update {
-            it.copy(addMyListState = AddActionState.Success)
+    fun onAddToMyList(movie: MovieDetailResponse) = uiState.runStateWithActionMovieLocalManager(
+        block = {
+            movieLocalManager.addMovie(MOVIE_SAVED_LIST, movie)
+        },
+        reducer = { state, actionState ->
+            state.copy(addMyListState = actionState)
         }
-    }.onFailure {
-        uiState.update {
-            it.copy(
-                addMyListState = AddActionState.Error(
-                    ErrorMessages.GENERIC_ERROR
-                )
-            )
-        }
-    }
+    )
 
-    fun onAddToMyLike(movie: MovieDetailResponse) = runCatching {
-        movieLocalManager.addMovie(
-            ConstantPreferences.MOVIE_LIKED_LIST,
-            movie
-        )
-    }.onSuccess {
-        uiState.update {
-            it.copy(addMyLikeState = AddActionState.Success)
+    fun onAddToMyLike(movie: MovieDetailResponse) = uiState.runStateWithActionMovieLocalManager(
+        block = {
+            movieLocalManager.addMovie(MOVIE_LIKED_LIST, movie)
+        },
+        reducer = { state, actionState ->
+            state.copy(addMyLikeState = actionState)
         }
-    }.onFailure { throwable ->
-        uiState.update {
-            it.copy(
-                addMyLikeState = AddActionState.Error(
-                    throwable.message ?: ErrorMessages.GENERIC_ERROR
-                )
-            )
-        }
-    }
+    )
 
     fun onShareMovie(movie: MovieDetailResponse) {
 
     }
 
     fun onDismissAddMyList() {
-        uiState.update { it.copy(addMyListState = AddActionState.None) }
+        uiState.update { it.copy(addMyListState = StateMovieResult.None) }
     }
 
     fun onDismissAddMyLike() {
-        uiState.update { it.copy(addMyLikeState = AddActionState.None) }
+        uiState.update { it.copy(addMyLikeState = StateMovieResult.None) }
     }
 
 }
