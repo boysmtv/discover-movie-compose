@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mtv.app.movie.common.BuildConfig
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.common.formatDateAutoLegacy
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
@@ -57,6 +59,8 @@ import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.ERROR_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 
 @Preview(
     showBackground = true,
@@ -107,9 +111,9 @@ fun HandleAddState(state: StateMovieResult, successMessage: String, onDismiss: (
         is StateMovieResult.Success -> DialogCenterV1(
             state = DialogStateV1(
                 type = DialogType.SUCCESS,
-                title = "Success",
+                title = stringResource(R.string.success),
                 message = successMessage,
-                primaryButtonText = "OK"
+                primaryButtonText = OK_STRING
             ),
             onDismiss = onDismiss
         )
@@ -117,9 +121,9 @@ fun HandleAddState(state: StateMovieResult, successMessage: String, onDismiss: (
         is StateMovieResult.Error -> DialogCenterV1(
             state = DialogStateV1(
                 type = DialogType.ERROR,
-                title = "Error",
+                title = ERROR_STRING,
                 message = state.message,
-                primaryButtonText = "OK"
+                primaryButtonText = OK_STRING
             ),
             onDismiss = onDismiss
         )

@@ -36,15 +36,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.feature.event.profile.ProfileDataListener
 import com.mtv.app.movie.feature.event.profile.ProfileEventListener
 import com.mtv.app.movie.feature.event.profile.ProfileNavigationListener
 import com.mtv.app.movie.feature.event.profile.ProfileStateListener
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(showBackground = true)
 @Composable
@@ -98,7 +101,7 @@ fun ProfileHeaderSection(
     Box(contentAlignment = Alignment.BottomEnd) {
         AsyncImage(
             model = photoUrl.ifBlank { "https://via.placeholder.com/150" },
-            contentDescription = "Profile Image",
+            contentDescription = EMPTY_STRING,
             modifier = Modifier
                 .size(120.dp)
                 .clip(CircleShape),
@@ -113,7 +116,7 @@ fun ProfileHeaderSection(
         ) {
             Icon(
                 imageVector = Icons.Default.Edit,
-                contentDescription = "Edit",
+                contentDescription = EMPTY_STRING,
                 tint = Color.White,
                 modifier = Modifier.padding(8.dp)
             )
@@ -159,35 +162,35 @@ fun ProfileMenuCard(
     ) {
         Column {
             MenuRow(
-                title = "Edit Profile",
+                title = stringResource(R.string.edit_profile),
                 icon = Icons.Outlined.Person,
                 onClick = uiEvent.onEditProfile
             )
             HorizontalDivider()
 
             MenuRow(
-                title = "Add Pin",
+                title = stringResource(R.string.add_pin),
                 icon = Icons.Outlined.Lock,
                 onClick = uiEvent.onAddPin
             )
             HorizontalDivider()
 
             MenuRow(
-                title = "Settings",
+                title = stringResource(R.string.settings),
                 icon = Icons.Outlined.Settings,
                 onClick = uiNavigation.onNavigateToSettings
             )
             HorizontalDivider()
 
             MenuRow(
-                title = "Invite a friend",
+                title = stringResource(R.string.invite_friend),
                 icon = Icons.Outlined.Share,
                 onClick = uiEvent.onInviteFriend
             )
             HorizontalDivider()
 
             MenuRow(
-                title = "Logout",
+                title = stringResource(R.string.logout),
                 icon = Icons.AutoMirrored.Outlined.ExitToApp,
                 onClick = uiEvent.onLogout
             )

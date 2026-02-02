@@ -27,10 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mtv.app.movie.common.R
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 
 @Preview(
@@ -59,7 +62,7 @@ fun LikedHeader(
     ) {
 
         Text(
-            text = "Your favorite",
+            text = stringResource(R.string.your_favorite),
             color = Color.White.copy(0.7f),
             fontSize = 20.sp
         )
@@ -74,7 +77,7 @@ fun LikedHeader(
         ) {
             Icon(
                 imageVector = Icons.Default.DeleteSweep,
-                contentDescription = "Notification",
+                contentDescription = EMPTY_STRING,
                 tint = Color.White.copy(0.8f),
                 modifier = Modifier.size(20.dp)
             )
