@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -38,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.common.Constant
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.feature.event.login.LoginEventListener
 import com.mtv.app.movie.feature.event.login.LoginNavigationListener
@@ -172,7 +174,9 @@ fun LoginScreen(
 
                     Icon(
                         imageVector = icon,
-                        contentDescription = if (passwordVisible.value) "Hide Password" else "Show Password",
+                        contentDescription = if (passwordVisible.value) stringResource(R.string.hide_password) else stringResource(
+                            R.string.show_password
+                        ),
                         modifier = Modifier
                             .clickable {
                                 passwordVisible.value = !passwordVisible.value

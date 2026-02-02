@@ -34,6 +34,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.mtv.app.movie.common.BuildConfig
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
 import com.mtv.app.movie.feature.utils.mockMovieDetailResponseList
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(showBackground = true)
 @Composable
@@ -84,7 +85,7 @@ fun LikedFeatureMovieCard(
         ) {
             Icon(
                 imageVector = Icons.Default.DeleteOutline,
-                contentDescription = "Delete Movie",
+                contentDescription = EMPTY_STRING,
                 tint = Color.White,
                 modifier = Modifier.size(18.dp)
             )

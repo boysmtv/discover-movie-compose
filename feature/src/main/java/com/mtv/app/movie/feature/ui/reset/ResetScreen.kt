@@ -28,11 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.common.Constant
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.feature.event.reset.ResetEventListener
 import com.mtv.app.movie.feature.event.reset.ResetNavigationListener
 import com.mtv.app.movie.feature.event.reset.ResetStateListener
@@ -41,6 +43,8 @@ import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Preview(showBackground = true)
 @Composable
@@ -74,9 +78,9 @@ fun ResetScreen(
         DialogCenterV1(
             state = DialogStateV1(
                 type = DialogType.SUCCESS,
-                title = "Warning",
-                message = "Reset Password Successfully",
-                primaryButtonText = "OK"
+                title = WARNING_STRING,
+                message = stringResource(R.string.reset_password_success),
+                primaryButtonText = OK_STRING
             ),
             onDismiss = {
                 uiNavigation.onNavigateToLogin()
@@ -110,7 +114,7 @@ fun ResetScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "Enter your email and we’ll send you a reset link.",
+                text = stringResource(R.string.enter_your_email_reset_password),
                 color = Color.White.copy(alpha = 0.8f),
                 fontSize = 14.sp
             )
@@ -156,13 +160,13 @@ fun ResetScreen(
                     )
                 },
             ) {
-                Text("Send Reset Link", fontSize = 16.sp)
+                Text(stringResource(R.string.send_reset_link), fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "or reset via",
+                text = stringResource(R.string.or_reset_via),
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 12.sp
             )
@@ -204,7 +208,7 @@ fun ResetScreen(
 
             Row {
                 Text(
-                    text = "Back to ",
+                    text = stringResource(R.string.back_to),
                     color = Color.White,
                     fontSize = 12.sp
                 )

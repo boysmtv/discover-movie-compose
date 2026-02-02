@@ -21,10 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.feature.event.splash.SplashEventListener
 import com.mtv.app.movie.feature.event.splash.SplashNavigationListener
 import com.mtv.app.movie.feature.event.splash.SplashStateListener
@@ -77,7 +79,7 @@ fun SplashScreen(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(
-                "My App",
+                stringResource(R.string.movie_app),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold
                 ),

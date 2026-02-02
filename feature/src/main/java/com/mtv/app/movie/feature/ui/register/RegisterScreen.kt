@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -41,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.common.Constant
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.feature.event.register.RegisterEventListener
 import com.mtv.app.movie.feature.event.register.RegisterNavigationListener
 import com.mtv.app.movie.feature.event.register.RegisterStateListener
@@ -49,6 +51,7 @@ import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 
 @Preview(showBackground = true)
 @Composable
@@ -93,9 +96,9 @@ fun RegisterScreen(
         DialogCenterV1(
             state = DialogStateV1(
                 type = DialogType.SUCCESS,
-                title = "Success",
-                message = "Success Register",
-                primaryButtonText = "OK"
+                title = stringResource(R.string.success),
+                message = stringResource(R.string.success_register),
+                primaryButtonText = OK_STRING
             ),
             onDismiss = {
                 uiNavigation.onNavigateToLogin()
@@ -224,7 +227,7 @@ fun RegisterScreen(
 
                     Icon(
                         imageVector = icon,
-                        contentDescription = if (passwordVisible.value) "Hide Password" else "Show Password",
+                        contentDescription = if (passwordVisible.value) Constant.Description.HIDE_PASSWORD else Constant.Description.SHOW_PASSWORD,
                         modifier = Modifier
                             .clickable {
                                 passwordVisible.value = !passwordVisible.value

@@ -22,10 +22,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mtv.app.movie.common.DeleteTarget
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.feature.event.liked.LikedDataListener
 import com.mtv.app.movie.feature.event.liked.LikedEventListener
@@ -35,6 +37,7 @@ import com.mtv.app.movie.feature.utils.previewMovieDetail
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Preview(
@@ -77,9 +80,9 @@ fun LikedScreen(
         DialogCenterV1(
             state = DialogStateV1(
                 type = DialogType.SUCCESS,
-                title = "Success",
-                message = "Successfully clear your favorite",
-                primaryButtonText = "OK"
+                title = stringResource(R.string.success),
+                message = stringResource(R.string.success_clear_fav),
+                primaryButtonText = OK_STRING
             ),
             onDismiss = { uiEvent.onDismissDeleteMovie() }
         )
@@ -91,7 +94,7 @@ fun LikedScreen(
                 type = DialogType.ERROR,
                 title = WARNING_STRING,
                 message = "Error Message : ${it.message}",
-                primaryButtonText = "OK"
+                primaryButtonText = OK_STRING
             ),
             onDismiss = { uiEvent.onDismissDeleteMovie() }
         )

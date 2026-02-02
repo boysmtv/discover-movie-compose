@@ -16,12 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.mtv.app.movie.common.BuildConfig
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.data.model.movie.MoviesItemResponse
 import com.mtv.app.movie.feature.utils.mockMoviesResponse
 
@@ -64,7 +66,7 @@ fun HomeFeaturedMovieCard(
                 .padding(horizontal = 6.dp, vertical = 2.dp)
         ) {
             Text(
-                text = "Recently added",
+                text = stringResource(R.string.recently_added),
                 color = Color.White,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold
