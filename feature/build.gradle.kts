@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.firebase.common.ktx)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.compose.animation)
     debugImplementation(libs.androidx.ui.tooling)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)

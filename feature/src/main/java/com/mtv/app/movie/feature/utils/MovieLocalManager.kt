@@ -1,12 +1,10 @@
 package com.mtv.app.movie.feature.utils
 
-import com.google.protobuf.LazyStringArrayList.emptyList
 import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.movie.common.getList
 import com.mtv.app.movie.common.putList
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
 import javax.inject.Inject
-import kotlin.collections.emptyList
 
 class MovieLocalManager @Inject constructor(
     private val securePrefs: SecurePrefs

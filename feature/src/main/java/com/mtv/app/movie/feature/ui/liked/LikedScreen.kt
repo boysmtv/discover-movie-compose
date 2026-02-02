@@ -9,50 +9,33 @@
 package com.mtv.app.movie.feature.ui.liked
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DeleteSweep
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.mtv.app.movie.common.R
-import com.mtv.app.movie.feature.event.detail.AddActionState
+import com.mtv.app.movie.common.DeleteTarget
+import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.feature.event.liked.LikedDataListener
 import com.mtv.app.movie.feature.event.liked.LikedEventListener
 import com.mtv.app.movie.feature.event.liked.LikedNavigationListener
 import com.mtv.app.movie.feature.event.liked.LikedStateListener
 import com.mtv.app.movie.feature.utils.previewMovieDetail
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
-import com.mtv.based.uicomponent.core.component.dialog.dialogv1.ErrorDialogStateV1
-import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Preview(
     showBackground = true,
@@ -87,30 +70,31 @@ fun LikedScreen(
     uiNavigation: LikedNavigationListener
 ) {
 
-    when (uiState.movieDeletedState) {
-        is AddActionState.Success -> {
-            DialogCenterV1(
-                state = ErrorDialogStateV1(
-                    title = "Success",
-                    message = "Successfully clear your favorite",
-                    primaryButtonText = "OK"
-                ),
-                onDismiss = { uiEvent.onDismissDeleteMovie() }
-            )
-        }
+    if (
+        uiState.stateMovieResult is StateMovieResult.Success &&
+        uiState.deleteSource == DeleteTarget.ALL
+    ) {
+        DialogCenterV1(
+            state = DialogStateV1(
+                type = DialogType.SUCCESS,
+                title = "Success",
+                message = "Successfully clear your favorite",
+                primaryButtonText = "OK"
+            ),
+            onDismiss = { uiEvent.onDismissDeleteMovie() }
+        )
+    }
 
-        is AddActionState.Error -> {
-            DialogCenterV1(
-                state = ErrorDialogStateV1(
-                    title = "Error",
-                    message = "Error Message : ${uiState.movieDeletedState.message}",
-                    primaryButtonText = "OK"
-                ),
-                onDismiss = { uiEvent.onDismissDeleteMovie() }
-            )
-        }
-
-        else -> {}
+    (uiState.stateMovieResult as? StateMovieResult.Error)?.let {
+        DialogCenterV1(
+            state = DialogStateV1(
+                type = DialogType.ERROR,
+                title = WARNING_STRING,
+                message = "Error Message : ${it.message}",
+                primaryButtonText = "OK"
+            ),
+            onDismiss = { uiEvent.onDismissDeleteMovie() }
+        )
     }
 
     Column(
@@ -124,60 +108,17 @@ fun LikedScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        if (uiData.movieLikedList.isNotEmpty()) {
+        AnimatedVisibility(
+            visible = uiData.movieLikedList.isNotEmpty(),
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
             LikedFeaturedSection(
                 movies = uiData.movieLikedList,
-                onClickedMovies = uiNavigation.onNavigateToMovieDetail
+                onClickDetail = uiNavigation.onNavigateToMovieDetail,
+                onClickDeleted = uiEvent.onDeletedMovie
             )
         }
     }
-}
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_6
-)
-@Composable
-fun PreviewLikedHeader() {
-    LikedHeader(
-        onDeletedAllMovies = { }
-    )
-}
-
-@Composable
-fun LikedHeader(
-    onDeletedAllMovies: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-
-        Text(
-            text = "Favorite",
-            color = Color.White.copy(0.7f),
-            fontSize = 20.sp
-        )
-
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color.White.copy(alpha = 0.1f))
-                .clickable { onDeletedAllMovies() },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.DeleteSweep,
-                contentDescription = "Notification",
-                tint = Color.White.copy(0.8f),
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
 }

@@ -30,6 +30,7 @@ uiTooling = "1.10.1"
 ksp = "2.0.21-1.0.25"
 firebaseAuthInterop = "20.0.0"
 firebaseAuthKtx = "24.0.1"
+animation = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -90,6 +91,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 firebase-auth-interop = { group = "com.google.firebase", name = "firebase-auth-interop", version.ref = "firebaseAuthInterop" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

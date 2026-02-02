@@ -9,15 +9,15 @@
 package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
-import com.mtv.app.movie.common.ConstantPreferences
+import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.common.ConstantPreferences.MOVIE_SAVED_LIST
+import com.mtv.app.movie.common.DeleteTarget
 import com.mtv.app.movie.common.UiOwner
+import com.mtv.app.movie.common.runStateWithActionMovieLocalManager
 import com.mtv.app.movie.common.updateUiDataListener
-import com.mtv.app.movie.feature.event.detail.AddActionState
 import com.mtv.app.movie.feature.event.liked.LikedDataListener
 import com.mtv.app.movie.feature.event.liked.LikedStateListener
 import com.mtv.app.movie.feature.utils.MovieLocalManager
-import com.mtv.based.core.network.utils.ErrorMessages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -39,26 +39,52 @@ class LikedViewModel @Inject constructor(
         updateUiDataListener(uiData) { copy(movieLikedList = movieList) }
     }
 
-    fun doDeleteLikedMovies() = runCatching {
-        movieLocalManager.clearMovies(
-            MOVIE_SAVED_LIST
-        )
-    }.onSuccess {
-        uiState.update {
-            it.copy(movieDeletedState = AddActionState.Success)
-        }
-    }.onFailure { throwable ->
-        uiState.update {
-            it.copy(
-                movieDeletedState = AddActionState.Error(
-                    throwable.message ?: ErrorMessages.GENERIC_ERROR
-                )
+    fun doDeleteLikedMovies() = uiState.runStateWithActionMovieLocalManager(
+        block = {
+            movieLocalManager.clearMovies(MOVIE_SAVED_LIST)
+        },
+        reducer = { state, actionState ->
+            state.copy(
+                stateMovieResult = actionState,
+                deleteSource = DeleteTarget.ALL
             )
+        },
+        onSuccess = {
+            uiData.update {
+                it.copy(movieLikedList = emptyList())
+            }
         }
-    }
+    )
+
+    fun doDeleteLikedMoviesById(movieId: Int) = uiState.runStateWithActionMovieLocalManager(
+        block = {
+            movieLocalManager.removeMovie(MOVIE_SAVED_LIST, movieId)
+        },
+        reducer = { state, actionState ->
+            state.copy(
+                stateMovieResult = actionState,
+                deleteSource = DeleteTarget.SINGLE
+            )
+        },
+        onSuccess = {
+            uiData.update { state ->
+                state.copy(
+                    movieLikedList = state.movieLikedList.filterNot {
+                        it.id == movieId
+                    }
+                )
+            }
+        }
+    )
+
 
     fun onDismissDeleteMovie() {
-        uiState.update { it.copy(movieDeletedState = AddActionState.None) }
+        uiState.update {
+            it.copy(
+                stateMovieResult = StateMovieResult.None,
+                deleteSource = null
+            )
+        }
     }
 
 }

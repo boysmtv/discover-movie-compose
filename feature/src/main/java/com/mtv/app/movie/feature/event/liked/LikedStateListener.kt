@@ -1,12 +1,17 @@
+/*
+ * Project: App Movie Compose
+ * Author: Boys.mtv@gmail.com
+ * File: LikedStateListener.kt
+ *
+ * Last modified by Dedy Wijaya on 02/02/26 09.43
+ */
+
 package com.mtv.app.movie.feature.event.liked
 
-import com.mtv.app.movie.data.model.movie.MoviesResponse
-import com.mtv.app.movie.data.model.response.LoginResponse
-import com.mtv.app.movie.feature.event.detail.AddActionState
-import com.mtv.based.core.network.utils.Resource
-import com.mtv.based.core.network.utils.ResourceFirebase
+import com.mtv.app.movie.common.DeleteTarget
+import com.mtv.app.movie.common.StateMovieResult
 
 data class LikedStateListener(
-    val likedMovieState: Resource<MoviesResponse> = Resource.Loading,
-    val movieDeletedState: AddActionState = AddActionState.None,
+    val stateMovieResult: StateMovieResult = StateMovieResult.None,
+    val deleteSource: DeleteTarget? = null
 )

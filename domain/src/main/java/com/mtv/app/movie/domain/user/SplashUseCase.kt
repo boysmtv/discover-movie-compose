@@ -35,6 +35,7 @@ class SplashUseCase @Inject constructor(
         return observeDevice(deviceId, param)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeDevice(
         deviceId: String,
         param: SplashRequest
@@ -58,6 +59,7 @@ class SplashUseCase @Inject constructor(
             }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun handleExistingDevice(
         data: Map<String, Any>,
         param: SplashRequest
@@ -97,6 +99,7 @@ class SplashUseCase @Inject constructor(
             }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun handleNewDevice(
         param: SplashRequest
     ): Flow<ResourceFirebase<String>> {
