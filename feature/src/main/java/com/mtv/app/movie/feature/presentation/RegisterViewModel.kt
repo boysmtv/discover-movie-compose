@@ -30,7 +30,7 @@ class RegisterViewModel @Inject constructor(
     override val uiData = MutableStateFlow(Unit)
 
     init {
-        collectFieldSuccess(
+        collectFieldSuccessFirebase(
             parent = uiState,
             selector = { it.registerState }
         ) { data ->

@@ -18,9 +18,7 @@ fun BaseScreen(
     content: @Composable () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-
         content()
-
         if (baseUiState.isLoading) {
             Box(
                 modifier = Modifier
@@ -34,14 +32,11 @@ fun BaseScreen(
                 LoadingV2()
             }
         }
-
         baseUiState.errorDialog?.let {
             DialogCenterV1(
                 state = it,
                 onDismiss = onDismissError
             )
         }
-
     }
-
 }

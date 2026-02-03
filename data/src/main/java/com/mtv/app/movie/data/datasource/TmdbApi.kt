@@ -9,6 +9,7 @@ class TmdbApi {
         const val API_VERSION = 3
         const val PATH_MOVIE = "movie"
         const val PATH_VIDEOS = "videos"
+        const val PATH_SEARCH = "search"
     }
 
     object GetNowPlaying : IApiEndPoint {
@@ -38,6 +39,11 @@ class TmdbApi {
 
     class GetDetailVideos(movieId: Int) : IApiEndPoint {
         override val path = "$API_VERSION/$PATH_MOVIE/$movieId/$PATH_VIDEOS"
+        override val method = HttpMethod.Get
+    }
+
+    class SearchMovie(query: String, language: String = "en") : IApiEndPoint {
+        override val path = "$API_VERSION/$PATH_SEARCH/$PATH_MOVIE?query=$query&language=$language"
         override val method = HttpMethod.Get
     }
 

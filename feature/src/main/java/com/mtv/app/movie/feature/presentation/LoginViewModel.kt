@@ -32,7 +32,7 @@ class LoginViewModel @Inject constructor(
 
     /** INIT */
     init {
-        collectFieldSuccess(
+        collectFieldSuccessFirebase(
             parent = uiState,
             selector = { it.loginState }
         ) { data ->
