@@ -8,24 +8,79 @@
 
 package com.mtv.app.movie.feature.presentation
 
+import androidx.lifecycle.viewModelScope
 import com.mtv.app.core.provider.based.BaseViewModel
-import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.movie.common.UiOwner
+import com.mtv.app.movie.common.valueFlowOf
+import com.mtv.app.movie.domain.movie.MoviesUpComingUseCase
+import com.mtv.app.movie.domain.movie.SearchMovieUseCase
+import com.mtv.app.movie.feature.event.search.SearchDataListener
 import com.mtv.app.movie.feature.event.search.SearchStateListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    securePrefs: SecurePrefs
-) : BaseViewModel(), UiOwner<SearchStateListener, Unit> {
+    private val searchMovieUseCase: SearchMovieUseCase,
+    private val upComingUseCase: MoviesUpComingUseCase
+) : BaseViewModel(), UiOwner<SearchStateListener, SearchDataListener> {
 
-    /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
     override val uiState = MutableStateFlow(SearchStateListener())
+    override val uiData = MutableStateFlow(SearchDataListener())
 
-    /** UI DATA : DATA PERSIST (Prefs) */
-    override val uiData = MutableStateFlow(Unit)
+    init {
+        viewModelScope.launch {
+            uiData.map { it.query }
+                .debounce(500)
+                .distinctUntilChanged()
+                .collect { query -> if (query.isNotBlank()) performSearch(query) else fetchUpComingMovies() }
+        }
 
+        collectFieldSuccessResource(
+            parent = uiState,
+            selector = { it.searchState }
+        ) { data ->
+            uiData.update { it.copy(query = it.query, movies = data.results) }
+        }
+
+        collectFieldSuccessResource(
+            parent = uiState,
+            selector = { it.upComingState }
+        ) { data ->
+            if (uiData.value.query.isBlank()) uiData.update { it.copy(query = it.query, movies = data.results) }
+        }
+    }
+
+    fun onSearch(query: String) {
+        uiData.update { it.copy(query = query) }
+    }
+
+    private fun performSearch(query: String) {
+        launchUseCase(
+            target = uiState.valueFlowOf(
+                get = { it.searchState },
+                set = { state -> copy(searchState = state) }
+            ),
+            block = { searchMovieUseCase(query) }
+        )
+    }
+
+    private fun fetchUpComingMovies() {
+        launchUseCase(
+            target = uiState.valueFlowOf(
+                get = { it.upComingState },
+                set = { state -> copy(upComingState = state) }
+            ),
+            block = { upComingUseCase(Unit) }
+        )
+    }
 
 }

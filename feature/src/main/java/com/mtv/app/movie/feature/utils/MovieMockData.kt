@@ -249,3 +249,46 @@ val mockMoviesResponse = MoviesResponse(
         )
     )
 )
+
+val mockSearchMovies = listOf(
+    MoviesItemResponse(
+        id = 1,
+        title = "Fight Club",
+        releaseDate = "2024-10-17",
+        overview = "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy.",
+        posterPath = "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+        voteAverage = 8.4
+    ),
+    MoviesItemResponse(
+        id = 3,
+        title = "Florence Fight Club",
+        releaseDate = "2024-10-17",
+        overview = "Intertwined stories from the gladiator/athletes participating in the Calcio Storico Fiorentino yearly championship.",
+        posterPath = null,
+        voteAverage = 5.7
+    ),
+    MoviesItemResponse(
+        id = 2,
+        title = "Zombie Fight Club",
+        releaseDate = "2024-10-17",
+        overview = "It's the end of the century at a corner of the city in a building riddled with crime - Everyone in the building has turned into zombies.",
+        posterPath = "/u8u3KVq0qfJYmNDsaTVOXy4So6f.jpg",
+        voteAverage = 4.7
+    ),
+    MoviesItemResponse(
+        id = 3,
+        title = "Florence Fight Club",
+        releaseDate = "2024-10-17",
+        overview = "Intertwined stories from the gladiator/athletes participating in the Calcio Storico Fiorentino yearly championship.",
+        posterPath = null,
+        voteAverage = 5.7
+    ),
+    MoviesItemResponse(
+        id = 2,
+        title = "Zombie Fight Club",
+        releaseDate = "2024-10-17",
+        overview = "It's the end of the century at a corner of the city in a building riddled with crime - Everyone in the building has turned into zombies.",
+        posterPath = "/u8u3KVq0qfJYmNDsaTVOXy4So6f.jpg",
+        voteAverage = 4.7
+    ),
+)

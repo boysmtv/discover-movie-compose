@@ -12,18 +12,21 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
+import com.mtv.app.movie.feature.event.search.SearchDataListener
 import com.mtv.app.movie.feature.event.search.SearchEventListener
 import com.mtv.app.movie.feature.event.search.SearchNavigationListener
 import com.mtv.app.movie.feature.event.search.SearchStateListener
 import com.mtv.app.movie.feature.presentation.SearchViewModel
 import com.mtv.app.movie.feature.ui.search.SearchScreen
+import com.mtv.app.movie.nav.AppDestinations
 
 @Composable
 fun SearchRoute(nav: NavController) {
-    BaseRoute<SearchViewModel, SearchStateListener, Unit> { vm, base, uiState, uiData ->
+    BaseRoute<SearchViewModel, SearchStateListener, SearchDataListener> { vm, base, uiState, uiData ->
         BaseScreen(baseUiState = base, onDismissError = vm::dismissError) {
             SearchScreen(
                 uiState = uiState,
+                uiData = uiData,
                 uiEvent = searchEvent(vm),
                 uiNavigation = searchNavigation(nav)
             )
@@ -32,10 +35,13 @@ fun SearchRoute(nav: NavController) {
 }
 
 private fun searchEvent(vm: SearchViewModel) = SearchEventListener(
-    onDoSplash = { }
+    onDoSearch = { query ->
+        vm.onSearch(query)
+    }
 )
 
-
 private fun searchNavigation(nav: NavController) = SearchNavigationListener(
-    emptyNavigate = { }
+    onNavigateToMovieDetail = { movieId ->
+        nav.navigate(AppDestinations.navigateToDetailMovies(movieId))
+    }
 )
