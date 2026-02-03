@@ -83,7 +83,7 @@ fun ProfileScreen(
             photoUrl = uiData.userAccount?.photoUrl ?: uiData.userDummy.photoUrl
         )
 
-        Spacer(Modifier.height(108.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         ProfileMenuCard(
             uiEvent = uiEvent,
@@ -164,15 +164,17 @@ fun ProfileMenuCard(
             MenuRow(
                 title = stringResource(R.string.edit_profile),
                 icon = Icons.Outlined.Person,
-                onClick = uiEvent.onEditProfile
+                onClick = uiNavigation.onNavigateToEditProfile
             )
+
             HorizontalDivider()
 
             MenuRow(
                 title = stringResource(R.string.add_pin),
                 icon = Icons.Outlined.Lock,
-                onClick = uiEvent.onAddPin
+                onClick = uiNavigation.onNavigateToAddPin
             )
+
             HorizontalDivider()
 
             MenuRow(
@@ -180,13 +182,7 @@ fun ProfileMenuCard(
                 icon = Icons.Outlined.Settings,
                 onClick = uiNavigation.onNavigateToSettings
             )
-            HorizontalDivider()
 
-            MenuRow(
-                title = stringResource(R.string.invite_friend),
-                icon = Icons.Outlined.Share,
-                onClick = uiEvent.onInviteFriend
-            )
             HorizontalDivider()
 
             MenuRow(

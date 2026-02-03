@@ -10,6 +10,9 @@ object AppDestinations {
     const val RESET_GRAPH = "FORGOT_GRAPH"
     const val MOVIE_DETAIL_ROUTE = "MOVIE_DETAIL_ROUTE/{${Constant.SharedParam.MOVIE_ID}}"
     const val MOVIE_PLAY_ROUTE = "MOVIE_PLAY_ROUTE/{${Constant.SharedParam.VIDEOS_KEY}}"
+    const val EDIT_PROFILE_GRAPH = "EDIT_PROFILE_GRAPH"
+    const val ADD_PIN_GRAPH = "ADD_PIN_GRAPH"
+    const val SETTING_GRAPH = "SETTING_GRAPH"
 
     fun navigateToDetailMovies(movieId: Int): String {
         return "MOVIE_DETAIL_ROUTE/$movieId"

@@ -24,5 +24,6 @@ fun AppNavGraph(navController: NavHostController) {
         homeGraph(navController)
         detailMovieGraph(navController)
         playMovieGraph(navController)
+        profileGraph(navController)
     }
 }
