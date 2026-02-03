@@ -1,7 +1,8 @@
 package com.mtv.app.movie.feature.event.profile
 
-import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
+import com.mtv.app.movie.data.model.response.LoginResponse
+import com.mtv.based.core.network.utils.ResourceFirebase
 
 data class ProfileStateListener(
-    val emptyListener: String = EMPTY_STRING
+    val profileState: ResourceFirebase<LoginResponse> = ResourceFirebase.Loading
 )

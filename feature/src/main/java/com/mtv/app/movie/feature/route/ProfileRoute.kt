@@ -10,6 +10,7 @@ import com.mtv.app.movie.feature.event.profile.ProfileNavigationListener
 import com.mtv.app.movie.feature.event.profile.ProfileStateListener
 import com.mtv.app.movie.feature.presentation.ProfileViewModel
 import com.mtv.app.movie.feature.ui.profile.ProfileScreen
+import com.mtv.app.movie.nav.AppDestinations
 
 @Composable
 fun ProfileRoute(nav: NavController) {
@@ -26,12 +27,17 @@ fun ProfileRoute(nav: NavController) {
 }
 
 private fun profileEvent(vm: ProfileViewModel) = ProfileEventListener(
-    onEditProfile = { },
-    onAddPin = { },
-    onInviteFriend = { },
-    onLogout = { },
+    onLogout = vm::logout
 )
 
 private fun profileNavigation(nav: NavController) = ProfileNavigationListener(
-    onNavigateToSettings = { }
+    onNavigateToEditProfile = {
+        nav.navigate(AppDestinations.EDIT_PROFILE_GRAPH)
+    },
+    onNavigateToAddPin = {
+        nav.navigate(AppDestinations.ADD_PIN_GRAPH)
+    },
+    onNavigateToSettings = {
+        nav.navigate(AppDestinations.SETTING_GRAPH)
+    }
 )

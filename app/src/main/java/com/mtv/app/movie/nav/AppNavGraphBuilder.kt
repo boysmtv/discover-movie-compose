@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.mtv.app.movie.common.Constant
+import com.mtv.app.movie.feature.route.EditProfileRoute
 import com.mtv.app.movie.feature.route.movie.MovieDetailRoute
 import com.mtv.app.movie.feature.route.HomeRoute
 import com.mtv.app.movie.feature.route.LikedRoute
@@ -81,5 +82,17 @@ fun NavGraphBuilder.playMovieGraph(nav: NavHostController) {
         )
     ) {
         PlayMovieRoute(nav = nav)
+    }
+}
+
+fun NavGraphBuilder.profileGraph(nav: NavHostController) {
+    composable(AppDestinations.EDIT_PROFILE_GRAPH) {
+        EditProfileRoute(nav)
+    }
+
+    composable(AppDestinations.ADD_PIN_GRAPH) {
+    }
+
+    composable(AppDestinations.SETTING_GRAPH) {
     }
 }
