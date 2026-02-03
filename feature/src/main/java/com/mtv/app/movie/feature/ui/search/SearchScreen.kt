@@ -12,6 +12,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,22 +35,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,9 +57,12 @@ import com.mtv.app.movie.feature.event.search.SearchDataListener
 import com.mtv.app.movie.feature.event.search.SearchEventListener
 import com.mtv.app.movie.feature.event.search.SearchNavigationListener
 import com.mtv.app.movie.feature.event.search.SearchStateListener
+import com.mtv.app.movie.feature.utils.MovieTagChipAnimated
 import com.mtv.app.movie.feature.utils.mockSearchMovies
+import com.mtv.app.movie.feature.utils.priorityTag
 import com.mtv.based.core.network.utils.Resource
 import kotlinx.coroutines.FlowPreview
+import org.threeten.bp.LocalDate
 
 @OptIn(FlowPreview::class)
 @Composable
@@ -262,11 +260,25 @@ fun MovieItemNetflix(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                Text(
-                    movie.releaseDate,
-                    color = Color.LightGray,
-                    style = MaterialTheme.typography.bodySmall
-                )
+                val priorityTag = remember(movie.id) {
+                    movie.priorityTag(
+                        today = LocalDate.parse("2024-01-01")
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(top = 6.dp)
+                ) {
+                    Text(
+                        text = movie.releaseDate,
+                        color = Color.LightGray,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+
+                    MovieTagChipAnimated(priorityTag)
+                }
 
                 Spacer(modifier = Modifier.height(6.dp))
 
@@ -320,7 +332,7 @@ fun NetflixSearchBarPreview() {
 @Composable
 fun MovieItemNetflixPreview() {
     MovieItemNetflix(
-        movie = mockSearchMovies[0],
+        movie = mockSearchMovies.first(),
         onClickMovie = {}
     )
 }
