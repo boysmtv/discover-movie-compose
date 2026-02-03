@@ -57,20 +57,5 @@ fun HomeFeaturedMovieCard(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(10.dp)
-                .background(Color.Red, RoundedCornerShape(4.dp))
-                .padding(horizontal = 6.dp, vertical = 2.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.recently_added),
-                color = Color.White,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
     }
 }

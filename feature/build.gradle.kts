@@ -105,6 +105,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
 
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:13.0.0")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
 
     // Testing
     testImplementation(libs.junit)

@@ -257,7 +257,9 @@ val mockSearchMovies = listOf(
         releaseDate = "2024-10-17",
         overview = "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy.",
         posterPath = "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-        voteAverage = 8.4
+        voteAverage = 8.7,
+        voteCount = 12000,
+        popularity = 180.0
     ),
     MoviesItemResponse(
         id = 3,
@@ -265,7 +267,9 @@ val mockSearchMovies = listOf(
         releaseDate = "2024-10-17",
         overview = "Intertwined stories from the gladiator/athletes participating in the Calcio Storico Fiorentino yearly championship.",
         posterPath = null,
-        voteAverage = 5.7
+        voteAverage = 5.7,
+        voteCount = 12000,
+        popularity = 180.0
     ),
     MoviesItemResponse(
         id = 2,
@@ -273,7 +277,9 @@ val mockSearchMovies = listOf(
         releaseDate = "2024-10-17",
         overview = "It's the end of the century at a corner of the city in a building riddled with crime - Everyone in the building has turned into zombies.",
         posterPath = "/u8u3KVq0qfJYmNDsaTVOXy4So6f.jpg",
-        voteAverage = 4.7
+        voteAverage = 4.7,
+        voteCount = 12000,
+        popularity = 180.0
     ),
     MoviesItemResponse(
         id = 3,
@@ -281,7 +287,9 @@ val mockSearchMovies = listOf(
         releaseDate = "2024-10-17",
         overview = "Intertwined stories from the gladiator/athletes participating in the Calcio Storico Fiorentino yearly championship.",
         posterPath = null,
-        voteAverage = 5.7
+        voteAverage = 5.7,
+        voteCount = 12000,
+        popularity = 180.0
     ),
     MoviesItemResponse(
         id = 2,
@@ -289,6 +297,8 @@ val mockSearchMovies = listOf(
         releaseDate = "2024-10-17",
         overview = "It's the end of the century at a corner of the city in a building riddled with crime - Everyone in the building has turned into zombies.",
         posterPath = "/u8u3KVq0qfJYmNDsaTVOXy4So6f.jpg",
-        voteAverage = 4.7
+        voteAverage = 4.7,
+        voteCount = 12000,
+        popularity = 180.0
     ),
 )

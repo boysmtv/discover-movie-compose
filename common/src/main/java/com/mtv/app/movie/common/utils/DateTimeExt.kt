@@ -1,6 +1,9 @@
 package com.mtv.app.movie.common.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
 
@@ -47,3 +50,11 @@ fun nowDb(): String = dbFormat.format(Date())
 // NOW → ISO format
 // ----------------------------
 fun nowIso(): String = isoFormat.format(Date())
+
+
+// ----------------------------
+// NOW → ISO format
+// ----------------------------
+@RequiresApi(Build.VERSION_CODES.O)
+fun today(): LocalDate = LocalDate.now()
+

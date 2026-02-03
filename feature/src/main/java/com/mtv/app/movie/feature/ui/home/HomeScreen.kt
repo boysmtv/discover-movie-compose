@@ -119,18 +119,18 @@ fun HomeScreen(
                 .background(Color.Black)
                 .verticalScroll(scrollState)
         ) {
-            if (uiState.nowPlayingState is Resource.Success) {
+            if (uiState.upComingState is Resource.Success) {
                 HomeFeaturedSection(
-                    movieCategory = MovieCategory.NOW_PLAYING,
-                    movies = uiState.nowPlayingState.data.results,
+                    movieCategory = MovieCategory.UP_COMING,
+                    movies = uiState.upComingState.data.results,
                     onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
             }
 
-            if (uiState.popularState is Resource.Success) {
+            if (uiState.nowPlayingState is Resource.Success) {
                 HomeFeaturedSection(
-                    movieCategory = MovieCategory.POPULAR,
-                    movies = uiState.popularState.data.results,
+                    movieCategory = MovieCategory.NOW_PLAYING,
+                    movies = uiState.nowPlayingState.data.results,
                     onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
             }
@@ -143,10 +143,10 @@ fun HomeScreen(
                 )
             }
 
-            if (uiState.upComingState is Resource.Success) {
+            if (uiState.popularState is Resource.Success) {
                 HomeFeaturedSection(
-                    movieCategory = MovieCategory.UP_COMING,
-                    movies = uiState.upComingState.data.results,
+                    movieCategory = MovieCategory.POPULAR,
+                    movies = uiState.popularState.data.results,
                     onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
             }
