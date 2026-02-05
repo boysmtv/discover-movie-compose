@@ -53,6 +53,7 @@ class RegisterViewModel @Inject constructor(
                         phone = phone,
                         password = password,
                         deviceId = installationIdProvider.getInstallationId(),
+                        photoUrl = EMPTY_STRING,
                         createdAt = System.currentTimeMillis().toString()
                     )
                 )

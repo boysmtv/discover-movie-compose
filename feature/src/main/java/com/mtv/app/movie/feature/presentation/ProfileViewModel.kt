@@ -11,8 +11,10 @@ import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.GetProfileUseCase
 import com.mtv.app.movie.feature.event.profile.ProfileDataListener
 import com.mtv.app.movie.feature.event.profile.ProfileStateListener
+import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,16 +35,9 @@ class ProfileViewModel @Inject constructor(
             parent = uiState,
             selector = { it.profileState }
         ) { data ->
-            securePrefs.putObject(
-                ConstantPreferences.USER_ACCOUNT,
-                data
-            )
-
-            updateUiDataListener(uiData) {
-                copy(userAccount = data)
-            }
+            securePrefs.putObject(ConstantPreferences.USER_ACCOUNT, data)
+            updateUiDataListener(uiData) { copy(userAccount = data) }
         }
-
         refreshProfile()
     }
 
@@ -73,5 +68,10 @@ class ProfileViewModel @Inject constructor(
 
     fun logout() {
         sessionManager.logout()
+        uiState.update {
+            it.copy(
+                logoutState = Resource.Success(Unit)
+            )
+        }
     }
 }

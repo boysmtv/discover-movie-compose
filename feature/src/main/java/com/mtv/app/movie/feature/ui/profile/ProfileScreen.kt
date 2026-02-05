@@ -36,6 +36,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,6 +55,7 @@ import com.mtv.app.movie.feature.event.profile.ProfileDataListener
 import com.mtv.app.movie.feature.event.profile.ProfileEventListener
 import com.mtv.app.movie.feature.event.profile.ProfileNavigationListener
 import com.mtv.app.movie.feature.event.profile.ProfileStateListener
+import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(
@@ -79,6 +81,13 @@ fun ProfileScreen(
     uiEvent: ProfileEventListener,
     uiNavigation: ProfileNavigationListener
 ) {
+
+    LaunchedEffect(uiState.logoutState) {
+        if (uiState.logoutState is Resource.Success) {
+            uiNavigation.navigateToLoginAndClearBackStack()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
