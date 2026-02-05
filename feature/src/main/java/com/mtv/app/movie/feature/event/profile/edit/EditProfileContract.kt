@@ -8,10 +8,12 @@
 
 package com.mtv.app.movie.feature.event.profile.edit
 
+import android.net.Uri
 import com.mtv.based.core.network.utils.ResourceFirebase
 
 data class EditProfileStateListener(
-    val updateState: ResourceFirebase<Unit> = ResourceFirebase.Loading
+    val updateState: ResourceFirebase<Unit> = ResourceFirebase.Loading,
+    val uploadPhotoState: ResourceFirebase<String> = ResourceFirebase.Loading
 )
 
 data class EditProfileEventListener(
@@ -19,7 +21,8 @@ data class EditProfileEventListener(
         name: String,
         phone: String,
         photoUrl: String?
-    ) -> Unit
+    ) -> Unit,
+    val onPhotoSelected: (uri: Uri) -> Unit
 )
 
 data class EditProfileNavigationListener(

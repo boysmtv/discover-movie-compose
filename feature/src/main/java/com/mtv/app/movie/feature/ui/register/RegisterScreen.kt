@@ -1,5 +1,6 @@
 package com.mtv.app.movie.feature.ui.register
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +55,12 @@ import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_6
+)
 @Composable
 fun PreviewRegisterScreen() {
     RegisterScreen(
@@ -85,11 +92,11 @@ fun RegisterScreen(
     val confirmPasswordVisible = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        name.value = Constant.TestData.NAME
-        email.value = Constant.TestData.EMAIL
-        phone.value = Constant.TestData.PHONE
-        password.value = Constant.TestData.PASSWORD
-        confirmPassword.value = Constant.TestData.PASSWORD
+        name.value = Constant.TestData.TESTDATA_NAME
+        email.value = Constant.TestData.TESTDATA_EMAIL
+        phone.value = Constant.TestData.TESTDATA_PHONE
+        password.value = Constant.TestData.TESTDATA_PASSWORD
+        confirmPassword.value = Constant.TestData.TESTDATA_PASSWORD
     }
 
     if (uiState.registerState is ResourceFirebase.Success) {
@@ -141,7 +148,7 @@ fun RegisterScreen(
                         modifier = Modifier.padding(start = 12.dp)
                     )
                 },
-                placeholder = { Text(Constant.Description.FULL_NAME) },
+                placeholder = { Text(Constant.Title.FULL_NAME) },
                 shape = RoundedCornerShape(50),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -227,7 +234,7 @@ fun RegisterScreen(
 
                     Icon(
                         imageVector = icon,
-                        contentDescription = if (passwordVisible.value) Constant.Description.HIDE_PASSWORD else Constant.Description.SHOW_PASSWORD,
+                        contentDescription = if (passwordVisible.value) Constant.Title.HIDE_PASSWORD else Constant.Title.SHOW_PASSWORD,
                         modifier = Modifier
                             .clickable {
                                 passwordVisible.value = !passwordVisible.value
@@ -252,7 +259,7 @@ fun RegisterScreen(
                         modifier = Modifier.padding(start = 12.dp)
                     )
                 },
-                placeholder = { Text(Constant.Description.CONFIRM_PASSWORD) },
+                placeholder = { Text(Constant.Title.CONFIRM_PASSWORD) },
                 shape = RoundedCornerShape(50),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -269,7 +276,7 @@ fun RegisterScreen(
 
                     Icon(
                         imageVector = icon,
-                        contentDescription = if (confirmPasswordVisible.value) Constant.Description.HIDE_PASSWORD else Constant.Description.SHOW_PASSWORD,
+                        contentDescription = if (confirmPasswordVisible.value) Constant.Title.HIDE_PASSWORD else Constant.Title.SHOW_PASSWORD,
                         modifier = Modifier
                             .clickable {
                                 confirmPasswordVisible.value = !confirmPasswordVisible.value
@@ -301,13 +308,13 @@ fun RegisterScreen(
                     containerColor = Color(0xFF5C6BC0)
                 )
             ) {
-                Text(Constant.Description.CREATE_ACCOUNT, fontSize = 16.sp)
+                Text(Constant.Title.CREATE_ACCOUNT, fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = Constant.Description.OR_CONNECT_WITH,
+                text = Constant.Title.OR_CONNECT_WITH,
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 12.sp
             )
@@ -345,7 +352,7 @@ fun RegisterScreen(
 
             Row {
                 Text(
-                    text = Constant.Description.ALREADY_HAVE_ACCOUNT,
+                    text = Constant.Title.ALREADY_HAVE_ACCOUNT,
                     color = Color.White,
                     fontSize = 12.sp
                 )

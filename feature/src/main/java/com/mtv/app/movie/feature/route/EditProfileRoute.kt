@@ -21,10 +21,7 @@ import com.mtv.app.movie.feature.ui.profile.edit.EditProfileScreen
 @Composable
 fun EditProfileRoute(nav: NavController) {
     BaseRoute<EditProfileViewModel, EditProfileStateListener, Unit> { vm, base, uiState, _ ->
-        BaseScreen(
-            baseUiState = base,
-            onDismissError = vm::dismissError
-        ) {
+        BaseScreen(baseUiState = base, onDismissError = vm::dismissError) {
             EditProfileScreen(
                 uiState = uiState,
                 uiEvent = editProfileEvent(vm),
@@ -35,7 +32,8 @@ fun EditProfileRoute(nav: NavController) {
 }
 
 private fun editProfileEvent(vm: EditProfileViewModel) = EditProfileEventListener(
-    onSaveClicked = vm::doUpdateProfile
+    onSaveClicked = vm::doUpdateProfile,
+    onPhotoSelected = vm::onPhotoSelected
 )
 
 private fun editProfileNavigation(nav: NavController) = EditProfileNavigationListener(

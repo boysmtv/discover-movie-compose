@@ -1,5 +1,6 @@
 package com.mtv.app.movie.feature.ui.reset
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,7 +48,12 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_6
+)
 @Composable
 fun PreviewResetScreen() {
     ResetScreen(
@@ -71,7 +78,7 @@ fun ResetScreen(
     val email = remember { mutableStateOf(EMPTY_STRING) }
 
     LaunchedEffect(Unit) {
-        email.value = Constant.TestData.EMAIL
+        email.value = Constant.TestData.TESTDATA_EMAIL
     }
 
     if (uiState.resetPasswordState is ResourceFirebase.Success) {
