@@ -33,7 +33,6 @@ fun EditProfileRoute(nav: NavController) {
 
 private fun editProfileEvent(vm: EditProfileViewModel) = EditProfileEventListener(
     onSaveClicked = vm::doUpdateProfile,
-    onPhotoSelected = vm::onPhotoSelected
 )
 
 private fun editProfileNavigation(nav: NavController) = EditProfileNavigationListener(

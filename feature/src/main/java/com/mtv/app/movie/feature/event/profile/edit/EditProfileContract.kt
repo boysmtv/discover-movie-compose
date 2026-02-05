@@ -22,7 +22,6 @@ data class EditProfileEventListener(
         phone: String,
         photoUrl: String?
     ) -> Unit,
-    val onPhotoSelected: (uri: Uri) -> Unit
 )
 
 data class EditProfileNavigationListener(

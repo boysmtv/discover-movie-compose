@@ -39,5 +39,13 @@ private fun profileNavigation(nav: NavController) = ProfileNavigationListener(
     },
     onNavigateToSettings = {
         nav.navigate(AppDestinations.SETTING_GRAPH)
+    },
+    navigateToLoginAndClearBackStack = {
+        nav.navigate(AppDestinations.LOGIN_GRAPH) {
+            popUpTo(0) {
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
     }
 )

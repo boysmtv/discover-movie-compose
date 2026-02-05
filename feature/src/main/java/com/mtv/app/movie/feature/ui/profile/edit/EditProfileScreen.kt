@@ -8,6 +8,7 @@
 
 package com.mtv.app.movie.feature.ui.profile.edit
 
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -53,8 +54,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -85,7 +88,10 @@ import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
+
+/* ------------------------------------------------ */
+/* PREVIEW                                          */
+/* ------------------------------------------------ */
 
 @Preview(
     showBackground = true,
@@ -99,24 +105,51 @@ fun EditProfileScreenPreview() {
         EditProfileScreen(
             uiState = EditProfileStateListener(),
             uiEvent = EditProfileEventListener(
-                onSaveClicked = { _, _, _ -> },
-                onPhotoSelected = {}
+                onSaveClicked = { _, _, _ -> }
             ),
             uiNavigation = EditProfileNavigationListener {}
         )
     }
 }
 
-private fun uriToBase64(context: android.content.Context, uri: Uri): String {
-    val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-    val bitmap = BitmapFactory.decodeStream(inputStream)
+/* ------------------------------------------------ */
+/* IMAGE UTILS                                      */
+/* ------------------------------------------------ */
+
+private fun uriToBase64(
+    context: Context,
+    uri: Uri,
+    maxSize: Int = 1024
+): String {
+    val inputStream = context.contentResolver.openInputStream(uri)
+
+    val options = BitmapFactory.Options().apply {
+        inJustDecodeBounds = true
+    }
+    BitmapFactory.decodeStream(inputStream, null, options)
+    inputStream?.close()
+
+    var scale = 1
+    while (options.outWidth / scale > maxSize || options.outHeight / scale > maxSize) {
+        scale *= 2
+    }
+
+    val resizedOptions = BitmapFactory.Options().apply {
+        inSampleSize = scale
+    }
+
+    val resizedStream = context.contentResolver.openInputStream(uri)
+    val bitmap = BitmapFactory.decodeStream(resizedStream, null, resizedOptions)
+    resizedStream?.close()
+
     val output = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, output)
-    return Base64.encodeToString(output.toByteArray(), Base64.DEFAULT)
+    bitmap?.compress(Bitmap.CompressFormat.JPEG, 70, output)
+
+    return Base64.encodeToString(output.toByteArray(), Base64.NO_WRAP)
 }
 
 private fun base64ToBitmap(base64: String): Bitmap {
-    val bytes = Base64.decode(base64, Base64.DEFAULT)
+    val bytes = Base64.decode(base64, Base64.NO_WRAP)
     return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 }
 
@@ -127,6 +160,7 @@ fun EditProfileScreen(
     uiNavigation: EditProfileNavigationListener
 ) {
     val context = LocalContext.current
+    val isPreview = LocalInspectionMode.current
 
     val name = remember { mutableStateOf(EMPTY_STRING) }
     val email = remember { mutableStateOf(EMPTY_STRING) }
@@ -143,18 +177,20 @@ fun EditProfileScreen(
     val photoBase64 = remember { mutableStateOf<String?>(null) }
     val showPhotoPreview = remember { mutableStateOf(false) }
 
-    val imagePickerLauncher =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.GetContent()
-        ) { uri: Uri? ->
-            uri?.let {
-                photoBase64.value = uriToBase64(context, it)
-                uiEvent.onPhotoSelected(it)
-            }
-        }
+    val avatarBitmap = remember { mutableStateOf<Bitmap?>(null) }
 
-    val avatarBitmap = remember(photoBase64.value) {
-        photoBase64.value?.let { base64ToBitmap(it) }
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            photoBase64.value = uriToBase64(context, it)
+        }
+    }
+
+    LaunchedEffect(photoBase64.value) {
+        if (!isPreview) {
+            avatarBitmap.value = photoBase64.value?.let { base64ToBitmap(it) }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -174,7 +210,7 @@ fun EditProfileScreen(
             onDismiss = uiNavigation.onBack
         )
     }
-    /* ---------------- FULL IMAGE PREVIEW ---------------- */
+
     if (showPhotoPreview.value) {
         Dialog(onDismissRequest = { showPhotoPreview.value = false }) {
             Box(
@@ -184,9 +220,8 @@ fun EditProfileScreen(
                     .clickable { showPhotoPreview.value = false },
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_avatar),
-                    contentDescription = null,
+                AvatarImage(
+                    bitmap = avatarBitmap.value,
                     modifier = Modifier.fillMaxWidth(),
                     contentScale = ContentScale.Fit
                 )
@@ -217,9 +252,9 @@ fun EditProfileScreen(
                 color = Color.White
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(Modifier.height(32.dp))
 
-            /* ---------------- PROFILE PHOTO ---------------- */
+            /* ---------------- PHOTO ---------------- */
             Box(
                 modifier = Modifier.size(110.dp),
                 contentAlignment = Alignment.BottomEnd
@@ -231,33 +266,29 @@ fun EditProfileScreen(
                         .clickable { showPhotoPreview.value = true },
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_avatar),
-                        contentDescription = null,
+                    AvatarImage(
+                        bitmap = avatarBitmap.value,
                         modifier = Modifier.size(80.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
 
                 IconButton(
-                    onClick = {
-                        imagePickerLauncher.launch("image/*")
-                    },
+                    onClick = { imagePickerLauncher.launch("image/*") },
                     modifier = Modifier
                         .size(32.dp)
                         .background(Color.White, CircleShape)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit Photo",
+                        contentDescription = null,
                         tint = Color(0xFF5C6BC0)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(64.dp))
+            Spacer(Modifier.height(64.dp))
 
-            /* ---------------- FORM (UNCHANGED) ---------------- */
             OutlinedTextField(
                 value = name.value,
                 onValueChange = { name.value = it },
@@ -432,5 +463,29 @@ fun EditProfileScreen(
                 Text(SAVE_CHANGES, fontSize = 16.sp)
             }
         }
+    }
+}
+
+
+@Composable
+private fun AvatarImage(
+    bitmap: Bitmap?,
+    modifier: Modifier,
+    contentScale: ContentScale
+) {
+    if (bitmap != null) {
+        Image(
+            bitmap = bitmap.asImageBitmap(),
+            contentDescription = null,
+            modifier = modifier,
+            contentScale = contentScale
+        )
+    } else {
+        Image(
+            painter = painterResource(R.drawable.ic_avatar),
+            contentDescription = null,
+            modifier = modifier,
+            contentScale = contentScale
+        )
     }
 }
