@@ -19,4 +19,5 @@
     <string name="send_reset_link">Send Reset Link</string>
     <string name="or_reset_via">or reset via</string>
     <string name="back_to">Back to </string>
+    <string name="successfully_update_profile">Successfully Update Profile</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.mtv.app.movie.feature.ui.login
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +49,12 @@ import com.mtv.app.movie.feature.event.login.LoginStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_6
+)
 @Composable
 fun PreviewLoginScreen() {
     LoginScreen(
@@ -86,8 +93,8 @@ fun LoginScreen(
     val passwordVisible = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        username.value = Constant.TestData.EMAIL
-        password.value = Constant.TestData.PASSWORD
+        username.value = Constant.TestData.TESTDATA_EMAIL
+        password.value = Constant.TestData.TESTDATA_PASSWORD
     }
 
     LaunchedEffect(uiState.loginState) {
@@ -209,7 +216,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = Constant.Description.FORGOT_YOUR_PASSWORD,
+                text = Constant.Title.FORGOT_YOUR_PASSWORD,
                 color = Color.White,
                 fontSize = 12.sp,
                 modifier = Modifier.clickable {
@@ -220,7 +227,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = Constant.Description.OR_CONNECT_WITH,
+                text = Constant.Title.OR_CONNECT_WITH,
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 12.sp
             )
@@ -258,12 +265,12 @@ fun LoginScreen(
 
             Row {
                 Text(
-                    text = Constant.Description.DONT_HAVE_ACCOUNT,
+                    text = Constant.Title.DONT_HAVE_ACCOUNT,
                     color = Color.White,
                     fontSize = 12.sp
                 )
                 Text(
-                    text = Constant.Description.SIGN_UP,
+                    text = Constant.Title.SIGN_UP_MARK,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,

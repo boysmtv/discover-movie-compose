@@ -1,5 +1,6 @@
 package com.mtv.app.movie.feature.ui.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,17 +10,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.common.MovieCategory
-import com.mtv.app.movie.data.model.movie.MoviesItemResponse
-import com.mtv.app.movie.data.model.movie.MoviesResponse
 import com.mtv.app.movie.data.model.response.CheckResponse
 import com.mtv.app.movie.data.model.response.LogoutResponse
 import com.mtv.app.movie.common.R
@@ -33,7 +31,12 @@ import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFF000000,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_6
+)
 @Composable
 fun PreviewHomeScreen() {
     HomeScreen(
@@ -89,7 +92,7 @@ fun HomeScreen(
 
     if (!LocalInspectionMode.current) {
         LaunchedEffect(Unit) {
-            uiEvent.onCheck(Constant.TestData.EMAIL)
+            uiEvent.onCheck(Constant.TestData.TESTDATA_EMAIL)
             uiEvent.onLoadMovies()
         }
 

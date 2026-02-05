@@ -86,7 +86,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
-//    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.material3)
@@ -100,6 +99,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+
 
     /* Maven Local Libraries (Core) */
     implementation("com.mtv.based.core:network:1.0.0")
