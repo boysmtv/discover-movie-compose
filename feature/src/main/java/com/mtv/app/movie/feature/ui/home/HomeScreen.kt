@@ -1,6 +1,7 @@
 package com.mtv.app.movie.feature.ui.home
 
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -22,6 +25,7 @@ import com.mtv.app.movie.common.MovieCategory
 import com.mtv.app.movie.data.model.response.CheckResponse
 import com.mtv.app.movie.data.model.response.LogoutResponse
 import com.mtv.app.movie.common.R
+import com.mtv.app.movie.common.base64ToBitmap
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.feature.event.home.HomeDataListener
 import com.mtv.app.movie.feature.event.home.HomeEventListener
@@ -36,7 +40,7 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
     showBackground = true,
     backgroundColor = 0xFF000000,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_6
+    device = Devices.PIXEL_3
 )
 @Composable
 fun PreviewHomeScreen() {
@@ -90,6 +94,15 @@ fun HomeScreen(
     uiNavigation: HomeNavigationListener
 ) {
     val scrollState = rememberScrollState()
+    val isPreview = LocalInspectionMode.current
+    val photoBase64 = uiData.loginResponse?.photo
+    val avatarBitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+    LaunchedEffect(photoBase64) {
+        if (!isPreview && !photoBase64.isNullOrBlank()) {
+            avatarBitmap.value = base64ToBitmap(photoBase64)
+        }
+    }
 
     if (!LocalInspectionMode.current) {
         LaunchedEffect(Unit) {
@@ -110,17 +123,16 @@ fun HomeScreen(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF181818),
-                        Color(0xFF0F0F0F),
-                        Color(0xFF000000)
+                        Color(0xFF2C225A),
+                        Color(0xFF3B2AAE),
+                        Color(0xFF5A3FD1)
                     )
                 )
             )
     ) {
         HomeHeader(
             userName = uiData.loginResponse?.name ?: EMPTY_STRING,
-            profileImage = R.drawable.ic_avatar,
-            onNotificationClick = { /* TODO */ }
+            photoBitmap = avatarBitmap.value,
         )
 
         Spacer(modifier = Modifier.width(16.dp))

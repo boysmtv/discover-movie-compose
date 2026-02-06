@@ -38,15 +38,11 @@ import com.mtv.app.movie.feature.event.splash.SplashStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import kotlin.random.Random
 
-/* ---------------------------------------------------
-   PREVIEW
---------------------------------------------------- */
-
 @Preview(
     showBackground = true,
     backgroundColor = 0xFF000000,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_6
+    device = Devices.PIXEL_3
 )
 @Composable
 fun SplashScreenPreview() {
@@ -197,7 +193,7 @@ private fun NoiseOverlay() {
 }
 
 @Composable
-fun PulsingLoadingText(text: String = "Loading") {
+fun PulsingLoadingText(text: String = "Loading...") {
     val alpha = remember { Animatable(0.3f) }
 
     LaunchedEffect(Unit) {
