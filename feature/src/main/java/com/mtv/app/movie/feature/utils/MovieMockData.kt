@@ -191,6 +191,60 @@ val mockMovieDetailResponseList = listOf(
         video = false,
         voteAverage = 8.1,
         voteCount = 8_230
+    ),
+
+    MovieDetailResponse(
+        adult = false,
+        backdropPath = "/backdrop_movie_2.jpg",
+        belongsToCollection = null,
+        budget = 80_000_000,
+        genres = listOf(
+            GenreItem(id = 16, name = "Animation"),
+            GenreItem(id = 35, name = "Comedy")
+        ),
+        homepage = null,
+        id = 103,
+        imdbId = "tt7654321",
+        originalLanguage = "en",
+        originalTitle = "Compose World",
+        overview = "A colorful journey into Jetpack Compose and modern UI.",
+        popularity = 76.4,
+        posterPath = "/poster_movie_2.jpg",
+        productionCompanies = listOf(
+            ProductionCompany(
+                id = 2,
+                logoPath = null,
+                name = "Compose Animation Studio",
+                originCountry = "JP"
+            )
+        ),
+        productionCountries = listOf(
+            ProductionCountry(
+                iso31661 = "JP",
+                name = "Japan"
+            )
+        ),
+        releaseDate = "2023-11-20",
+        revenue = 210_000_000,
+        runtime = 95,
+        spokenLanguages = listOf(
+            SpokenLanguage(
+                englishName = "Japanese",
+                iso6391 = "ja",
+                name = "日本語"
+            ),
+            SpokenLanguage(
+                englishName = "English",
+                iso6391 = "en",
+                name = "English"
+            )
+        ),
+        status = "Released",
+        tagline = "UI has never been this fun.",
+        title = "Compose World",
+        video = false,
+        voteAverage = 8.1,
+        voteCount = 8_230
     )
 )
 

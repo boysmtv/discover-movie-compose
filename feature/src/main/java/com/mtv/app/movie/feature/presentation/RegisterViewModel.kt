@@ -4,16 +4,15 @@ import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SessionManager
 import com.mtv.app.core.provider.utils.device.InstallationIdProvider
 import com.mtv.app.movie.common.UiOwner
-import com.mtv.app.movie.common.utils.nowDb
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.RegisterRequest
 import com.mtv.app.movie.domain.user.RegisterUseCase
 import com.mtv.app.movie.feature.event.register.RegisterStateListener
-import com.mtv.app.movie.feature.event.splash.SplashStateListener
+import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,17 +31,18 @@ class RegisterViewModel @Inject constructor(
     init {
         collectFieldSuccessFirebase(
             parent = uiState,
-            selector = { it.registerState }
+            selector = { it.registerByEmailState }
         ) { data ->
             sessionManager.saveUid(data)
         }
     }
 
-    fun doRegister(name: String, email: String, phone: String, password: String) =
+    /** REGISTER BY EMAIL */
+    fun doRegisterByEmail(name: String, email: String, phone: String, password: String, photoBase64: String) =
         launchFirebaseUseCase(
             target = uiState.valueFlowOf(
-                get = { it.registerState },
-                set = { state -> copy(registerState = state) }
+                get = { it.registerByEmailState },
+                set = { state -> copy(registerByEmailState = state) }
             ),
             block = {
                 registerUseCase(
@@ -53,11 +53,21 @@ class RegisterViewModel @Inject constructor(
                         phone = phone,
                         password = password,
                         deviceId = installationIdProvider.getInstallationId(),
-                        photoUrl = EMPTY_STRING,
+                        photo = photoBase64,
                         createdAt = System.currentTimeMillis().toString()
                     )
                 )
             }
         )
+
+    /** REGISTER BY GOOGLE */
+    fun doLoginByGoogle() {
+        uiState.update { it.copy(registerByGoogleState = Resource.Success(Unit)) }
+    }
+
+    /** REGISTER BY GOOGLE */
+    fun doLoginByFacebook() {
+        uiState.update { it.copy(registerByFacebookState = Resource.Success(Unit)) }
+    }
 
 }

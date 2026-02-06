@@ -46,8 +46,14 @@ import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.feature.event.login.LoginEventListener
 import com.mtv.app.movie.feature.event.login.LoginNavigationListener
 import com.mtv.app.movie.feature.event.login.LoginStateListener
+import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.core.network.utils.ResourceFirebase
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Preview(
     showBackground = true,
@@ -59,24 +65,24 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 fun PreviewLoginScreen() {
     LoginScreen(
         uiState = LoginStateListener(
-            loginState = ResourceFirebase.Success(
+            loginByEmailState = ResourceFirebase.Success(
                 LoginResponse(
                     name = "Dedy Wijaya",
                     email = "Dedy.wijaya@ikonsultan.com",
                     phone = "08158844424",
-                    photoUrl = "https://i.pinimg.com/736x/41/66/b0/4166b08e8d32aff9e00f2bee5e2dc4dd.jpg",
+                    photo = "https://i.pinimg.com/736x/41/66/b0/4166b08e8d32aff9e00f2bee5e2dc4dd.jpg",
                     createdAt = "21/12/26"
                 )
             ),
         ),
         uiEvent = LoginEventListener(
-            onLoginClicked = { _, _ -> }
+            onLoginByEmailClicked = { _, _ -> },
+            onLoginByGoogleClicked = { },
+            onLoginByFacebookClicked = { },
         ),
         uiNavigation = LoginNavigationListener(
             onNavigateToHome = {},
             onNavigateToSignUpByEmail = {},
-            onNavigateToSignUpByGoogle = {},
-            onNavigateToSignUpByFacebook = {},
             onNavigateToForgotPassword = {},
         )
     )
@@ -97,10 +103,24 @@ fun LoginScreen(
         password.value = Constant.TestData.TESTDATA_PASSWORD
     }
 
-    LaunchedEffect(uiState.loginState) {
-        if (uiState.loginState is ResourceFirebase.Success) {
+    LaunchedEffect(uiState.loginByEmailState) {
+        if (uiState.loginByEmailState is ResourceFirebase.Success) {
             uiNavigation.onNavigateToHome()
         }
+    }
+
+    if (uiState.loginByGoogleState is Resource.Success ||
+        uiState.loginByFacebookState is Resource.Success
+    ) {
+        DialogCenterV1(
+            state = DialogStateV1(
+                type = DialogType.WARNING,
+                title = WARNING_STRING,
+                message = stringResource(R.string.under_maintenance),
+                primaryButtonText = OK_STRING
+            ),
+            onDismiss = { }
+        )
     }
 
     Box(
@@ -200,7 +220,7 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    uiEvent.onLoginClicked(username.value, password.value)
+                    uiEvent.onLoginByEmailClicked(username.value, password.value)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -244,7 +264,7 @@ fun LoginScreen(
                         containerColor = Color(0xFF1877F2)
                     ),
                     shape = RoundedCornerShape(50),
-                    onClick = { uiNavigation.onNavigateToSignUpByFacebook() },
+                    onClick = { uiEvent.onLoginByFacebookClicked() },
                 ) {
                     Text(Constant.Title.FACEBOOK)
                 }
@@ -255,7 +275,7 @@ fun LoginScreen(
                         containerColor = Color(0xFFDB4437)
                     ),
                     shape = RoundedCornerShape(50),
-                    onClick = { uiNavigation.onNavigateToSignUpByGoogle() },
+                    onClick = { uiEvent.onLoginByGoogleClicked() },
                 ) {
                     Text(Constant.Title.GOOGLE)
                 }

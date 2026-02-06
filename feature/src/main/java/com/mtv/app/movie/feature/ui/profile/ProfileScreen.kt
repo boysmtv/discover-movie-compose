@@ -9,6 +9,10 @@
 package com.mtv.app.movie.feature.ui.profile
 
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.util.Log
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,7 +29,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
@@ -33,30 +36,37 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import androidx.compose.ui.window.Dialog
 import com.mtv.app.movie.common.R
+import com.mtv.app.movie.common.base64ToBitmap
 import com.mtv.app.movie.feature.event.profile.ProfileDataListener
 import com.mtv.app.movie.feature.event.profile.ProfileEventListener
 import com.mtv.app.movie.feature.event.profile.ProfileNavigationListener
 import com.mtv.app.movie.feature.event.profile.ProfileStateListener
 import com.mtv.based.core.network.utils.Resource
-import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(
     showBackground = true,
@@ -81,6 +91,15 @@ fun ProfileScreen(
     uiEvent: ProfileEventListener,
     uiNavigation: ProfileNavigationListener
 ) {
+    val isPreview = LocalInspectionMode.current
+    val photoBase64 = uiData.userAccount?.photo
+    val avatarBitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+    LaunchedEffect(photoBase64) {
+        if (!isPreview && !photoBase64.isNullOrBlank()) {
+            avatarBitmap.value = base64ToBitmap(photoBase64)
+        }
+    }
 
     LaunchedEffect(uiState.logoutState) {
         if (uiState.logoutState is Resource.Success) {
@@ -101,7 +120,7 @@ fun ProfileScreen(
         ProfileHeaderSection(
             name = uiData.userAccount?.name ?: uiData.userDummy.name,
             email = uiData.userAccount?.email ?: uiData.userDummy.email,
-            photoUrl = uiData.userAccount?.photoUrl ?: uiData.userDummy.photoUrl
+            photoBitmap = avatarBitmap.value
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -117,30 +136,43 @@ fun ProfileScreen(
 fun ProfileHeaderSection(
     name: String,
     email: String,
-    photoUrl: String
+    photoBitmap: Bitmap?
 ) {
+    var showPreview by remember { mutableStateOf(false) }
+
     Box(contentAlignment = Alignment.BottomEnd) {
-        AsyncImage(
-            model = photoUrl.ifBlank { "https://via.placeholder.com/150" },
-            contentDescription = EMPTY_STRING,
+        AvatarImage(
+            bitmap = photoBitmap,
             modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape),
+                .size(100.dp)
+                .clickable(enabled = photoBitmap != null) {
+                    showPreview = true
+                },
             contentScale = ContentScale.Crop
         )
+    }
 
-        Surface(
-            modifier = Modifier
-                .size(36.dp),
-            shape = CircleShape,
-            color = Color(0xFF2563EB)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = EMPTY_STRING,
-                tint = Color.White,
-                modifier = Modifier.padding(8.dp)
+    if (showPreview && photoBitmap != null) {
+        Dialog(
+            onDismissRequest = { showPreview = false },
+            properties = androidx.compose.ui.window.DialogProperties(
+                usePlatformDefaultWidth = false
             )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .clickable { showPreview = false },
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    bitmap = photoBitmap.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Fit
+                )
+            }
         }
     }
 
@@ -247,6 +279,33 @@ fun MenuRow(
             text = "›",
             fontSize = 24.sp,
             color = Color.Gray
+        )
+    }
+}
+
+@Composable
+private fun AvatarImage(
+    bitmap: Bitmap?,
+    modifier: Modifier,
+    contentScale: ContentScale
+) {
+    val imageModifier = modifier
+        .clip(CircleShape)
+        .background(Color.LightGray)
+
+    if (bitmap != null) {
+        Image(
+            bitmap = bitmap.asImageBitmap(),
+            contentDescription = null,
+            modifier = imageModifier,
+            contentScale = contentScale
+        )
+    } else {
+        Image(
+            painter = painterResource(R.drawable.ic_avatar),
+            contentDescription = null,
+            modifier = imageModifier,
+            contentScale = contentScale
         )
     }
 }

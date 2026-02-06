@@ -1,5 +1,7 @@
 package com.mtv.app.movie.feature.event.register
 
 data class RegisterEventListener(
-    val onRegisterClicked: (name: String, email: String, phone: String, password: String) -> Unit
+    val onRegisterByEmailClicked: (name: String, email: String, phone: String, password: String, photoBase64: String) -> Unit,
+    val onRegisterByGoogleClicked: () -> Unit,
+    val onRegisterByFacebookClicked: () -> Unit
 )

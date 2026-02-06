@@ -16,6 +16,7 @@ class Constant {
         const val SIGN_UP = "Sign Up"
         const val EDIT_PROFILE = "Edit Profile"
         const val FORGOT_PASSWORD = "Forgot Password"
+        const val CHANGE_PASSWORD = "Change Password"
 
         /* =========================
          * FORM FIELDS

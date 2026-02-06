@@ -8,6 +8,6 @@ data class LoginResponse(
     val name: String = EMPTY_STRING,
     val email: String = EMPTY_STRING,
     val phone: String = EMPTY_STRING,
-    val photoUrl: String = EMPTY_STRING,
+    val photo: String = EMPTY_STRING,
     val createdAt: String = EMPTY_STRING
 )

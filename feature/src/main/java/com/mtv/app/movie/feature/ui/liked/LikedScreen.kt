@@ -21,7 +21,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,14 +53,11 @@ fun PreviewLikedScreen() {
     LikedScreen(
         uiState = LikedStateListener(),
         uiData = LikedDataListener(
-            movieLikedList = listOf(
-                previewMovieDetail,
-                previewMovieDetail,
-                previewMovieDetail,
-                previewMovieDetail,
-                previewMovieDetail,
-                previewMovieDetail,
-            )
+            movieLikedList = List(12) { index ->
+                previewMovieDetail.copy(
+                    id = index
+                )
+            }
         ),
         uiEvent = LikedEventListener({}, {}, {}, {}),
         uiNavigation = LikedNavigationListener {},
@@ -103,7 +102,15 @@ fun LikedScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF181818),
+                        Color(0xFF0F0F0F),
+                        Color(0xFF000000)
+                    )
+                )
+            )
     ) {
         LikedHeader(
             onDeletedAllMovies = uiEvent.onDeletedAllMovies

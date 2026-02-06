@@ -11,7 +11,10 @@ package com.mtv.app.movie.feature.ui.liked
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -24,6 +27,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,15 +65,30 @@ fun LikedFeatureMovieCard(
     onClickDeleted: (MovieDetailResponse) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
     Box(
         modifier = modifier
             .width(120.dp)
             .height(170.dp)
             .clip(RoundedCornerShape(8.dp))
-            .clickable {
+            .border(
+                width = if (isPressed) 1.dp else 0.5.dp,
+                color = if (isPressed)
+                    Color.White.copy(alpha = 0.7f)
+                else
+                    Color.White.copy(alpha = 0.15f),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
                 onClickDetail(movie)
             }
     ) {
+
         Image(
             painter = rememberAsyncImagePainter(
                 BuildConfig.TMDB_IMAGE_URL + movie.posterPath
@@ -81,13 +101,15 @@ fun LikedFeatureMovieCard(
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 6.dp, bottom = 6.dp)
+                .padding(end = 12.dp, bottom = 12.dp)
                 .size(32.dp)
                 .background(
                     color = Color.Black.copy(alpha = 0.6f),
                     shape = CircleShape
                 )
-                .clickable { onClickDeleted(movie) },
+                .clickable {
+                    onClickDeleted(movie)
+                },
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -97,6 +119,5 @@ fun LikedFeatureMovieCard(
                 modifier = Modifier.size(18.dp)
             )
         }
-
     }
 }

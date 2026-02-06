@@ -9,12 +9,11 @@ import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.LoginRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.LoginUseCase
-import com.mtv.app.movie.feature.event.home.HomeDataListener
-import com.mtv.app.movie.feature.event.home.HomeStateListener
 import com.mtv.app.movie.feature.event.login.LoginStateListener
+import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,18 +33,18 @@ class LoginViewModel @Inject constructor(
     init {
         collectFieldSuccessFirebase(
             parent = uiState,
-            selector = { it.loginState }
+            selector = { it.loginByEmailState }
         ) { data ->
             securePrefs.putObject(ConstantPreferences.USER_ACCOUNT, data)
         }
     }
 
     /** LOGIN */
-    fun doLogin(username: String, password: String) {
+    fun doLoginByEmail(username: String, password: String) {
         launchFirebaseUseCase(
             target = uiState.valueFlowOf(
-                get = { it.loginState },
-                set = { state -> copy(loginState = state) }
+                get = { it.loginByEmailState },
+                set = { state -> copy(loginByEmailState = state) }
             ),
             block = {
                 loginUseCase(
@@ -58,6 +57,16 @@ class LoginViewModel @Inject constructor(
                 )
             }
         )
+    }
+
+    /** LOGIN BY GOOGLE */
+    fun doLoginByGoogle() {
+        uiState.update { it.copy(loginByGoogleState = Resource.Success(Unit)) }
+    }
+
+    /** LOGIN BY GOOGLE */
+    fun doLoginByFacebook() {
+        uiState.update { it.copy(loginByFacebookState = Resource.Success(Unit)) }
     }
 
 }

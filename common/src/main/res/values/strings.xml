@@ -5,6 +5,7 @@
     <string name="success_register">Success Register</string>
     <string name="success_clear_fav">Successfully clear your favorite</string>
     <string name="recently_added">Recently added</string>
+    <string name="under_maintenance">Under Maintenance</string>
     <string name="hello">Hello,</string>
     <string name="your_favorite">Your favorite</string>
     <string name="hide_password">Hide Password</string>
