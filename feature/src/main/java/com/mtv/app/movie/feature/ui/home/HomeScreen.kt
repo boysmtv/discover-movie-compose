@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Devices
@@ -65,7 +66,7 @@ fun PreviewHomeScreen() {
                 name = "Dedy Wijaya",
                 email = "Dedy.wijaya@ikonsultan.com",
                 phone = "08158844424",
-                photoUrl = "https://i.pinimg.com/736x/41/66/b0/4166b08e8d32aff9e00f2bee5e2dc4dd.jpg",
+                photo = "https://i.pinimg.com/736x/41/66/b0/4166b08e8d32aff9e00f2bee5e2dc4dd.jpg",
                 createdAt = "21/12/26"
             )
         ),
@@ -106,7 +107,15 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF181818),
+                        Color(0xFF0F0F0F),
+                        Color(0xFF000000)
+                    )
+                )
+            )
     ) {
         HomeHeader(
             userName = uiData.loginResponse?.name ?: EMPTY_STRING,
@@ -114,12 +123,11 @@ fun HomeScreen(
             onNotificationClick = { /* TODO */ }
         )
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(16.dp))
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
                 .verticalScroll(scrollState)
         ) {
             if (uiState.upComingState is Resource.Success) {

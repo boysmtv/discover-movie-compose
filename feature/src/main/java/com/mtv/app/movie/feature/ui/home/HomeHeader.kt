@@ -83,7 +83,7 @@ fun HomeHeader(
 
         Box(
             modifier = Modifier
-                .size(40.dp)
+                .size(50.dp)
                 .clip(CircleShape)
                 .background(Color.White.copy(alpha = 0.1f))
                 .clickable { onNotificationClick() },

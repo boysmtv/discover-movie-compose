@@ -4,35 +4,43 @@ import android.content.res.Configuration
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mtv.app.movie.common.R
 import com.mtv.app.movie.feature.event.splash.SplashEventListener
 import com.mtv.app.movie.feature.event.splash.SplashNavigationListener
 import com.mtv.app.movie.feature.event.splash.SplashStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
+import kotlin.random.Random
+
+/* ---------------------------------------------------
+   PREVIEW
+--------------------------------------------------- */
 
 @Preview(
     showBackground = true,
@@ -55,18 +63,20 @@ fun SplashScreen(
     uiEvent: SplashEventListener,
     uiNavigation: SplashNavigationListener
 ) {
-    val scale = remember { Animatable(0f) }
+
+    val scale = remember { Animatable(0.8f) }
     val alpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-
         scale.animateTo(
-            1.1f, animationSpec = tween(700, easing = {
-                OvershootInterpolator(4f).getInterpolation(it)
-            })
+            1.1f,
+            animationSpec = tween(
+                durationMillis = 700,
+                easing = { OvershootInterpolator(4f).getInterpolation(it) }
+            )
         )
-        scale.animateTo(1f)
-        alpha.animateTo(1f, tween(400))
+        scale.animateTo(1f, tween(300))
+        alpha.animateTo(1f, tween(500))
 
         uiEvent.onDoSplash()
     }
@@ -79,23 +89,109 @@ fun SplashScreen(
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .scale(scale.value)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF5A3FD1),
+                            Color(0xFF4A32C3),
+                            Color(0xFF3B2AAE)
+                        )
+                    )
+                )
+        ) {
 
-            Text(
-                stringResource(R.string.movie_app),
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                color = MaterialTheme.colorScheme.primary.copy(alpha = alpha.value)
+            AbstractSplashBackground()
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 28.dp, top = 40.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+
+                Text(
+                    text = "Discover",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White.copy(alpha = alpha.value)
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = "Movie",
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF6FE3FF).copy(alpha = alpha.value)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                PulsingLoadingText()
+            }
+        }
+    }
+}
+@Composable
+private fun AbstractSplashBackground() {
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Box(
+            modifier = Modifier
+                .size(260.dp)
+                .offset(x = 160.dp, y = 220.dp)
+                .clip(RoundedCornerShape(140.dp))
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF69E3FF),
+                            Color(0xFF46C8F0)
+                        )
+                    )
+                )
+        )
+
+        Box(
+            modifier = Modifier
+                .size(220.dp)
+                .offset(x = (-60).dp, y = 420.dp)
+                .clip(RoundedCornerShape(120.dp))
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF7A5CFF),
+                            Color(0xFF5A3FD1)
+                        )
+                    )
+                )
+        )
+
+        NoiseOverlay()
+    }
+}
+
+@Composable
+private fun NoiseOverlay() {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val random = Random(1)
+
+        repeat(7_000) {
+            val x = random.nextFloat() * size.width
+            val y = random.nextFloat() * size.height
+
+            drawCircle(
+                color = Color.White.copy(alpha = 0.015f),
+                radius = random.nextFloat() * 1.4f,
+                center = androidx.compose.ui.geometry.Offset(x, y)
             )
-
-            Spacer(Modifier.height(12.dp))
-
-            PulsingLoadingText()
         }
     }
 }
@@ -114,7 +210,7 @@ fun PulsingLoadingText(text: String = "Loading") {
     Text(
         text = text,
         fontSize = 14.sp,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onBackground.copy(alpha = alpha.value)
+        fontWeight = FontWeight.Medium,
+        color = Color.White.copy(alpha = alpha.value)
     )
 }

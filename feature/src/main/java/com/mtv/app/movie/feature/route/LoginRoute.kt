@@ -26,7 +26,9 @@ fun LoginRoute(nav: NavController) {
 }
 
 private fun loginEvent(vm: LoginViewModel) = LoginEventListener(
-    onLoginClicked = vm::doLogin
+    onLoginByEmailClicked = vm::doLoginByEmail,
+    onLoginByGoogleClicked = vm::doLoginByGoogle,
+    onLoginByFacebookClicked = vm::doLoginByFacebook,
 )
 
 private fun loginNavigation(nav: NavController) = LoginNavigationListener(
@@ -44,7 +46,5 @@ private fun loginNavigation(nav: NavController) = LoginNavigationListener(
         nav.navigateAndPopLogin(
             route = AppDestinations.RESET_GRAPH
         )
-    },
-    onNavigateToSignUpByGoogle = {},
-    onNavigateToSignUpByFacebook = {},
+    }
 )

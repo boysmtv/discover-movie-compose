@@ -3,7 +3,10 @@ package com.mtv.app.movie.feature.ui.home
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -12,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,13 +53,26 @@ fun HomeFeaturedMovieCard(
     movie: MoviesItemResponse,
     onClick: (MoviesItemResponse) -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
     Box(
         modifier = Modifier
             .width(120.dp)
             .height(170.dp)
             .clip(RoundedCornerShape(8.dp))
-            .clickable {
+            .border(
+                width = if (isPressed) 1.dp else 0.5.dp,
+                color = if (isPressed)
+                    Color.White.copy(alpha = 0.7f)
+                else
+                    Color.White.copy(alpha = 0.15f),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
                 onClick(movie)
             }
     ) {

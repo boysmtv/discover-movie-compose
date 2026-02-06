@@ -8,7 +8,9 @@
 
 package com.mtv.app.movie.feature.event.profile.edit
 
-import android.net.Uri
+import android.graphics.Bitmap
+import androidx.compose.runtime.Immutable
+import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.based.core.network.utils.ResourceFirebase
 
 data class EditProfileStateListener(
@@ -16,11 +18,24 @@ data class EditProfileStateListener(
     val uploadPhotoState: ResourceFirebase<String> = ResourceFirebase.Loading
 )
 
+data class EditProfileDataListener(
+    val userAccount: LoginResponse? = null,
+    val userDummy: EditProfileDummyData = EditProfileDummyData()
+)
+
+@Immutable
+data class EditProfileDummyData(
+    val name: String = "Sana Afzal",
+    val email: String = "sanaafzal291@gmail.com",
+    val photo: Bitmap? = null
+)
+
 data class EditProfileEventListener(
     val onSaveClicked: (
         name: String,
         phone: String,
-        photoUrl: String?
+        photo: String?,
+        password: String?
     ) -> Unit,
 )
 

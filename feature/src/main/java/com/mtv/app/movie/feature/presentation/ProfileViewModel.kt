@@ -1,5 +1,6 @@
 package com.mtv.app.movie.feature.presentation
 
+import android.util.Log
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.core.provider.utils.SessionManager
@@ -25,7 +26,10 @@ class ProfileViewModel @Inject constructor(
 ) : BaseViewModel(),
     UiOwner<ProfileStateListener, ProfileDataListener> {
 
+    /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
     override val uiState = MutableStateFlow(ProfileStateListener())
+
+    /** UI DATA : DATA PERSIST (Prefs) */
     override val uiData = MutableStateFlow(ProfileDataListener())
 
     init {

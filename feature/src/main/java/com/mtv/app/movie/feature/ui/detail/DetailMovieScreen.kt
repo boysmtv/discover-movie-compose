@@ -144,7 +144,15 @@ fun DetailMovieContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF181818),
+                        Color(0xFF0F0F0F),
+                        Color(0xFF000000)
+                    )
+                )
+            )
     ) {
         item { VideoHeader(movie.posterPath ?: EMPTY_STRING, uiNavigation, video) }
         item { MovieInfoSection(movie) }
@@ -174,9 +182,6 @@ fun VideoHeader(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black))
-                )
         )
         IconButton(
             onClick = { uiNavigation.onNavigateToBack() },

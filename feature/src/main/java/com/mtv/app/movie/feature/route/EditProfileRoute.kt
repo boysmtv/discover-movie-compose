@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
+import com.mtv.app.movie.feature.event.profile.edit.EditProfileDataListener
 import com.mtv.app.movie.feature.event.profile.edit.EditProfileEventListener
 import com.mtv.app.movie.feature.event.profile.edit.EditProfileNavigationListener
 import com.mtv.app.movie.feature.event.profile.edit.EditProfileStateListener
@@ -20,10 +21,11 @@ import com.mtv.app.movie.feature.ui.profile.edit.EditProfileScreen
 
 @Composable
 fun EditProfileRoute(nav: NavController) {
-    BaseRoute<EditProfileViewModel, EditProfileStateListener, Unit> { vm, base, uiState, _ ->
+    BaseRoute<EditProfileViewModel, EditProfileStateListener, EditProfileDataListener> { vm, base, uiState, uiData ->
         BaseScreen(baseUiState = base, onDismissError = vm::dismissError) {
             EditProfileScreen(
                 uiState = uiState,
+                uiData = uiData,
                 uiEvent = editProfileEvent(vm),
                 uiNavigation = editProfileNavigation(nav)
             )

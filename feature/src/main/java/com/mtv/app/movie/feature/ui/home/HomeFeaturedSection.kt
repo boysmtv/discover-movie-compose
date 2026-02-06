@@ -57,7 +57,7 @@ fun HomeFeaturedSection(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),

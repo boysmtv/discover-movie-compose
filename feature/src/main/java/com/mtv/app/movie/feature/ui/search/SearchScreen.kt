@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
@@ -84,7 +85,15 @@ fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF181818),
+                        Color(0xFF0F0F0F),
+                        Color(0xFF000000)
+                    )
+                )
+            )
     ) {
 
         Spacer(modifier = Modifier.height(8.dp))
