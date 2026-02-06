@@ -33,7 +33,7 @@ import com.mtv.app.movie.feature.utils.mockMovieDetailResponseList
     showBackground = true,
     backgroundColor = 0xFF000000,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_6
+    device = Devices.PIXEL_3
 )
 @Composable
 fun PreviewHomeFeaturedSection() {

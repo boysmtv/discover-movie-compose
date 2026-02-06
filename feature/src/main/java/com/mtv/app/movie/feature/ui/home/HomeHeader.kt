@@ -1,6 +1,7 @@
 package com.mtv.app.movie.feature.ui.home
 
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,22 +31,20 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
     showBackground = true,
     backgroundColor = 0xFF000000,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_6
+    device = Devices.PIXEL_3
 )
 @Composable
 fun PreviewHomeHeader() {
     HomeHeader(
         userName = "William B.",
-        profileImage = R.drawable.ic_avatar,
-        onNotificationClick = { }
+        photoBitmap = null
     )
 }
 
 @Composable
 fun HomeHeader(
     userName: String,
-    profileImage: Int,
-    onNotificationClick: () -> Unit
+    photoBitmap: Bitmap?,
 ) {
     Row(
         modifier = Modifier
@@ -53,15 +53,12 @@ fun HomeHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = painterResource(profileImage),
-                contentDescription = EMPTY_STRING,
-                contentScale = ContentScale.Crop,
+            AvatarImage(
+                bitmap = photoBitmap,
                 modifier = Modifier
-                    .size(46.dp)
-                    .clip(CircleShape)
+                    .size(46.dp),
+                contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -85,8 +82,7 @@ fun HomeHeader(
             modifier = Modifier
                 .size(50.dp)
                 .clip(CircleShape)
-                .background(Color.White.copy(alpha = 0.1f))
-                .clickable { onNotificationClick() },
+                .background(Color.White.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -96,5 +92,34 @@ fun HomeHeader(
                 modifier = Modifier.size(20.dp)
             )
         }
+    }
+}
+
+
+@Composable
+private fun AvatarImage(
+    bitmap: Bitmap?,
+    modifier: Modifier,
+    contentScale: ContentScale
+) {
+    val imageModifier = modifier
+        .size(50.dp)
+        .clip(CircleShape)
+        .background(Color.LightGray)
+
+    if (bitmap != null) {
+        Image(
+            bitmap = bitmap.asImageBitmap(),
+            contentDescription = null,
+            modifier = imageModifier,
+            contentScale = contentScale
+        )
+    } else {
+        Image(
+            painter = painterResource(R.drawable.ic_avatar),
+            contentDescription = null,
+            modifier = imageModifier,
+            contentScale = contentScale
+        )
     }
 }

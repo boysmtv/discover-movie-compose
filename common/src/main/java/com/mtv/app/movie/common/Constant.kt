@@ -25,6 +25,8 @@ class Constant {
         const val USERNAME = "Username"
         const val EMAIL = "Email"
         const val PHONE = "Phone"
+        const val ENTER_YOUR_EMAIL = "Enter your email"
+        const val ENTER_YOUR_PASSWORD = "Enter your password"
 
         /* =========================
          * PASSWORD

@@ -66,7 +66,7 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
     showBackground = true,
     backgroundColor = 0xFF000000,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_6
+    device = Devices.PIXEL_3
 )
 @Composable
 fun SeriesDetailScreenPreview() {

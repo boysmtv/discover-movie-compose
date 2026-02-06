@@ -38,7 +38,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 @Preview(
     showBackground = true,
     backgroundColor = 0xFF000000,
-    device = Devices.PIXEL_6
+    device = Devices.PIXEL_3
 )
 @Composable
 fun PlayMovieScreenPreview() {

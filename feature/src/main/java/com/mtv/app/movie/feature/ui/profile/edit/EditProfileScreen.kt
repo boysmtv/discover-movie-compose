@@ -93,7 +93,7 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
     showBackground = true,
     backgroundColor = 0xFF000000,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_6
+    device = Devices.PIXEL_3
 )
 @Composable
 fun EditProfileScreenPreview() {
@@ -194,7 +194,11 @@ fun EditProfileScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFFB39DDB), Color(0xFF7986CB))
+                    colors = listOf(
+                        Color(0xFF2C225A),
+                        Color(0xFF3B2AAE),
+                        Color(0xFF5A3FD1)
+                    )
                 )
             )
     ) {
@@ -206,6 +210,8 @@ fun EditProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            Spacer(modifier = Modifier.height(40.dp))
+
             Text(
                 text = EDIT_PROFILE,
                 fontSize = 28.sp,
@@ -213,7 +219,7 @@ fun EditProfileScreen(
                 color = Color.White
             )
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(40.dp))
 
             Box(
                 modifier = Modifier.size(120.dp),
