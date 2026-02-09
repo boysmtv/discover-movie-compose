@@ -35,7 +35,9 @@ class RegisterViewModel @Inject constructor(
             selector = { it.registerByEmailState }
         ) { data ->
             sessionManager.saveUid(data)
+            uiState.update { it.copy(activeDialog = RegisterDialog.Success) }
         }
+
     }
 
     /** REGISTER BY EMAIL */
@@ -43,12 +45,7 @@ class RegisterViewModel @Inject constructor(
         launchFirebaseUseCase(
             target = uiState.valueFlowOf(
                 get = { it.registerByEmailState },
-                set = { state ->
-                    copy(
-                        registerByEmailState = state,
-                        activeDialog = RegisterDialog.Register
-                    )
-                }
+                set = { state -> copy(registerByEmailState = state) }
             ),
             block = {
                 registerUseCase(
