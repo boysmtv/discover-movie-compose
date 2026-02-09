@@ -14,6 +14,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,9 +33,7 @@ import com.mtv.app.movie.feature.utils.mockMovieDetailResponseList
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun PreviewHomeFeaturedSection() {
@@ -54,7 +54,8 @@ fun LikedFeaturedSection(
         columns = GridCells.Fixed(3),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .background(Color(0xFFF5F5F5)),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(bottom = 20.dp)

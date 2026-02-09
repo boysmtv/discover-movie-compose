@@ -45,9 +45,7 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun PreviewHomeFeaturedMovieCard() {
@@ -76,9 +74,9 @@ fun LikedFeatureMovieCard(
             .border(
                 width = if (isPressed) 1.dp else 0.5.dp,
                 color = if (isPressed)
-                    Color.White.copy(alpha = 0.7f)
+                    Color.DarkGray.copy(alpha = 0.7f)
                 else
-                    Color.White.copy(alpha = 0.15f),
+                    Color.DarkGray.copy(alpha = 0.15f),
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable(
@@ -104,7 +102,7 @@ fun LikedFeatureMovieCard(
                 .padding(end = 12.dp, bottom = 12.dp)
                 .size(32.dp)
                 .background(
-                    color = Color.Black.copy(alpha = 0.6f),
+                    color = Color.LightGray.copy(alpha = 0.1f),
                     shape = CircleShape
                 )
                 .clickable {

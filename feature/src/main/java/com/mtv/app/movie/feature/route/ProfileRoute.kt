@@ -1,3 +1,11 @@
+/*
+ * Project: App Movie Compose
+ * Author: Boys.mtv@gmail.com
+ * File: ProfileRoute.kt
+ *
+ * Last modified by Dedy Wijaya on 09/02/26 15.35
+ */
+
 package com.mtv.app.movie.feature.route
 
 import androidx.compose.runtime.Composable
@@ -27,18 +35,17 @@ fun ProfileRoute(nav: NavController) {
 }
 
 private fun profileEvent(vm: ProfileViewModel) = ProfileEventListener(
-    onLogout = vm::logout
+    onLogout = vm::doLogout,
+    onNavigateToSettings = vm::doOpenSetting,
+    onDismissActiveDialog = vm::doDismissActiveDialog,
 )
 
 private fun profileNavigation(nav: NavController) = ProfileNavigationListener(
     onNavigateToEditProfile = {
         nav.navigate(AppDestinations.EDIT_PROFILE_GRAPH)
     },
-    onNavigateToAddPin = {
-        nav.navigate(AppDestinations.ADD_PIN_GRAPH)
-    },
-    onNavigateToSettings = {
-        nav.navigate(AppDestinations.SETTING_GRAPH)
+    onNavigateToChangePassword = {
+        nav.navigate(AppDestinations.CHANGE_PASSWORD_GRAPH)
     },
     navigateToLoginAndClearBackStack = {
         nav.navigate(AppDestinations.LOGIN_GRAPH) {

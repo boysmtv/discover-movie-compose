@@ -17,6 +17,6 @@ enum class MovieTag(
 ) {
     UPCOMING(label = "Upcoming", color = Color(0xFF1E88E5), priority = 1),
     NOW_PLAYING(label = "Now Playing", color = Color(0xFF43A047), priority = 2),
-    TOP_RATED(label = "Top Rated", color = Color(0xFFFFC107), priority = 3),
+    TOP_RATED(label = "Top Rated", color = Color(0xFFFF9800), priority = 3),
     POPULAR(label = "Popular", color = Color(0xFFE53935), priority = 4)
 }

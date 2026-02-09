@@ -29,6 +29,7 @@ private fun registerEvent(vm: RegisterViewModel) = RegisterEventListener(
     onRegisterByEmailClicked = vm::doRegisterByEmail,
     onRegisterByGoogleClicked = vm::doLoginByGoogle,
     onRegisterByFacebookClicked = vm::doLoginByFacebook,
+    onDismissActiveDialog = vm::doDismissActiveDialog,
 )
 
 private fun registerNavigation(nav: NavController) = RegisterNavigationListener(

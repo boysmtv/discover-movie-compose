@@ -1,9 +1,9 @@
 /*
  * Project: App Movie Compose
  * Author: Boys.mtv@gmail.com
- * File: EditProfileViewModel.kt
+ * File: PasswordViewModel.kt
  *
- * Last modified by Dedy Wijaya on 03/02/26 11.58
+ * Last modified by Dedy Wijaya on 09/02/26 16.03
  */
 
 package com.mtv.app.movie.feature.presentation
@@ -15,27 +15,29 @@ import com.mtv.app.movie.common.ConstantPreferences
 import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.updateUiDataListener
 import com.mtv.app.movie.common.valueFlowOf
-import com.mtv.app.movie.data.model.request.UpdateProfileRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
-import com.mtv.app.movie.domain.user.UpdateProfileUseCase
-import com.mtv.app.movie.feature.event.profile.EditProfileDataListener
-import com.mtv.app.movie.feature.event.profile.EditProfileStateListener
+import com.mtv.app.movie.domain.user.PasswordUseCase
+import com.mtv.app.movie.feature.event.profile.PasswordDataListener
+import com.mtv.app.movie.feature.event.profile.PasswordStateListener
+import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class EditProfileViewModel @Inject constructor(
-    private val updateProfileUseCase: UpdateProfileUseCase,
+class PasswordViewModel @Inject constructor(
+    private val securePrefs: SecurePrefs,
     private val sessionManager: SessionManager,
-    private val securePrefs: SecurePrefs
-) : BaseViewModel(), UiOwner<EditProfileStateListener, EditProfileDataListener> {
+    private val passwordUseCase: PasswordUseCase<LoginResponse>
+) : BaseViewModel(),
+    UiOwner<PasswordStateListener, PasswordDataListener> {
 
     /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
-    override val uiState = MutableStateFlow(EditProfileStateListener())
+    override val uiState = MutableStateFlow(PasswordStateListener())
 
     /** UI DATA : DATA PERSIST (Prefs) */
-    override val uiData = MutableStateFlow(EditProfileDataListener())
+    override val uiData = MutableStateFlow(PasswordDataListener())
 
     init {
         loadLocalProfile()
@@ -52,33 +54,32 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    fun doUpdateProfile(
-        name: String,
-        phone: String,
-        photo: String,
-        email: String,
-        password: String
+    fun doSubmitPassword(
+        password: String,
+        newPassword: String,
+        newPasswordConfirm: String
     ) {
+        val email = uiData.value.userAccount?.email
         val uid = sessionManager.getUid() ?: return
 
         launchFirebaseUseCase(
             target = uiState.valueFlowOf(
-                get = { it.updateState },
-                set = { copy(updateState = it) }
+                get = { it.onSubmitPasswordState },
+                set = { copy(onSubmitPasswordState = it) }
             ),
             block = {
-                updateProfileUseCase(
-                    UpdateProfileRequest(
-                        uid = uid,
-                        name = name,
-                        phone = phone,
-                        photo = photo,
-                        email = email,
-                        password = password
-                    )
-                )
+                passwordUseCase(uid)
             }
         )
     }
-}
 
+    fun doDismissActiveDialog() {
+        uiState.update {
+            it.copy(
+                activeDialog = null,
+                onSubmitPasswordState = Resource.Loading,
+            )
+        }
+    }
+
+}

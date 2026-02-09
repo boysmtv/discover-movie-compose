@@ -1,6 +1,5 @@
 package com.mtv.app.movie.feature.ui.register
 
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,17 +24,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.LockPerson
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,7 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -53,16 +46,36 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.mtv.app.movie.common.Constant
+import com.mtv.app.movie.common.Constant.TestData.TESTDATA_EMAIL
+import com.mtv.app.movie.common.Constant.TestData.TESTDATA_NAME
+import com.mtv.app.movie.common.Constant.TestData.TESTDATA_PASSWORD
+import com.mtv.app.movie.common.Constant.TestData.TESTDATA_PHONE
+import com.mtv.app.movie.common.Constant.Title.ALREADY_HAVE_ACCOUNT
+import com.mtv.app.movie.common.Constant.Title.CREATE_ACCOUNT
+import com.mtv.app.movie.common.Constant.Title.EMAIL
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_EMAIL
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_NAME
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_PASSWORD
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_PHONE
+import com.mtv.app.movie.common.Constant.Title.FACEBOOK
+import com.mtv.app.movie.common.Constant.Title.FULL_NAME
+import com.mtv.app.movie.common.Constant.Title.GOOGLE
+import com.mtv.app.movie.common.Constant.Title.LOGIN
+import com.mtv.app.movie.common.Constant.Title.OR_CONNECT_WITH
+import com.mtv.app.movie.common.Constant.Title.PASSWORD
+import com.mtv.app.movie.common.Constant.Title.PHONE
+import com.mtv.app.movie.common.Constant.Title.SIGN_UP
 import com.mtv.app.movie.common.R
+import com.mtv.app.movie.common.ui.BaseTextInput
+import com.mtv.app.movie.common.ui.PrimaryButton
 import com.mtv.app.movie.common.uriToBase64
+import com.mtv.app.movie.feature.event.login.LoginDialog
+import com.mtv.app.movie.feature.event.register.RegisterDialog
 import com.mtv.app.movie.feature.event.register.RegisterEventListener
 import com.mtv.app.movie.feature.event.register.RegisterNavigationListener
 import com.mtv.app.movie.feature.event.register.RegisterStateListener
@@ -74,27 +87,6 @@ import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
-
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
-@Composable
-fun PreviewRegisterScreen() {
-    RegisterScreen(
-        uiState = RegisterStateListener(),
-        uiEvent = RegisterEventListener(
-            onRegisterByEmailClicked = { _, _, _, _, _ -> },
-            onRegisterByGoogleClicked = {},
-            onRegisterByFacebookClicked = {}
-        ),
-        uiNavigation = RegisterNavigationListener(
-            onNavigateToLogin = {}
-        )
-    )
-}
 
 @Composable
 fun RegisterScreen(
@@ -109,10 +101,6 @@ fun RegisterScreen(
     val email = remember { mutableStateOf(EMPTY_STRING) }
     val phone = remember { mutableStateOf(EMPTY_STRING) }
     val password = remember { mutableStateOf(EMPTY_STRING) }
-    val confirmPassword = remember { mutableStateOf(EMPTY_STRING) }
-
-    val passwordVisible = remember { mutableStateOf(false) }
-    val confirmPasswordVisible = remember { mutableStateOf(false) }
 
     var photoBase64 by remember { mutableStateOf(EMPTY_STRING) }
     val showPhotoPreview = remember { mutableStateOf(false) }
@@ -133,39 +121,40 @@ fun RegisterScreen(
     }
 
     LaunchedEffect(Unit) {
-        name.value = Constant.TestData.TESTDATA_NAME
-        email.value = Constant.TestData.TESTDATA_EMAIL
-        phone.value = Constant.TestData.TESTDATA_PHONE
-        password.value = Constant.TestData.TESTDATA_PASSWORD
-        confirmPassword.value = Constant.TestData.TESTDATA_PASSWORD
+        name.value = TESTDATA_NAME
+        email.value = TESTDATA_EMAIL
+        phone.value = TESTDATA_PHONE
+        password.value = TESTDATA_PASSWORD
     }
 
-    if (uiState.registerByEmailState is ResourceFirebase.Success) {
-        DialogCenterV1(
-            state = DialogStateV1(
-                type = DialogType.SUCCESS,
-                title = stringResource(R.string.success),
-                message = stringResource(R.string.success_register),
-                primaryButtonText = OK_STRING
-            ),
-            onDismiss = {
-                uiNavigation.onNavigateToLogin()
+    uiState.activeDialog?.let { dialog ->
+        when (dialog) {
+            is RegisterDialog.Register -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.SUCCESS,
+                        title = stringResource(R.string.success),
+                        message = stringResource(R.string.success_register),
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = {
+                        uiNavigation.onNavigateToLogin()
+                    }
+                )
             }
-        )
-    }
 
-    if (uiState.registerByGoogleState is Resource.Success ||
-        uiState.registerByFacebookState is Resource.Success
-    ) {
-        DialogCenterV1(
-            state = DialogStateV1(
-                type = DialogType.WARNING,
-                title = WARNING_STRING,
-                message = stringResource(R.string.under_maintenance),
-                primaryButtonText = OK_STRING
-            ),
-            onDismiss = { }
-        )
+            is RegisterDialog.Maintenance -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.WARNING,
+                        title = WARNING_STRING,
+                        message = dialog.message,
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = { uiEvent.onDismissActiveDialog() }
+                )
+            }
+        }
     }
 
     if (showPhotoPreview.value) {
@@ -189,11 +178,7 @@ fun RegisterScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFFB39DDB), Color(0xFF7986CB))
-                )
-            )
+            .background(Color(0xFFF5F5F5))
     ) {
         Column(
             modifier = Modifier
@@ -204,13 +189,13 @@ fun RegisterScreen(
         ) {
 
             Text(
-                text = Constant.Title.SIGN_UP,
+                text = SIGN_UP,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.DarkGray
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Box(
                 modifier = Modifier.size(110.dp),
@@ -244,162 +229,52 @@ fun RegisterScreen(
                 }
             }
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(24.dp))
 
-            OutlinedTextField(
+            BaseTextInput(
+                label = FULL_NAME,
                 value = name.value,
                 onValueChange = { name.value = it },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 12.dp)
-                    )
-                },
-                placeholder = { Text(Constant.Title.FULL_NAME) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                )
+                placeholder = ENTER_YOUR_NAME,
+                leadingIcon = Icons.Default.Person
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            BaseTextInput(
+                label = EMAIL,
                 value = email.value,
                 onValueChange = { email.value = it },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 12.dp)
-                    )
-                },
-                placeholder = { Text(Constant.Title.EMAIL) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                )
+                placeholder = ENTER_YOUR_EMAIL,
+                leadingIcon = Icons.Default.Email
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            BaseTextInput(
+                label = PHONE,
                 value = phone.value,
                 onValueChange = { phone.value = it },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Phone,
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 12.dp)
-                    )
-                },
-                placeholder = { Text(Constant.Title.PHONE) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                )
+                placeholder = ENTER_YOUR_PHONE,
+                leadingIcon = Icons.Default.Phone
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            BaseTextInput(
+                label = PASSWORD,
                 value = password.value,
                 onValueChange = { password.value = it },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 12.dp)
-                    )
-                },
-                placeholder = { Text(Constant.Title.PASSWORD) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                ),
-                trailingIcon = {
-                    val icon = if (passwordVisible.value)
-                        Icons.Default.Visibility
-                    else
-                        Icons.Default.VisibilityOff
-
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = if (passwordVisible.value) Constant.Title.HIDE_PASSWORD else Constant.Title.SHOW_PASSWORD,
-                        modifier = Modifier
-                            .clickable {
-                                passwordVisible.value = !passwordVisible.value
-                            }
-                            .padding(end = 12.dp)
-                    )
-                },
-                visualTransformation =
-                    if (passwordVisible.value) VisualTransformation.None
-                    else PasswordVisualTransformation(),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = confirmPassword.value,
-                onValueChange = { confirmPassword.value = it },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.LockPerson,
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 12.dp)
-                    )
-                },
-                placeholder = { Text(Constant.Title.CONFIRM_PASSWORD) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                ),
-                trailingIcon = {
-                    val icon = if (confirmPasswordVisible.value)
-                        Icons.Default.Visibility
-                    else
-                        Icons.Default.VisibilityOff
-
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = if (confirmPasswordVisible.value) Constant.Title.HIDE_PASSWORD else Constant.Title.SHOW_PASSWORD,
-                        modifier = Modifier
-                            .clickable {
-                                confirmPasswordVisible.value = !confirmPasswordVisible.value
-                            }
-                            .padding(end = 12.dp)
-                    )
-                },
-                visualTransformation =
-                    if (confirmPasswordVisible.value) VisualTransformation.None
-                    else PasswordVisualTransformation(),
+                placeholder = ENTER_YOUR_PASSWORD,
+                leadingIcon = Icons.Default.Lock,
+                isPassword = true
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
+            PrimaryButton(
+                text = CREATE_ACCOUNT,
+                enabled = true,
                 onClick = {
                     uiEvent.onRegisterByEmailClicked(
                         name.value,
@@ -408,23 +283,14 @@ fun RegisterScreen(
                         password.value,
                         photoBase64
                     )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
-                shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF5C6BC0)
-                )
-            ) {
-                Text(Constant.Title.CREATE_ACCOUNT, fontSize = 16.sp)
-            }
+                }
+            )
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = Constant.Title.OR_CONNECT_WITH,
-                color = Color.White.copy(alpha = 0.7f),
+                text = OR_CONNECT_WITH,
+                color = Color.DarkGray,
                 fontSize = 12.sp
             )
 
@@ -442,7 +308,7 @@ fun RegisterScreen(
                     ),
                     onClick = { uiEvent.onRegisterByFacebookClicked() }
                 ) {
-                    Text(Constant.Title.FACEBOOK)
+                    Text(FACEBOOK)
                 }
 
                 Button(
@@ -453,26 +319,28 @@ fun RegisterScreen(
                     ),
                     onClick = { uiEvent.onRegisterByGoogleClicked() }
                 ) {
-                    Text(Constant.Title.GOOGLE)
+                    Text(GOOGLE)
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row {
                 Text(
-                    text = Constant.Title.ALREADY_HAVE_ACCOUNT,
-                    color = Color.White,
+                    text = ALREADY_HAVE_ACCOUNT,
+                    color = Color.DarkGray,
                     fontSize = 12.sp
                 )
                 Text(
-                    text = Constant.Title.LOGIN,
-                    color = Color.White,
+                    text = LOGIN,
+                    color = Color.Blue,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,
-                    modifier = Modifier.clickable {
-                        uiNavigation.onNavigateToLogin()
-                    }
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                        .clickable {
+                            uiNavigation.onNavigateToLogin()
+                        }
                 )
             }
         }
@@ -500,4 +368,24 @@ private fun AvatarImage(
             contentScale = contentScale
         )
     }
+}
+
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun PreviewRegisterScreen() {
+    RegisterScreen(
+        uiState = RegisterStateListener(),
+        uiEvent = RegisterEventListener(
+            onRegisterByEmailClicked = { _, _, _, _, _ -> },
+            onRegisterByGoogleClicked = {},
+            onRegisterByFacebookClicked = {},
+            onDismissActiveDialog = {},
+        ),
+        uiNavigation = RegisterNavigationListener(
+            onNavigateToLogin = {}
+        )
+    )
 }

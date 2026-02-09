@@ -8,4 +8,5 @@ data class LoginStateListener(
     val loginByEmailState: ResourceFirebase<LoginResponse> = ResourceFirebase.Loading,
     val loginByGoogleState: Resource<Unit> = Resource.Loading,
     val loginByFacebookState: Resource<Unit> = Resource.Loading,
+    val activeDialog: LoginDialog? = null
 )

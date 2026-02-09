@@ -8,13 +8,11 @@
 
 package com.mtv.app.movie.feature.ui.profile
 
-import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.util.Log
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,16 +44,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,26 +62,16 @@ import androidx.compose.ui.window.Dialog
 import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.base64ToBitmap
 import com.mtv.app.movie.feature.event.profile.ProfileDataListener
+import com.mtv.app.movie.feature.event.profile.ProfileDialog
 import com.mtv.app.movie.feature.event.profile.ProfileEventListener
 import com.mtv.app.movie.feature.event.profile.ProfileNavigationListener
 import com.mtv.app.movie.feature.event.profile.ProfileStateListener
 import com.mtv.based.core.network.utils.Resource
-
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen(
-        uiState = ProfileStateListener(),
-        uiData = ProfileDataListener(),
-        uiEvent = ProfileEventListener(),
-        uiNavigation = ProfileNavigationListener()
-    )
-}
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Composable
 fun ProfileScreen(
@@ -102,30 +90,35 @@ fun ProfileScreen(
         }
     }
 
-    LaunchedEffect(uiState.logoutState) {
-        if (uiState.logoutState is Resource.Success) {
+    LaunchedEffect(uiState.onLogoutState) {
+        if (uiState.onLogoutState is Resource.Success) {
             uiNavigation.navigateToLoginAndClearBackStack()
+        }
+    }
+
+    uiState.activeDialog?.let { dialog ->
+        when (dialog) {
+            is ProfileDialog.Maintenance -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.WARNING,
+                        title = WARNING_STRING,
+                        message = dialog.message,
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = { uiEvent.onDismissActiveDialog() }
+                )
+            }
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF2C225A),
-                        Color(0xFF3B2AAE),
-                        Color(0xFF5A3FD1)
-                    )
-                )
-            )
-            .padding(horizontal = 24.dp, vertical = 24.dp),
+            .background(Color(0xFFF5F5F5))
+            .padding(horizontal = 16.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Spacer(Modifier.height(48.dp))
-
         ProfileHeaderSection(
             name = uiData.userAccount?.name ?: uiData.userDummy.name,
             email = uiData.userAccount?.email ?: uiData.userDummy.email,
@@ -149,16 +142,80 @@ fun ProfileHeaderSection(
 ) {
     var showPreview by remember { mutableStateOf(false) }
 
-    Box(contentAlignment = Alignment.BottomEnd) {
-        AvatarImage(
-            bitmap = photoBitmap,
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(240.dp)
+            .clip(RoundedCornerShape(22.dp))
+            .background(Color.White)
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AvatarImage(
+                bitmap = photoBitmap,
+                modifier = Modifier
+                    .size(80.dp)
+                    .clickable(enabled = photoBitmap != null) {
+                        showPreview = true
+                    },
+                contentScale = ContentScale.Crop
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = name,
+                    color = Color.DarkGray,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = email,
+                    color = Color(0xFF2563EB),
+                    fontSize = 14.sp
+                )
+            }
+        }
+
+        Box(
             modifier = Modifier
-                .size(100.dp)
-                .clickable(enabled = photoBitmap != null) {
-                    showPreview = true
-                },
-            contentScale = ContentScale.Crop
-        )
+                .weight(1f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(2.dp)
+                        .background(Color(0xFF5A3FD1).copy(alpha = 0.6f))
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Text(
+                    text = "“Small steps taken consistently can lead to remarkable change.”",
+                    color = Color(0xFF5A3FD1),
+                    fontSize = 15.sp,
+                    fontStyle = FontStyle.Italic,
+                    lineHeight = 22.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+            }
+        }
     }
 
     if (showPreview && photoBitmap != null) {
@@ -184,31 +241,6 @@ fun ProfileHeaderSection(
             }
         }
     }
-
-    Spacer(Modifier.height(24.dp))
-
-    Text(
-        text = name,
-        fontSize = 22.sp,
-        fontWeight = FontWeight.Bold
-    )
-
-    Spacer(Modifier.height(24.dp))
-
-    Box(
-        modifier = Modifier
-            .background(
-                color = Color(0xFFDCE9FF),
-                shape = RoundedCornerShape(10.dp)
-            )
-            .padding(horizontal = 14.dp, vertical = 6.dp)
-    ) {
-        Text(
-            text = email,
-            color = Color(0xFF2563EB),
-            fontSize = 14.sp
-        )
-    }
 }
 
 @Composable
@@ -217,7 +249,8 @@ fun ProfileMenuCard(
     uiNavigation: ProfileNavigationListener
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
@@ -232,9 +265,9 @@ fun ProfileMenuCard(
             HorizontalDivider()
 
             MenuRow(
-                title = stringResource(R.string.add_pin),
+                title = stringResource(R.string.change_password),
                 icon = Icons.Outlined.Lock,
-                onClick = uiNavigation.onNavigateToAddPin
+                onClick = uiNavigation.onNavigateToChangePassword
             )
 
             HorizontalDivider()
@@ -242,7 +275,7 @@ fun ProfileMenuCard(
             MenuRow(
                 title = stringResource(R.string.settings),
                 icon = Icons.Outlined.Settings,
-                onClick = uiNavigation.onNavigateToSettings
+                onClick = uiEvent.onNavigateToSettings
             )
 
             HorizontalDivider()
@@ -317,4 +350,18 @@ private fun AvatarImage(
             contentScale = contentScale
         )
     }
+}
+
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun ProfileScreenPreview() {
+    ProfileScreen(
+        uiState = ProfileStateListener(),
+        uiData = ProfileDataListener(),
+        uiEvent = ProfileEventListener(),
+        uiNavigation = ProfileNavigationListener()
+    )
 }

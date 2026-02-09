@@ -38,9 +38,7 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun PreviewLikedHeader() {
@@ -56,29 +54,30 @@ fun LikedHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .background(Color(0xFFF5F5F5)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
         Text(
             text = stringResource(R.string.your_favorite),
-            color = Color.White.copy(0.7f),
+            color = Color.DarkGray.copy(0.7f),
             fontSize = 20.sp
         )
 
         Box(
             modifier = Modifier
-                .size(40.dp)
+                .size(42.dp)
                 .clip(CircleShape)
-                .background(Color.White.copy(alpha = 0.1f))
+                .background(Color.DarkGray.copy(alpha = 0.1f))
                 .clickable { onDeletedAllMovies() },
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.DeleteSweep,
                 contentDescription = EMPTY_STRING,
-                tint = Color.White.copy(0.8f),
+                tint = Color.DarkGray.copy(0.8f),
                 modifier = Modifier.size(20.dp)
             )
         }

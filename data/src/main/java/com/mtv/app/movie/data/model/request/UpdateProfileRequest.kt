@@ -12,5 +12,7 @@ data class UpdateProfileRequest(
     val uid: String,
     val name: String,
     val phone: String,
-    val photo: String?
+    val photo: String,
+    val email: String,
+    val password: String
 )

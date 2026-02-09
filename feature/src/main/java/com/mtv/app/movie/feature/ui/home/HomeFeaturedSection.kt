@@ -1,6 +1,7 @@
 package com.mtv.app.movie.feature.ui.home
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,9 +25,7 @@ import com.mtv.app.movie.feature.utils.mockMoviesResponse
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun PreviewHomeFeaturedSection() {
@@ -47,13 +46,15 @@ fun HomeFeaturedSection(
     if (movies.isEmpty()) return
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFFF5F5F5))
     ) {
         Text(
             text = movieCategory.title,
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.White,
+            color = Color.DarkGray,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 

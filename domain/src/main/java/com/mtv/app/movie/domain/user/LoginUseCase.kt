@@ -1,3 +1,11 @@
+/*
+ * Project: App Movie Compose
+ * Author: Boys.mtv@gmail.com
+ * File: LoginUseCase.kt
+ *
+ * Last modified by Dedy Wijaya on 03/02/26 11.59
+ */
+
 package com.mtv.app.movie.domain.user
 
 import com.google.firebase.auth.FirebaseAuth

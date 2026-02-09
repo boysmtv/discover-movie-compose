@@ -1,6 +1,5 @@
 package com.mtv.app.movie.feature.ui.reset
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,9 +48,7 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun PreviewResetScreen() {
@@ -98,11 +94,7 @@ fun ResetScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFFB39DDB), Color(0xFF7986CB))
-                )
-            )
+            .background(Color(0xFFF5F5F5))
     ) {
         Column(
             modifier = Modifier
@@ -115,14 +107,14 @@ fun ResetScreen(
                 text = Constant.Title.FORGOT_PASSWORD,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.DarkGray
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
                 text = stringResource(R.string.enter_your_email_reset_password),
-                color = Color.White.copy(alpha = 0.8f),
+                color = Color.DarkGray.copy(alpha = 0.8f),
                 fontSize = 14.sp
             )
 
@@ -174,7 +166,7 @@ fun ResetScreen(
 
             Text(
                 text = stringResource(R.string.or_reset_via),
-                color = Color.White.copy(alpha = 0.7f),
+                color = Color.White,
                 fontSize = 12.sp
             )
 
@@ -216,15 +208,17 @@ fun ResetScreen(
             Row {
                 Text(
                     text = stringResource(R.string.back_to),
-                    color = Color.White,
+                    color = Color.DarkGray,
                     fontSize = 12.sp
                 )
                 Text(
                     text = Constant.Title.LOGIN,
-                    color = Color.White,
+                    color = Color.Blue,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,
-                    modifier = Modifier.clickable {
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                        .clickable {
                         uiNavigation.onNavigateToLogin()
                     }
                 )

@@ -1,6 +1,5 @@
 package com.mtv.app.movie.feature.ui.detail
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -62,27 +61,6 @@ import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.ERROR_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
-@Composable
-fun SeriesDetailScreenPreview() {
-    MaterialTheme {
-        DetailMovieContent(
-            uiState = DetailStateListener(
-                detailState = Resource.Success(
-                    previewMovieDetail
-                )
-            ),
-            uiNavigation = DetailNavigationListener({}, {}),
-            uiEvent = DetailEventListener({}, {}, {}, {}, {}, {}, {}, {})
-        )
-    }
-}
-
 @Composable
 fun DetailMovieScreen(
     uiState: DetailStateListener,
@@ -138,27 +116,21 @@ fun DetailMovieContent(
     uiEvent: DetailEventListener,
     uiNavigation: DetailNavigationListener
 ) {
-    val movie = (uiState.detailState as? Resource.Success)?.data ?: previewMovieDetail
-    val video = (uiState.videosState as? Resource.Success)?.data ?: previewVideoResponse
+    if (uiState.detailState is Resource.Success){
+        val movie = uiState.detailState.data
+        val video = (uiState.videosState as? Resource.Success)?.data
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF181818),
-                        Color(0xFF0F0F0F),
-                        Color(0xFF000000)
-                    )
-                )
-            )
-    ) {
-        item { VideoHeader(movie.posterPath ?: EMPTY_STRING, uiNavigation, video) }
-        item { MovieInfoSection(movie) }
-        item { PlayDownloadSection { uiEvent.onPlayMovies() } }
-        item { DescriptionSection(movie.overview) }
-        item { ActionButtons(uiEvent, movie) }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF5F5F5))
+        ) {
+            item { VideoHeader(movie.posterPath.orEmpty(), uiNavigation, video ?: MovieVideoResponse()) }
+            item { MovieInfoSection(movie) }
+            item { PlayDownloadSection { uiEvent.onPlayMovies() } }
+            item { DescriptionSection(movie.overview) }
+            item { ActionButtons(uiEvent, movie) }
+        }
     }
 }
 
@@ -188,16 +160,16 @@ fun VideoHeader(
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.TopStart)
-        ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White) }
+        ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.DarkGray) }
 
         Icon(
             imageVector = Icons.Default.PlayArrow,
             contentDescription = null,
-            tint = Color.White,
+            tint = Color.DarkGray,
             modifier = Modifier
                 .size(72.dp)
                 .align(Alignment.Center)
-                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                .background(Color.LightGray, CircleShape)
                 .padding(12.dp)
                 .clickable { video.results.getOrNull(0)?.key?.let { uiNavigation.onNavigateToPlayMovie(it) } }
         )
@@ -207,7 +179,7 @@ fun VideoHeader(
 @Composable
 fun MovieInfoSection(movie: MovieDetailResponse) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(movie.title, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        Text(movie.title, color = Color.DarkGray, fontSize = 22.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         Row {
             Text(movie.releaseDate.formatDateAutoLegacy("yyyy"), color = Color.Gray, fontSize = 12.sp)
@@ -225,7 +197,7 @@ fun PlayDownloadSection(onPlay: () -> Unit) {
         Button(
             onClick = onPlay,
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
         ) {
             Icon(Icons.Default.PlayArrow, null, tint = Color.Black)
             Spacer(modifier = Modifier.width(8.dp))
@@ -236,7 +208,7 @@ fun PlayDownloadSection(onPlay: () -> Unit) {
 
 @Composable
 fun DescriptionSection(description: String) {
-    Text(description, color = Color.White, fontSize = 14.sp, modifier = Modifier.padding(16.dp))
+    Text(description, color = Color.DarkGray, fontSize = 14.sp, modifier = Modifier.padding(16.dp))
 }
 
 @Composable
@@ -255,8 +227,28 @@ fun ActionButtons(uiEvent: DetailEventListener, movie: MovieDetailResponse) {
 @Composable
 fun ActionItem(icon: ImageVector, text: String, onClick: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { onClick() }) {
-        Icon(icon, contentDescription = null, tint = Color.White)
+        Icon(icon, contentDescription = null, tint = Color.DarkGray)
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text, color = Color.White, fontSize = 12.sp)
+        Text(text, color = Color.DarkGray, fontSize = 12.sp)
+    }
+}
+
+
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun SeriesDetailScreenPreview() {
+    MaterialTheme {
+        DetailMovieContent(
+            uiState = DetailStateListener(
+                detailState = Resource.Success(
+                    previewMovieDetail
+                )
+            ),
+            uiNavigation = DetailNavigationListener({}, {}),
+            uiEvent = DetailEventListener({}, {}, {}, {}, {}, {}, {}, {})
+        )
     }
 }
