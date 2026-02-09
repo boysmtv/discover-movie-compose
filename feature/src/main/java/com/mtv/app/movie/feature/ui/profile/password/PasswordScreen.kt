@@ -9,28 +9,18 @@
 package com.mtv.app.movie.feature.ui.profile.password
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockPerson
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -42,38 +32,32 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.common.Constant.Title.CHANGE_PASSWORD
 import com.mtv.app.movie.common.Constant.Title.CONFIRM_NEW_PASSWORD
 import com.mtv.app.movie.common.Constant.Title.CURRENT_PASSWORD
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_NEW_CONFIRM_PASSWORD
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_NEW_PASSWORD
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_PASSWORD
 import com.mtv.app.movie.common.Constant.Title.NEW_PASSWORD
 import com.mtv.app.movie.common.Constant.Title.SAVE_CHANGES
+import com.mtv.app.movie.common.Constant.Title.UPDATE_PROFILE
 import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.ui.BaseTextInput
 import com.mtv.app.movie.common.ui.PrimaryButton
-import com.mtv.app.movie.feature.event.login.LoginDialog
-import com.mtv.app.movie.feature.event.profile.EditProfileDataListener
-import com.mtv.app.movie.feature.event.profile.EditProfileEventListener
-import com.mtv.app.movie.feature.event.profile.EditProfileNavigationListener
-import com.mtv.app.movie.feature.event.profile.EditProfileStateListener
 import com.mtv.app.movie.feature.event.profile.PasswordDataListener
 import com.mtv.app.movie.feature.event.profile.PasswordDialog
 import com.mtv.app.movie.feature.event.profile.PasswordEventListener
 import com.mtv.app.movie.feature.event.profile.PasswordNavigationListener
 import com.mtv.app.movie.feature.event.profile.PasswordStateListener
-import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
-import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Composable
 fun PasswordScreen(
@@ -84,13 +68,13 @@ fun PasswordScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    val currentPassword = remember { mutableStateOf(EMPTY_STRING) }
+    val oldPassword = remember { mutableStateOf(EMPTY_STRING) }
     val newPassword = remember { mutableStateOf(EMPTY_STRING) }
     val newPasswordConfirm = remember { mutableStateOf(EMPTY_STRING) }
 
     val isFormValid = remember {
         derivedStateOf {
-            currentPassword.value.isNotBlank()
+            oldPassword.value.isNotBlank()
                     && newPassword.value.isNotBlank()
                     && newPasswordConfirm.value.isNotBlank()
         }
@@ -118,11 +102,7 @@ fun PasswordScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFFB39DDB), Color(0xFF7986CB))
-                )
-            )
+            .background(Color(0xFFF5F5F5))
     ) {
         Column(
             modifier = Modifier
@@ -132,11 +112,22 @@ fun PasswordScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = CHANGE_PASSWORD,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray
+            )
+
+            Spacer(Modifier.height(42.dp))
+
             BaseTextInput(
-                label = CHANGE_PASSWORD,
-                value = currentPassword.value,
-                onValueChange = { currentPassword.value = it },
-                placeholder = CURRENT_PASSWORD,
+                label = CURRENT_PASSWORD,
+                value = oldPassword.value,
+                onValueChange = { oldPassword.value = it },
+                placeholder = ENTER_YOUR_PASSWORD,
                 leadingIcon = Icons.Default.Lock,
                 isPassword = true
             )
@@ -147,7 +138,7 @@ fun PasswordScreen(
                 label = NEW_PASSWORD,
                 value = newPassword.value,
                 onValueChange = { newPassword.value = it },
-                placeholder = NEW_PASSWORD,
+                placeholder = ENTER_YOUR_NEW_PASSWORD,
                 leadingIcon = Icons.Default.Lock,
                 isPassword = true
             )
@@ -158,7 +149,7 @@ fun PasswordScreen(
                 label = CONFIRM_NEW_PASSWORD,
                 value = newPasswordConfirm.value,
                 onValueChange = { newPasswordConfirm.value = it },
-                placeholder = CONFIRM_NEW_PASSWORD,
+                placeholder = ENTER_YOUR_NEW_CONFIRM_PASSWORD,
                 leadingIcon = Icons.Default.LockPerson,
                 isPassword = true
             )
@@ -171,9 +162,9 @@ fun PasswordScreen(
                 enabled = isFormValid.value,
                 onClick = {
                     uiEvent.onSubmitPassword(
-                        currentPassword,
-                        newPassword,
-                        newPasswordConfirm
+                        oldPassword.value,
+                        newPassword.value,
+                        newPasswordConfirm.value
                     )
                 }
             )
@@ -191,7 +182,7 @@ fun PasswordScreenPreview() {
         PasswordScreen(
             uiState = PasswordStateListener(),
             uiData = PasswordDataListener(),
-            uiEvent = PasswordEventListener(),
+            uiEvent = PasswordEventListener({ _, _, _ -> }, {}),
             uiNavigation = PasswordNavigationListener(),
         )
     }

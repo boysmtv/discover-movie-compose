@@ -39,6 +39,8 @@ class Constant {
         const val CONFIRM_PASSWORD = "Confirm Password"
         const val CONFIRM_NEW_PASSWORD = "Confirm New Password"
         const val ENTER_YOUR_PASSWORD = "Enter your password"
+        const val ENTER_YOUR_NEW_PASSWORD = "Enter new password"
+        const val ENTER_YOUR_NEW_CONFIRM_PASSWORD = "Enter new confirm password"
         const val ENTER_YOUR_CONFIRM_PASSWORD = "Enter your confirm password"
         const val HIDE_PASSWORD = "Hide Password"
         const val SHOW_PASSWORD = "Show Password"

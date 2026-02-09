@@ -10,16 +10,17 @@ package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
-import com.mtv.app.core.provider.utils.SessionManager
 import com.mtv.app.movie.common.ConstantPreferences
 import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.updateUiDataListener
 import com.mtv.app.movie.common.valueFlowOf
+import com.mtv.app.movie.data.model.request.PasswordRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.PasswordUseCase
 import com.mtv.app.movie.feature.event.profile.PasswordDataListener
+import com.mtv.app.movie.feature.event.profile.PasswordDialog
 import com.mtv.app.movie.feature.event.profile.PasswordStateListener
-import com.mtv.based.core.network.utils.Resource
+import com.mtv.based.core.network.utils.ResourceFirebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,10 +29,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PasswordViewModel @Inject constructor(
     private val securePrefs: SecurePrefs,
-    private val sessionManager: SessionManager,
-    private val passwordUseCase: PasswordUseCase<LoginResponse>
-) : BaseViewModel(),
-    UiOwner<PasswordStateListener, PasswordDataListener> {
+    private val passwordUseCase: PasswordUseCase
+) : BaseViewModel(), UiOwner<PasswordStateListener, PasswordDataListener> {
 
     /** UI STATE : LOADING / ERROR / SUCCESS (API Response) */
     override val uiState = MutableStateFlow(PasswordStateListener())
@@ -41,6 +40,13 @@ class PasswordViewModel @Inject constructor(
 
     init {
         loadLocalProfile()
+
+        collectFieldSuccessFirebase(
+            parent = uiState,
+            selector = { it.onSubmitPasswordState }
+        ) { _ ->
+            uiState.update { it.copy(activeDialog = PasswordDialog.Success) }
+        }
     }
 
     private fun loadLocalProfile() {
@@ -54,13 +60,17 @@ class PasswordViewModel @Inject constructor(
         }
     }
 
+
     fun doSubmitPassword(
         password: String,
         newPassword: String,
         newPasswordConfirm: String
     ) {
-        val email = uiData.value.userAccount?.email
-        val uid = sessionManager.getUid() ?: return
+        if (newPassword != newPasswordConfirm) {
+            return
+        }
+
+        val email = uiData.value.userAccount?.email ?: return
 
         launchFirebaseUseCase(
             target = uiState.valueFlowOf(
@@ -68,7 +78,13 @@ class PasswordViewModel @Inject constructor(
                 set = { copy(onSubmitPasswordState = it) }
             ),
             block = {
-                passwordUseCase(uid)
+                passwordUseCase(
+                    PasswordRequest(
+                        email = email,
+                        oldPassword = password,
+                        newPassword = newPassword
+                    )
+                )
             }
         )
     }
@@ -77,7 +93,7 @@ class PasswordViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 activeDialog = null,
-                onSubmitPasswordState = Resource.Loading,
+                onSubmitPasswordState = ResourceFirebase.Loading,
             )
         }
     }

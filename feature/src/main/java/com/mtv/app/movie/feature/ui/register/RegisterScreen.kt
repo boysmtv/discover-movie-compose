@@ -74,13 +74,10 @@ import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.ui.BaseTextInput
 import com.mtv.app.movie.common.ui.PrimaryButton
 import com.mtv.app.movie.common.uriToBase64
-import com.mtv.app.movie.feature.event.login.LoginDialog
 import com.mtv.app.movie.feature.event.register.RegisterDialog
 import com.mtv.app.movie.feature.event.register.RegisterEventListener
 import com.mtv.app.movie.feature.event.register.RegisterNavigationListener
 import com.mtv.app.movie.feature.event.register.RegisterStateListener
-import com.mtv.based.core.network.utils.Resource
-import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
@@ -129,7 +126,7 @@ fun RegisterScreen(
 
     uiState.activeDialog?.let { dialog ->
         when (dialog) {
-            is RegisterDialog.Register -> {
+            is RegisterDialog.Success -> {
                 DialogCenterV1(
                     state = DialogStateV1(
                         type = DialogType.SUCCESS,

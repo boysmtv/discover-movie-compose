@@ -13,5 +13,5 @@ sealed class RegisterDialog {
         val message: String
     ) : RegisterDialog()
 
-    object Register : RegisterDialog()
+    object Success : RegisterDialog()
 }

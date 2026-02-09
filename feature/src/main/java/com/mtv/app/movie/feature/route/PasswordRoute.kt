@@ -40,7 +40,7 @@ private fun passwordEvent(vm: PasswordViewModel) = PasswordEventListener(
 )
 
 private fun passwordNavigation(nav: NavController) = PasswordNavigationListener(
-     onBack = {
-        nav.navigate(AppDestinations.EDIT_PROFILE_GRAPH)
+    onBack = {
+        nav.popBackStack()
     },
 )

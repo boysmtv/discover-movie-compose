@@ -9,10 +9,10 @@
 package com.mtv.app.movie.feature.event.profile
 
 import com.mtv.app.movie.data.model.response.LoginResponse
-import com.mtv.based.core.network.utils.Resource
+import com.mtv.based.core.network.utils.ResourceFirebase
 
 data class PasswordStateListener(
-    val onSubmitPasswordState: Resource<Unit> = Resource.Loading,
+    val onSubmitPasswordState: ResourceFirebase<Unit> = ResourceFirebase.Loading,
     val activeDialog: PasswordDialog? = null
 )
 
