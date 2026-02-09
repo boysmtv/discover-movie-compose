@@ -7,6 +7,7 @@ import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.RegisterRequest
 import com.mtv.app.movie.domain.user.RegisterUseCase
+import com.mtv.app.movie.feature.event.register.RegisterDialog
 import com.mtv.app.movie.feature.event.register.RegisterStateListener
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
@@ -42,7 +43,12 @@ class RegisterViewModel @Inject constructor(
         launchFirebaseUseCase(
             target = uiState.valueFlowOf(
                 get = { it.registerByEmailState },
-                set = { state -> copy(registerByEmailState = state) }
+                set = { state ->
+                    copy(
+                        registerByEmailState = state,
+                        activeDialog = RegisterDialog.Register
+                    )
+                }
             ),
             block = {
                 registerUseCase(
@@ -62,12 +68,36 @@ class RegisterViewModel @Inject constructor(
 
     /** REGISTER BY GOOGLE */
     fun doLoginByGoogle() {
-        uiState.update { it.copy(registerByGoogleState = Resource.Success(Unit)) }
+        uiState.update {
+            it.copy(
+                registerByGoogleState = Resource.Success(Unit),
+                activeDialog = RegisterDialog.Maintenance(
+                    message = "Under maintenance"
+                )
+            )
+        }
     }
 
     /** REGISTER BY GOOGLE */
     fun doLoginByFacebook() {
-        uiState.update { it.copy(registerByFacebookState = Resource.Success(Unit)) }
+        uiState.update {
+            it.copy(
+                registerByFacebookState = Resource.Success(Unit),
+                activeDialog = RegisterDialog.Maintenance(
+                    message = "Under maintenance"
+                )
+            )
+        }
+    }
+
+    fun doDismissActiveDialog() {
+        uiState.update {
+            it.copy(
+                activeDialog = null,
+                registerByFacebookState = Resource.Loading,
+                registerByGoogleState = Resource.Loading
+            )
+        }
     }
 
 }

@@ -8,7 +8,6 @@
 
 package com.mtv.app.movie.feature.ui.liked
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -21,9 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,28 +38,6 @@ import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
-
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
-@Composable
-fun PreviewLikedScreen() {
-    LikedScreen(
-        uiState = LikedStateListener(),
-        uiData = LikedDataListener(
-            movieLikedList = List(12) { index ->
-                previewMovieDetail.copy(
-                    id = index
-                )
-            }
-        ),
-        uiEvent = LikedEventListener({}, {}, {}, {}),
-        uiNavigation = LikedNavigationListener {},
-    )
-}
 
 @Composable
 fun LikedScreen(
@@ -102,21 +77,11 @@ fun LikedScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF181818),
-                        Color(0xFF0F0F0F),
-                        Color(0xFF000000)
-                    )
-                )
-            )
+            .background(Color(0xFFF5F5F5))
     ) {
         LikedHeader(
             onDeletedAllMovies = uiEvent.onDeletedAllMovies
         )
-
-        Spacer(modifier = Modifier.height(12.dp))
 
         AnimatedVisibility(
             visible = uiData.movieLikedList.isNotEmpty(),
@@ -130,5 +95,24 @@ fun LikedScreen(
             )
         }
     }
+}
 
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun PreviewLikedScreen() {
+    LikedScreen(
+        uiState = LikedStateListener(),
+        uiData = LikedDataListener(
+            movieLikedList = List(12) { index ->
+                previewMovieDetail.copy(
+                    id = index
+                )
+            }
+        ),
+        uiEvent = LikedEventListener({}, {}, {}, {}),
+        uiNavigation = LikedNavigationListener {},
+    )
 }

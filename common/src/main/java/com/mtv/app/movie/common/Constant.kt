@@ -15,6 +15,7 @@ class Constant {
         const val LOGIN = "Login"
         const val SIGN_UP = "Sign Up"
         const val EDIT_PROFILE = "Edit Profile"
+        const val UPDATE_PROFILE = "Update Profile"
         const val FORGOT_PASSWORD = "Forgot Password"
         const val CHANGE_PASSWORD = "Change Password"
 
@@ -25,8 +26,9 @@ class Constant {
         const val USERNAME = "Username"
         const val EMAIL = "Email"
         const val PHONE = "Phone"
+        const val ENTER_YOUR_NAME = "Enter your name"
         const val ENTER_YOUR_EMAIL = "Enter your email"
-        const val ENTER_YOUR_PASSWORD = "Enter your password"
+        const val ENTER_YOUR_PHONE = "Enter your phone"
 
         /* =========================
          * PASSWORD
@@ -36,6 +38,8 @@ class Constant {
         const val NEW_PASSWORD = "New Password"
         const val CONFIRM_PASSWORD = "Confirm Password"
         const val CONFIRM_NEW_PASSWORD = "Confirm New Password"
+        const val ENTER_YOUR_PASSWORD = "Enter your password"
+        const val ENTER_YOUR_CONFIRM_PASSWORD = "Enter your confirm password"
         const val HIDE_PASSWORD = "Hide Password"
         const val SHOW_PASSWORD = "Show Password"
 

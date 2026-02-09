@@ -27,20 +27,6 @@ import com.mtv.app.movie.common.R
 import androidx.compose.ui.unit.sp
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
-@Composable
-fun PreviewHomeHeader() {
-    HomeHeader(
-        userName = "William B.",
-        photoBitmap = null
-    )
-}
-
 @Composable
 fun HomeHeader(
     userName: String,
@@ -49,7 +35,8 @@ fun HomeHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .background(Color(0xFFF5F5F5)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -57,7 +44,7 @@ fun HomeHeader(
             AvatarImage(
                 bitmap = photoBitmap,
                 modifier = Modifier
-                    .size(46.dp),
+                    .size(42.dp),
                 contentScale = ContentScale.Crop
             )
 
@@ -66,12 +53,12 @@ fun HomeHeader(
             Column {
                 Text(
                     text = stringResource(R.string.hello),
-                    color = Color.White.copy(0.7f),
+                    color = Color.DarkGray.copy(0.7f),
                     fontSize = 14.sp
                 )
                 Text(
                     text = userName,
-                    color = Color.White,
+                    color = Color.DarkGray,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -80,15 +67,15 @@ fun HomeHeader(
 
         Box(
             modifier = Modifier
-                .size(50.dp)
+                .size(42.dp)
                 .clip(CircleShape)
-                .background(Color.White.copy(alpha = 0.1f)),
+                .background(Color.DarkGray.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Notifications,
                 contentDescription = EMPTY_STRING,
-                tint = Color.White.copy(0.8f),
+                tint = Color.DarkGray.copy(0.8f),
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -122,4 +109,16 @@ private fun AvatarImage(
             contentScale = contentScale
         )
     }
+}
+
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun PreviewHomeHeader() {
+    HomeHeader(
+        userName = "William B.",
+        photoBitmap = null
+    )
 }

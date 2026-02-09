@@ -8,9 +8,10 @@
 
 package com.mtv.app.movie.feature.ui.search
 
-import android.content.res.Configuration
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
@@ -52,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.mtv.app.movie.common.ui.RatingStars
 import com.mtv.app.movie.data.model.movie.MoviesItemResponse
 import com.mtv.app.movie.data.model.movie.MoviesResponse
 import com.mtv.app.movie.feature.event.search.SearchDataListener
@@ -85,15 +86,7 @@ fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF181818),
-                        Color(0xFF0F0F0F),
-                        Color(0xFF000000)
-                    )
-                )
-            )
+            .background(Color(0xFFF5F5F5))
     ) {
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -111,7 +104,9 @@ fun SearchScreen(
 
             if (movies.isEmpty()) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFF5F5F5)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -119,11 +114,15 @@ fun SearchScreen(
                             "No movies found"
                         else
                             "No upcoming movies",
-                        color = Color.White.copy(alpha = 0.7f)
+                        color = Color.DarkGray.copy(alpha = 0.7f)
                     )
                 }
             } else {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFFF5F5F5))
+                ) {
                     items(movies) { movie ->
                         MovieItemNetflix(
                             movie = movie,
@@ -147,71 +146,78 @@ fun NetflixSearchBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .height(48.dp)
-            .background(Color(0xFF222222), RoundedCornerShape(24.dp))
+            .background(Color(0xFFF5F5F5))
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .height(48.dp)
+                .background(Color(0xFFFFFFFF), RoundedCornerShape(24.dp))
         ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search",
-                tint = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .size(24.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search",
+                    tint = Color.DarkGray.copy(alpha = 0.7f),
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .size(24.dp)
+                )
 
-            Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
 
-            BasicTextField(
-                value = query,
-                onValueChange = onQueryChange,
-                singleLine = true,
-                cursorBrush = SolidColor(Color.White),
-                textStyle = TextStyle(
-                    color = Color.White,
-                    fontSize = 16.sp
-                ),
-                decorationBox = { innerTextField ->
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        if (query.isEmpty()) {
-                            Text(
-                                text = "Search movies...",
-                                color = Color.White.copy(alpha = 0.5f),
-                                fontSize = 16.sp
-                            )
+                BasicTextField(
+                    value = query,
+                    onValueChange = onQueryChange,
+                    singleLine = true,
+                    cursorBrush = SolidColor(Color.LightGray),
+                    textStyle = TextStyle(
+                        color = Color.DarkGray,
+                        fontSize = 16.sp
+                    ),
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (query.isEmpty()) {
+                                Text(
+                                    text = "Search movies...",
+                                    color = Color.DarkGray,
+                                    fontSize = 16.sp
+                                )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
-                    }
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .padding(start = 8.dp, end = 12.dp)
-            )
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(start = 8.dp, end = 12.dp)
+                )
 
-            if (query.isNotEmpty()) {
-                IconButton(
-                    onClick = onClearClick,
-                    modifier = Modifier.padding(end = 12.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Clear text",
-                        tint = Color.White.copy(alpha = 0.7f)
-                    )
+                if (query.isNotEmpty()) {
+                    IconButton(
+                        onClick = onClearClick,
+                        modifier = Modifier.padding(end = 12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Clear text",
+                            tint = Color.DarkGray.copy(alpha = 0.7f)
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun MovieItemNetflix(
     movie: MoviesItemResponse,
@@ -220,9 +226,9 @@ fun MovieItemNetflix(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(0xFFF5F5F5))
             .clickable { onClickMovie(movie.id) }
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -239,8 +245,13 @@ fun MovieItemNetflix(
                     modifier = Modifier
                         .width(100.dp)
                         .height(140.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(
+                            width = 0.5.dp,
+                            color = Color.DarkGray.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+                    contentScale = ContentScale.Crop,
                 )
             } else {
                 Box(
@@ -250,7 +261,7 @@ fun MovieItemNetflix(
                         .background(Color.DarkGray, RoundedCornerShape(8.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No Image", fontSize = 12.sp, color = Color.White)
+                    Text("No Image", fontSize = 12.sp, color = Color.DarkGray)
                 }
             }
 
@@ -263,7 +274,7 @@ fun MovieItemNetflix(
             ) {
                 Text(
                     movie.title,
-                    color = Color.White,
+                    color = Color.DarkGray,
                     style = MaterialTheme.typography.titleMedium
                 )
 
@@ -282,7 +293,7 @@ fun MovieItemNetflix(
                 ) {
                     Text(
                         text = movie.releaseDate,
-                        color = Color.LightGray,
+                        color = Color.DarkGray,
                         style = MaterialTheme.typography.bodySmall
                     )
 
@@ -295,38 +306,43 @@ fun MovieItemNetflix(
                     movie.overview,
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis,
-                    color = Color.LightGray,
+                    color = Color.DarkGray,
                     style = MaterialTheme.typography.bodySmall
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    "⭐ ${movie.voteAverage}",
-                    color = Color(0xFFFFD700),
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RatingStars(rating = movie.voteAverage)
+
+                    Spacer(Modifier.width(6.dp))
+
+                    Text(
+                        text = String.format("%.1f", movie.voteAverage),
+                        color = Color(0xFFFFD700),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+
             }
         }
 
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp),
             thickness = 0.5.dp,
-            color = Color.White.copy(alpha = 0.6f)
+            color = Color.DarkGray.copy(alpha = 0.6f)
         )
     }
 }
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun NetflixSearchBarPreview() {
     NetflixSearchBar(
-        query = "Fast",
+        query = "",
         onQueryChange = {},
         onClearClick = {}
     )
@@ -334,9 +350,7 @@ fun NetflixSearchBarPreview() {
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun MovieItemNetflixPreview() {
@@ -348,9 +362,7 @@ fun MovieItemNetflixPreview() {
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun SearchScreenPreview() {

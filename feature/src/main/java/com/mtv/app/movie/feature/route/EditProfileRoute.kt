@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.profile.edit.EditProfileDataListener
-import com.mtv.app.movie.feature.event.profile.edit.EditProfileEventListener
-import com.mtv.app.movie.feature.event.profile.edit.EditProfileNavigationListener
-import com.mtv.app.movie.feature.event.profile.edit.EditProfileStateListener
+import com.mtv.app.movie.feature.event.profile.EditProfileDataListener
+import com.mtv.app.movie.feature.event.profile.EditProfileEventListener
+import com.mtv.app.movie.feature.event.profile.EditProfileNavigationListener
+import com.mtv.app.movie.feature.event.profile.EditProfileStateListener
 import com.mtv.app.movie.feature.presentation.EditProfileViewModel
 import com.mtv.app.movie.feature.ui.profile.edit.EditProfileScreen
 
@@ -42,4 +42,3 @@ private fun editProfileNavigation(nav: NavController) = EditProfileNavigationLis
         nav.popBackStack()
     }
 )
-

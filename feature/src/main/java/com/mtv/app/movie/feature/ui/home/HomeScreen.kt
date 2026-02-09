@@ -1,6 +1,5 @@
 package com.mtv.app.movie.feature.ui.home
 
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Devices
@@ -22,11 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.common.MovieCategory
-import com.mtv.app.movie.data.model.response.CheckResponse
-import com.mtv.app.movie.data.model.response.LogoutResponse
-import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.base64ToBitmap
+import com.mtv.app.movie.data.model.response.CheckResponse
 import com.mtv.app.movie.data.model.response.LoginResponse
+import com.mtv.app.movie.data.model.response.LogoutResponse
 import com.mtv.app.movie.feature.event.home.HomeDataListener
 import com.mtv.app.movie.feature.event.home.HomeEventListener
 import com.mtv.app.movie.feature.event.home.HomeNavigationListener
@@ -36,11 +33,91 @@ import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
+@Composable
+fun HomeScreen(
+    uiState: HomeStateListener,
+    uiData: HomeDataListener,
+    uiEvent: HomeEventListener,
+    uiNavigation: HomeNavigationListener
+) {
+    val scrollState = rememberScrollState()
+    val isPreview = LocalInspectionMode.current
+    val photoBase64 = uiData.loginResponse?.photo
+    val avatarBitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+    LaunchedEffect(photoBase64) {
+        if (!isPreview && !photoBase64.isNullOrBlank()) {
+            avatarBitmap.value = base64ToBitmap(photoBase64)
+        }
+    }
+
+    if (!LocalInspectionMode.current) {
+        LaunchedEffect(Unit) {
+            uiEvent.onCheck(Constant.TestData.TESTDATA_EMAIL)
+            uiEvent.onLoadMovies()
+        }
+
+        LaunchedEffect(uiState.logoutState) {
+            if (uiState.logoutState is ResourceFirebase.Success) {
+                uiNavigation.onNavigateToLogin()
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5))
+    ) {
+        HomeHeader(
+            userName = uiData.loginResponse?.name ?: EMPTY_STRING,
+            photoBitmap = avatarBitmap.value,
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .background(Color(0xFFF5F5F5))
+        ) {
+            if (uiState.upComingState is Resource.Success) {
+                HomeFeaturedSection(
+                    movieCategory = MovieCategory.UP_COMING,
+                    movies = uiState.upComingState.data.results,
+                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
+                )
+            }
+
+            if (uiState.nowPlayingState is Resource.Success) {
+                HomeFeaturedSection(
+                    movieCategory = MovieCategory.NOW_PLAYING,
+                    movies = uiState.nowPlayingState.data.results,
+                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
+                )
+            }
+
+            if (uiState.topRatedState is Resource.Success) {
+                HomeFeaturedSection(
+                    movieCategory = MovieCategory.TOP_RATED,
+                    movies = uiState.topRatedState.data.results,
+                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
+                )
+            }
+
+            if (uiState.popularState is Resource.Success) {
+                HomeFeaturedSection(
+                    movieCategory = MovieCategory.POPULAR,
+                    movies = uiState.popularState.data.results,
+                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
+                )
+            }
+        }
+    }
+}
+
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
+    device = Devices.PIXEL_4
 )
 @Composable
 fun PreviewHomeScreen() {
@@ -84,95 +161,4 @@ fun PreviewHomeScreen() {
             onNavigateToMovieDetail = {},
         )
     )
-}
-
-@Composable
-fun HomeScreen(
-    uiState: HomeStateListener,
-    uiData: HomeDataListener,
-    uiEvent: HomeEventListener,
-    uiNavigation: HomeNavigationListener
-) {
-    val scrollState = rememberScrollState()
-    val isPreview = LocalInspectionMode.current
-    val photoBase64 = uiData.loginResponse?.photo
-    val avatarBitmap = remember { mutableStateOf<Bitmap?>(null) }
-
-    LaunchedEffect(photoBase64) {
-        if (!isPreview && !photoBase64.isNullOrBlank()) {
-            avatarBitmap.value = base64ToBitmap(photoBase64)
-        }
-    }
-
-    if (!LocalInspectionMode.current) {
-        LaunchedEffect(Unit) {
-            uiEvent.onCheck(Constant.TestData.TESTDATA_EMAIL)
-            uiEvent.onLoadMovies()
-        }
-
-        LaunchedEffect(uiState.logoutState) {
-            if (uiState.logoutState is ResourceFirebase.Success) {
-                uiNavigation.onNavigateToLogin()
-            }
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF2C225A),
-                        Color(0xFF3B2AAE),
-                        Color(0xFF5A3FD1)
-                    )
-                )
-            )
-    ) {
-        HomeHeader(
-            userName = uiData.loginResponse?.name ?: EMPTY_STRING,
-            photoBitmap = avatarBitmap.value,
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-        ) {
-            if (uiState.upComingState is Resource.Success) {
-                HomeFeaturedSection(
-                    movieCategory = MovieCategory.UP_COMING,
-                    movies = uiState.upComingState.data.results,
-                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
-                )
-            }
-
-            if (uiState.nowPlayingState is Resource.Success) {
-                HomeFeaturedSection(
-                    movieCategory = MovieCategory.NOW_PLAYING,
-                    movies = uiState.nowPlayingState.data.results,
-                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
-                )
-            }
-
-            if (uiState.topRatedState is Resource.Success) {
-                HomeFeaturedSection(
-                    movieCategory = MovieCategory.TOP_RATED,
-                    movies = uiState.topRatedState.data.results,
-                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
-                )
-            }
-
-            if (uiState.popularState is Resource.Success) {
-                HomeFeaturedSection(
-                    movieCategory = MovieCategory.POPULAR,
-                    movies = uiState.popularState.data.results,
-                    onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
-                )
-            }
-        }
-    }
 }

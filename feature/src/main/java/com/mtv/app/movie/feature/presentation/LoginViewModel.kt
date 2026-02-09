@@ -9,6 +9,7 @@ import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.LoginRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.LoginUseCase
+import com.mtv.app.movie.feature.event.login.LoginDialog
 import com.mtv.app.movie.feature.event.login.LoginStateListener
 import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,12 +62,36 @@ class LoginViewModel @Inject constructor(
 
     /** LOGIN BY GOOGLE */
     fun doLoginByGoogle() {
-        uiState.update { it.copy(loginByGoogleState = Resource.Success(Unit)) }
+        uiState.update {
+            it.copy(
+                loginByGoogleState = Resource.Success(Unit),
+                activeDialog = LoginDialog.Maintenance(
+                    message = "Under maintenance"
+                )
+            )
+        }
     }
 
-    /** LOGIN BY GOOGLE */
+    /** LOGIN BY FACEBOOK */
     fun doLoginByFacebook() {
-        uiState.update { it.copy(loginByFacebookState = Resource.Success(Unit)) }
+        uiState.update {
+            it.copy(
+                loginByFacebookState = Resource.Success(Unit),
+                activeDialog = LoginDialog.Maintenance(
+                    message = "Under maintenance"
+                )
+            )
+        }
+    }
+
+    fun doDismissActiveDialog() {
+        uiState.update {
+            it.copy(
+                activeDialog = null,
+                loginByGoogleState = Resource.Loading,
+                loginByFacebookState = Resource.Loading
+            )
+        }
     }
 
 }

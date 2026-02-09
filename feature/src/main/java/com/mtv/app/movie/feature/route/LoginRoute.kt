@@ -29,6 +29,7 @@ private fun loginEvent(vm: LoginViewModel) = LoginEventListener(
     onLoginByEmailClicked = vm::doLoginByEmail,
     onLoginByGoogleClicked = vm::doLoginByGoogle,
     onLoginByFacebookClicked = vm::doLoginByFacebook,
+    onDismissActiveDialog = vm::doDismissActiveDialog,
 )
 
 private fun loginNavigation(nav: NavController) = LoginNavigationListener(
@@ -38,13 +39,9 @@ private fun loginNavigation(nav: NavController) = LoginNavigationListener(
         )
     },
     onNavigateToSignUpByEmail = {
-        nav.navigateAndPopLogin(
-            route = AppDestinations.REGISTER_GRAPH
-        )
+        nav.navigate(AppDestinations.REGISTER_GRAPH)
     },
     onNavigateToForgotPassword = {
-        nav.navigateAndPopLogin(
-            route = AppDestinations.RESET_GRAPH
-        )
+        nav.navigate(AppDestinations.RESET_GRAPH)
     }
 )

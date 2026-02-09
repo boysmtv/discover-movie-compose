@@ -1,3 +1,11 @@
+/*
+ * Project: App Movie Compose
+ * Author: Boys.mtv@gmail.com
+ * File: AuthErrorCode.kt
+ *
+ * Last modified by Dedy Wijaya on 03/02/26 11.59
+ */
+
 package com.mtv.app.movie.common.login
 
 import com.google.firebase.FirebaseNetworkException
@@ -10,14 +18,12 @@ import com.mtv.based.core.network.utils.ErrorMessages
 import com.mtv.based.core.network.utils.UiErrorFirebase
 
 fun mapFirebaseExceptionToUiError(e: Throwable): UiErrorFirebase = when (e) {
-    // Firebase Auth spesifik exceptions
     is FirebaseAuthInvalidUserException -> UiErrorFirebase.NotFound(ErrorMessages.NOT_FOUND)
     is FirebaseAuthInvalidCredentialsException -> UiErrorFirebase.Unknown(ErrorMessages.INVALID_INPUT)
     is FirebaseTooManyRequestsException -> UiErrorFirebase.Unknown(ErrorMessages.TOO_MANY_LOGIN_ATTEMPTS)
     is FirebaseNetworkException -> UiErrorFirebase.Network(ErrorMessages.NETWORK_ERROR)
     is FirebaseAuthUserCollisionException -> UiErrorFirebase.Permission(ErrorMessages.USER_ALREADY_EXISTS)
 
-    // Generic FirebaseAuthException dengan errorCode
     is FirebaseAuthException -> when (e.errorCode) {
         "ERROR_INVALID_EMAIL" -> UiErrorFirebase.Unknown(ErrorMessages.INVALID_EMAIL)
         "ERROR_USER_DISABLED" -> UiErrorFirebase.Permission(ErrorMessages.ACCESS_DENIED)
@@ -31,6 +37,5 @@ fun mapFirebaseExceptionToUiError(e: Throwable): UiErrorFirebase = when (e) {
         else -> UiErrorFirebase.Unknown(ErrorMessages.GENERIC_ERROR)
     }
 
-    // Default fallback untuk exception lain
     else -> UiErrorFirebase.Unknown(ErrorMessages.GENERIC_ERROR)
 }

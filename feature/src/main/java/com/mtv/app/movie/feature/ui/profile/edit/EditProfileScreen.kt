@@ -8,7 +8,6 @@
 
 package com.mtv.app.movie.feature.ui.profile.edit
 
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,7 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -33,18 +31,13 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,7 +46,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -62,52 +54,36 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.mtv.app.movie.common.Constant.Title.CURRENT_PASSWORD
-import com.mtv.app.movie.common.Constant.Title.EDIT_PROFILE
 import com.mtv.app.movie.common.Constant.Title.EMAIL
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_EMAIL
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_NAME
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_PASSWORD
+import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_PHONE
 import com.mtv.app.movie.common.Constant.Title.FULL_NAME
+import com.mtv.app.movie.common.Constant.Title.PASSWORD
 import com.mtv.app.movie.common.Constant.Title.PHONE
 import com.mtv.app.movie.common.Constant.Title.SAVE_CHANGES
+import com.mtv.app.movie.common.Constant.Title.UPDATE_PROFILE
 import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.base64ToBitmap
+import com.mtv.app.movie.common.ui.BaseTextInput
+import com.mtv.app.movie.common.ui.PrimaryButton
 import com.mtv.app.movie.common.uriToBase64
-import com.mtv.app.movie.feature.event.profile.edit.EditProfileDataListener
-import com.mtv.app.movie.feature.event.profile.edit.EditProfileEventListener
-import com.mtv.app.movie.feature.event.profile.edit.EditProfileNavigationListener
-import com.mtv.app.movie.feature.event.profile.edit.EditProfileStateListener
+import com.mtv.app.movie.feature.event.profile.EditProfileDataListener
+import com.mtv.app.movie.feature.event.profile.EditProfileEventListener
+import com.mtv.app.movie.feature.event.profile.EditProfileNavigationListener
+import com.mtv.app.movie.feature.event.profile.EditProfileStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
-
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFF000000,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_3
-)
-@Composable
-fun EditProfileScreenPreview() {
-    MaterialTheme {
-        EditProfileScreen(
-            uiState = EditProfileStateListener(),
-            uiData = EditProfileDataListener(),
-            uiEvent = EditProfileEventListener(
-                onSaveClicked = { _, _, _, _ -> }
-            ),
-            uiNavigation = EditProfileNavigationListener {},
-        )
-    }
-}
 
 @Composable
 fun EditProfileScreen(
@@ -122,9 +98,15 @@ fun EditProfileScreen(
 
     val name = rememberSaveable { mutableStateOf(EMPTY_STRING) }
     val phone = rememberSaveable { mutableStateOf(EMPTY_STRING) }
-    val currentPassword = rememberSaveable { mutableStateOf(EMPTY_STRING) }
+    val password = rememberSaveable { mutableStateOf(EMPTY_STRING) }
 
-    val currentPasswordVisible = remember { mutableStateOf(false) }
+    val isFormValid = remember {
+        derivedStateOf {
+            name.value.isNotBlank() && phone.value.isNotBlank() && password.value.isNotBlank()
+        }
+    }
+
+    remember { mutableStateOf(false) }
 
     var photoBase64 by remember { mutableStateOf(EMPTY_STRING) }
     var showPreview by remember { mutableStateOf(false) }
@@ -192,15 +174,7 @@ fun EditProfileScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF2C225A),
-                        Color(0xFF3B2AAE),
-                        Color(0xFF5A3FD1)
-                    )
-                )
-            )
+            .background(Color(0xFFF5F5F5))
     ) {
         Column(
             modifier = Modifier
@@ -210,16 +184,16 @@ fun EditProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = EDIT_PROFILE,
+                text = UPDATE_PROFILE,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.DarkGray
             )
 
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(16.dp))
 
             Box(
                 modifier = Modifier.size(120.dp),
@@ -253,118 +227,64 @@ fun EditProfileScreen(
                 }
             }
 
-            Spacer(Modifier.height(64.dp))
+            Spacer(Modifier.height(24.dp))
 
-            OutlinedTextField(
+            BaseTextInput(
+                label = FULL_NAME,
                 value = name.value,
                 onValueChange = { name.value = it },
-                leadingIcon = {
-                    Icon(Icons.Default.Person, null, Modifier.padding(start = 12.dp))
-                },
-                placeholder = { Text(FULL_NAME) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                )
+                placeholder = ENTER_YOUR_NAME,
+                leadingIcon = Icons.Default.Person
             )
 
             Spacer(Modifier.height(16.dp))
 
-            OutlinedTextField(
+
+            BaseTextInput(
+                label = EMAIL,
                 value = uiData.userAccount?.email.orEmpty(),
-                onValueChange = {},
                 enabled = false,
-                leadingIcon = {
-                    Icon(Icons.Default.Email, null, Modifier.padding(start = 12.dp))
-                },
-                placeholder = { Text(EMAIL) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    disabledContainerColor = Color.White,
-                    disabledBorderColor = Color.Transparent,
-                    disabledTextColor = Color.Gray,
-                    disabledLeadingIconColor = Color.Gray,
-                    disabledPlaceholderColor = Color.Gray
-                )
+                onValueChange = { },
+                placeholder = ENTER_YOUR_EMAIL,
+                leadingIcon = Icons.Default.Email
             )
 
             Spacer(Modifier.height(16.dp))
 
-            OutlinedTextField(
+            BaseTextInput(
+                label = PHONE,
                 value = phone.value,
                 onValueChange = { phone.value = it },
-                leadingIcon = {
-                    Icon(Icons.Default.Phone, null, Modifier.padding(start = 12.dp))
-                },
-                placeholder = { Text(PHONE) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                )
+                placeholder = ENTER_YOUR_PHONE,
+                leadingIcon = Icons.Default.Phone
             )
 
             Spacer(Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = currentPassword.value,
-                onValueChange = { currentPassword.value = it },
-                leadingIcon = {
-                    Icon(Icons.Default.Lock, null, Modifier.padding(start = 12.dp))
-                },
-                placeholder = { Text(CURRENT_PASSWORD) },
-                trailingIcon = {
-                    Icon(
-                        if (currentPasswordVisible.value) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        null,
-                        Modifier
-                            .clickable {
-                                currentPasswordVisible.value = !currentPasswordVisible.value
-                            }
-                            .padding(end = 12.dp)
-                    )
-                },
-                visualTransformation = if (currentPasswordVisible.value)
-                    VisualTransformation.None else PasswordVisualTransformation(),
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                )
+            BaseTextInput(
+                label = PASSWORD,
+                value = password.value,
+                onValueChange = { password.value = it },
+                placeholder = ENTER_YOUR_PASSWORD,
+                leadingIcon = Icons.Default.Lock,
+                isPassword = true
             )
 
             Spacer(Modifier.height(32.dp))
 
-            Button(
+            PrimaryButton(
+                text = SAVE_CHANGES,
+                enabled = isFormValid.value,
                 onClick = {
                     uiEvent.onSaveClicked(
                         name.value,
                         phone.value,
                         photoBase64,
-                        currentPassword.value
+                        uiData.userAccount?.email.orEmpty(),
+                        password.value
                     )
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
-                shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF5C6BC0)
-                )
-            ) {
-                Text(SAVE_CHANGES, fontSize = 16.sp)
-            }
+            )
         }
     }
 }
@@ -392,6 +312,24 @@ private fun AvatarImage(
             contentDescription = null,
             modifier = imageModifier,
             contentScale = contentScale
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun EditProfileScreenPreview() {
+    MaterialTheme {
+        EditProfileScreen(
+            uiState = EditProfileStateListener(),
+            uiData = EditProfileDataListener(),
+            uiEvent = EditProfileEventListener(
+                onSaveClicked = { _, _, _, _, _ -> }
+            ),
+            uiNavigation = EditProfileNavigationListener {},
         )
     }
 }
