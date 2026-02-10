@@ -7,7 +7,6 @@ import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.core.network.utils.ResourceFirebase
 
 data class HomeStateListener(
-    val checkState: ResourceFirebase<CheckResponse> = ResourceFirebase.Loading,
     val logoutState: ResourceFirebase<LogoutResponse> = ResourceFirebase.Loading,
     val nowPlayingState: Resource<MoviesResponse> = Resource.Loading,
     val popularState: Resource<MoviesResponse> = Resource.Loading,

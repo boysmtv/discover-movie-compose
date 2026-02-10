@@ -99,40 +99,45 @@ fun SearchScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (currentState is Resource.Success) {
-            val movies = currentState.data.results
+        when (currentState) {
+            is Resource.Loading -> SearchShimmer()
+            is Resource.Success -> {
+                val movies = currentState.data.results
 
-            if (movies.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFF5F5F5)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = if (isSearching)
-                            "No movies found"
-                        else
-                            "No upcoming movies",
-                        color = Color.DarkGray.copy(alpha = 0.7f)
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFF5F5F5))
-                ) {
-                    items(movies) { movie ->
-                        MovieItemNetflix(
-                            movie = movie,
-                            onClickMovie = {
-                                uiNavigation.onNavigateToMovieDetail(it)
-                            }
+                if (movies.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color(0xFFF5F5F5)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = if (isSearching)
+                                "No movies found"
+                            else
+                                "No upcoming movies",
+                            color = Color.DarkGray.copy(alpha = 0.7f)
                         )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFFF5F5F5))
+                    ) {
+                        items(movies) { movie ->
+                            MovieItemNetflix(
+                                movie = movie,
+                                onClickMovie = {
+                                    uiNavigation.onNavigateToMovieDetail(it)
+                                }
+                            )
+                        }
                     }
                 }
             }
+
+            else -> {}
         }
     }
 }
@@ -323,7 +328,6 @@ fun MovieItemNetflix(
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-
             }
         }
 

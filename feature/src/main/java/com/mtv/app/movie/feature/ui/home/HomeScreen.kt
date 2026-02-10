@@ -53,7 +53,6 @@ fun HomeScreen(
 
     if (!LocalInspectionMode.current) {
         LaunchedEffect(Unit) {
-            uiEvent.onCheck(Constant.TestData.TESTDATA_EMAIL)
             uiEvent.onLoadMovies()
         }
 
@@ -80,36 +79,48 @@ fun HomeScreen(
                 .verticalScroll(scrollState)
                 .background(Color(0xFFF5F5F5))
         ) {
-            if (uiState.upComingState is Resource.Success) {
-                HomeFeaturedSection(
+            when (uiState.upComingState) {
+                is Resource.Loading -> HomeFeaturedSectionShimmer()
+                is Resource.Success -> HomeFeaturedSection(
                     movieCategory = MovieCategory.UP_COMING,
                     movies = uiState.upComingState.data.results,
                     onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
+
+                else -> {}
             }
 
-            if (uiState.nowPlayingState is Resource.Success) {
-                HomeFeaturedSection(
+            when (uiState.nowPlayingState) {
+                is Resource.Loading -> HomeFeaturedSectionShimmer()
+                is Resource.Success -> HomeFeaturedSection(
                     movieCategory = MovieCategory.NOW_PLAYING,
                     movies = uiState.nowPlayingState.data.results,
                     onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
+
+                else -> {}
             }
 
-            if (uiState.topRatedState is Resource.Success) {
-                HomeFeaturedSection(
+            when (uiState.topRatedState) {
+                is Resource.Loading -> HomeFeaturedSectionShimmer()
+                is Resource.Success -> HomeFeaturedSection(
                     movieCategory = MovieCategory.TOP_RATED,
                     movies = uiState.topRatedState.data.results,
                     onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
+
+                else -> {}
             }
 
-            if (uiState.popularState is Resource.Success) {
-                HomeFeaturedSection(
+            when (uiState.popularState) {
+                is Resource.Loading -> HomeFeaturedSectionShimmer()
+                is Resource.Success -> HomeFeaturedSection(
                     movieCategory = MovieCategory.POPULAR,
                     movies = uiState.popularState.data.results,
                     onClickedMovies = { uiNavigation.onNavigateToMovieDetail(it) }
                 )
+
+                else -> {}
             }
         }
     }
@@ -123,20 +134,7 @@ fun HomeScreen(
 fun PreviewHomeScreen() {
     HomeScreen(
         uiState = HomeStateListener(
-            checkState = ResourceFirebase.Success(
-                data = CheckResponse(
-                    name = "Dedy Wijaya",
-                    email = "Dedy.wijaya@ikonsultan.com",
-                    phone = "08158844424",
-                    createdAt = "21/12/26"
-                )
-            ),
-            logoutState = ResourceFirebase.Success(
-                data =
-                    LogoutResponse(
-                        createdAt = "21/12/26"
-                    )
-            ),
+            logoutState = ResourceFirebase.Success(data = LogoutResponse(createdAt = "21/12/26")),
             nowPlayingState = Resource.Success(mockMoviesResponse),
             popularState = Resource.Success(mockMoviesResponse),
             topRatedState = Resource.Success(mockMoviesResponse),
@@ -152,7 +150,6 @@ fun PreviewHomeScreen() {
             )
         ),
         uiEvent = HomeEventListener(
-            onCheck = {},
             onLogout = {},
             onLoadMovies = {}
         ),

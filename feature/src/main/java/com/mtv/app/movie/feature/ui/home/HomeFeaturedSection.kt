@@ -1,6 +1,5 @@
 package com.mtv.app.movie.feature.ui.home
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,19 +21,6 @@ import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.common.MovieCategory
 import com.mtv.app.movie.data.model.movie.MoviesItemResponse
 import com.mtv.app.movie.feature.utils.mockMoviesResponse
-
-@Preview(
-    showBackground = true,
-    device = Devices.PIXEL_4
-)
-@Composable
-fun PreviewHomeFeaturedSection() {
-    HomeFeaturedSection(
-        movieCategory = MovieCategory.NOW_PLAYING,
-        movies = mockMoviesResponse.results,
-        onClickedMovies = { }
-    )
-}
 
 @Composable
 fun HomeFeaturedSection(
@@ -74,4 +60,17 @@ fun HomeFeaturedSection(
 
         Spacer(modifier = Modifier.height(20.dp))
     }
+}
+
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun PreviewHomeFeaturedSection() {
+    HomeFeaturedSection(
+        movieCategory = MovieCategory.NOW_PLAYING,
+        movies = mockMoviesResponse.results,
+        onClickedMovies = { }
+    )
 }

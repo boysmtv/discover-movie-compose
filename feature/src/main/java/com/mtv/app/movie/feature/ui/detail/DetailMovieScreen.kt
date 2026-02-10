@@ -116,21 +116,26 @@ fun DetailMovieContent(
     uiEvent: DetailEventListener,
     uiNavigation: DetailNavigationListener
 ) {
-    if (uiState.detailState is Resource.Success){
-        val movie = uiState.detailState.data
-        val video = (uiState.videosState as? Resource.Success)?.data
+    when (uiState.detailState) {
+        is Resource.Loading -> DetailMovieShimmer()
+        is Resource.Success -> {
+            val movie = uiState.detailState.data
+            val video = (uiState.videosState as? Resource.Success)?.data
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-        ) {
-            item { VideoHeader(movie.posterPath.orEmpty(), uiNavigation, video ?: MovieVideoResponse()) }
-            item { MovieInfoSection(movie) }
-            item { PlayDownloadSection { uiEvent.onPlayMovies() } }
-            item { DescriptionSection(movie.overview) }
-            item { ActionButtons(uiEvent, movie) }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFF5F5F5))
+            ) {
+                item { VideoHeader(movie.posterPath.orEmpty(), uiNavigation, video ?: MovieVideoResponse()) }
+                item { MovieInfoSection(movie) }
+                item { PlayDownloadSection { uiEvent.onPlayMovies() } }
+                item { DescriptionSection(movie.overview) }
+                item { ActionButtons(uiEvent, movie) }
+            }
         }
+
+        else -> {}
     }
 }
 
@@ -232,7 +237,6 @@ fun ActionItem(icon: ImageVector, text: String, onClick: () -> Unit) {
         Text(text, color = Color.DarkGray, fontSize = 12.sp)
     }
 }
-
 
 @Preview(
     showBackground = true,

@@ -47,6 +47,7 @@ class MovieDetailViewModel @Inject constructor(
 
     /** GET DETAIL MOVIES */
     fun loadDetailMovies() = launchUseCase(
+        loading = false,
         target = uiState.valueFlowOf(
             get = { it.detailState },
             set = { state -> copy(detailState = state) }
