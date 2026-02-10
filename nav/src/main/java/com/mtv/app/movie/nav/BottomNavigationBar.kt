@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -107,7 +108,7 @@ fun BottomNavigationBar(navController: NavController) {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Icon(
-                            painter = painterResource(item.icon),
+                            imageVector = item.icon,
                             contentDescription = item.label,
                             tint = iconTint,
                             modifier = Modifier.size(22.dp)
@@ -137,8 +138,7 @@ fun BottomNavigationBar(navController: NavController) {
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFFFFFFFF,
-    device = androidx.compose.ui.tooling.preview.Devices.PIXEL_4
+    device = Devices.PIXEL_4
 )
 @Composable
 fun PreviewBottomNavigationBar() {

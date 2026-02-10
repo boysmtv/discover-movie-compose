@@ -2,6 +2,7 @@ package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
+import com.mtv.app.core.provider.utils.SessionManager
 import com.mtv.app.core.provider.utils.device.InstallationIdProvider
 import com.mtv.app.movie.common.ConstantPreferences
 import com.mtv.app.movie.common.UiOwner
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase<LoginResponse>,
     private val installationIdProvider: InstallationIdProvider,
+    private val sessionManager: SessionManager,
     private val securePrefs: SecurePrefs
 ) : BaseViewModel(), UiOwner<LoginStateListener, Unit> {
 
@@ -48,6 +50,8 @@ class LoginViewModel @Inject constructor(
                 )
             },
             onSuccess = { data ->
+                sessionManager.setLoggedIn(true)
+                sessionManager.saveUid(data.uid)
                 securePrefs.putObject(ConstantPreferences.USER_ACCOUNT, data)
             }
         )

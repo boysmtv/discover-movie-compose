@@ -34,5 +34,9 @@ data class PasswordNavigationListener(
 )
 
 sealed class PasswordDialog {
+    data class Validate(
+        val message: String
+    ) : PasswordDialog()
+
     object Success : PasswordDialog()
 }

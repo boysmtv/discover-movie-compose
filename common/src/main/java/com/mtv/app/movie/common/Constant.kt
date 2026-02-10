@@ -14,7 +14,6 @@ class Constant {
          * ========================= */
         const val LOGIN = "Login"
         const val SIGN_UP = "Sign Up"
-        const val EDIT_PROFILE = "Edit Profile"
         const val UPDATE_PROFILE = "Update Profile"
         const val FORGOT_PASSWORD = "Forgot Password"
         const val CHANGE_PASSWORD = "Change Password"
@@ -58,6 +57,7 @@ class Constant {
         const val DONT_HAVE_ACCOUNT = "Don't have account? "
         const val ALREADY_HAVE_ACCOUNT = "Already have an account? "
         const val SIGN_UP_MARK = "Sign up!"
+        const val CHANGE_PASSWORD_VALIDATE = "New Password Invalid"
 
         /* =========================
          * SOCIAL LOGIN

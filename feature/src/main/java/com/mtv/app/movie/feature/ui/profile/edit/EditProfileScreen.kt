@@ -34,7 +34,6 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -53,11 +52,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mtv.app.movie.common.Constant.Title.EMAIL
 import com.mtv.app.movie.common.Constant.Title.ENTER_YOUR_EMAIL
@@ -72,13 +69,14 @@ import com.mtv.app.movie.common.Constant.Title.UPDATE_PROFILE
 import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.base64ToBitmap
 import com.mtv.app.movie.common.ui.BaseTextInput
-import com.mtv.app.movie.common.ui.PrimaryButton
+import com.mtv.app.movie.common.ui.BaseToolbar
+import com.mtv.app.movie.common.ui.BasePrimaryButton
 import com.mtv.app.movie.common.uriToBase64
 import com.mtv.app.movie.feature.event.profile.EditProfileDataListener
+import com.mtv.app.movie.feature.event.profile.EditProfileDialog
 import com.mtv.app.movie.feature.event.profile.EditProfileEventListener
 import com.mtv.app.movie.feature.event.profile.EditProfileNavigationListener
 import com.mtv.app.movie.feature.event.profile.EditProfileStateListener
-import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
@@ -139,18 +137,23 @@ fun EditProfileScreen(
         }
     }
 
-    if (uiState.updateState is ResourceFirebase.Success) {
-        DialogCenterV1(
-            state = DialogStateV1(
-                type = DialogType.SUCCESS,
-                title = stringResource(R.string.success),
-                message = stringResource(R.string.successfully_update_profile),
-                primaryButtonText = OK_STRING
-            ),
-            onDismiss = {
-                uiNavigation.onBack()
+    uiState.activeDialog?.let { dialog ->
+        when (dialog) {
+            is EditProfileDialog.Success -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.SUCCESS,
+                        title = stringResource(R.string.success),
+                        message = stringResource(R.string.successfully_update_profile),
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = {
+                        uiEvent.onDismissActiveDialog()
+                        uiNavigation.onBack()
+                    }
+                )
             }
-        )
+        }
     }
 
     if (showPreview) {
@@ -171,11 +174,17 @@ fun EditProfileScreen(
         }
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
+
+        BaseToolbar(
+            title = UPDATE_PROFILE,
+            onLeftClick = { uiNavigation.onBack() }
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -183,17 +192,6 @@ fun EditProfileScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = UPDATE_PROFILE,
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.DarkGray
-            )
-
-            Spacer(Modifier.height(16.dp))
 
             Box(
                 modifier = Modifier.size(120.dp),
@@ -272,7 +270,7 @@ fun EditProfileScreen(
 
             Spacer(Modifier.height(32.dp))
 
-            PrimaryButton(
+            BasePrimaryButton(
                 text = SAVE_CHANGES,
                 enabled = isFormValid.value,
                 onClick = {
@@ -327,7 +325,8 @@ fun EditProfileScreenPreview() {
             uiState = EditProfileStateListener(),
             uiData = EditProfileDataListener(),
             uiEvent = EditProfileEventListener(
-                onSaveClicked = { _, _, _, _, _ -> }
+                onSaveClicked = { _, _, _, _, _ -> },
+                onDismissActiveDialog = {}
             ),
             uiNavigation = EditProfileNavigationListener {},
         )

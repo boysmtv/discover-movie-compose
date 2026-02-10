@@ -96,6 +96,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.exifinterface)
+    implementation(libs.androidx.compose.foundation)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
@@ -115,8 +116,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.material3)
+    implementation(libs.ui)
+    implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.material.icons.extended)
+    debugImplementation(libs.ui.tooling)
 
     // Testing
     testImplementation(libs.junit)

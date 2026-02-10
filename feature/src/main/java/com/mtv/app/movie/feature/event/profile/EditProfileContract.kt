@@ -14,8 +14,8 @@ import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.based.core.network.utils.ResourceFirebase
 
 data class EditProfileStateListener(
-    val updateState: ResourceFirebase<Unit> = ResourceFirebase.Loading,
-    val uploadPhotoState: ResourceFirebase<String> = ResourceFirebase.Loading
+    val onUpdateState: ResourceFirebase<LoginResponse> = ResourceFirebase.Loading,
+    val activeDialog: EditProfileDialog? = null
 )
 
 data class EditProfileDataListener(
@@ -38,8 +38,13 @@ data class EditProfileEventListener(
         email: String,
         password: String
     ) -> Unit,
+    val onDismissActiveDialog: () -> Unit,
 )
 
 data class EditProfileNavigationListener(
     val onBack: () -> Unit
 )
+
+sealed class EditProfileDialog {
+    object Success : EditProfileDialog()
+}

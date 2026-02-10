@@ -71,8 +71,9 @@ import com.mtv.app.movie.common.Constant.Title.PASSWORD
 import com.mtv.app.movie.common.Constant.Title.PHONE
 import com.mtv.app.movie.common.Constant.Title.SIGN_UP
 import com.mtv.app.movie.common.R
+import com.mtv.app.movie.common.ui.BasePasswordInput
 import com.mtv.app.movie.common.ui.BaseTextInput
-import com.mtv.app.movie.common.ui.PrimaryButton
+import com.mtv.app.movie.common.ui.BasePrimaryButton
 import com.mtv.app.movie.common.uriToBase64
 import com.mtv.app.movie.feature.event.register.RegisterDialog
 import com.mtv.app.movie.feature.event.register.RegisterEventListener
@@ -258,18 +259,17 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            BaseTextInput(
+            BasePasswordInput(
                 label = PASSWORD,
                 value = password.value,
                 onValueChange = { password.value = it },
                 placeholder = ENTER_YOUR_PASSWORD,
                 leadingIcon = Icons.Default.Lock,
-                isPassword = true
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            PrimaryButton(
+            BasePrimaryButton(
                 text = CREATE_ACCOUNT,
                 enabled = true,
                 onClick = {

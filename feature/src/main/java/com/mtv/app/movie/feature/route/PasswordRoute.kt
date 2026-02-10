@@ -18,7 +18,6 @@ import com.mtv.app.movie.feature.event.profile.PasswordNavigationListener
 import com.mtv.app.movie.feature.event.profile.PasswordStateListener
 import com.mtv.app.movie.feature.presentation.PasswordViewModel
 import com.mtv.app.movie.feature.ui.profile.password.PasswordScreen
-import com.mtv.app.movie.nav.AppDestinations
 
 @Composable
 fun PasswordRoute(nav: NavController) {
@@ -26,7 +25,6 @@ fun PasswordRoute(nav: NavController) {
         BaseScreen(baseUiState = base, onDismissError = vm::dismissError) {
             PasswordScreen(
                 uiState = uiState,
-                uiData = uiData,
                 uiEvent = passwordEvent(vm),
                 uiNavigation = passwordNavigation(nav)
             )

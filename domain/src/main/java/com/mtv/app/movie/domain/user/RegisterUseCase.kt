@@ -1,15 +1,16 @@
 package com.mtv.app.movie.domain.user
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.mtv.app.core.provider.based.BaseFirebaseUseCase
 import com.mtv.app.core.provider.utils.toMap
-import com.mtv.app.movie.common.login.mapFirebaseExceptionToUiError
 import com.mtv.app.movie.data.model.request.RegisterRequest
 import com.mtv.based.core.network.config.FirebaseConfig
 import com.mtv.based.core.network.datasource.FirebaseDataSource
 import com.mtv.based.core.network.di.IoDispatcher
 import com.mtv.based.core.network.utils.ErrorMessages
 import com.mtv.based.core.network.utils.ResourceFirebase
+import com.mtv.based.core.network.utils.mapFirebaseExceptionToUiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -45,7 +46,10 @@ class RegisterUseCase @Inject constructor(
         val result = firebaseAuth
             .createUserWithEmailAndPassword(param.email, param.password)
             .await()
-        val uid = result.user?.uid ?: throw IllegalStateException(ErrorMessages.GENERIC_ERROR)
+        val uid = result.user?.uid ?: throw FirebaseAuthException(
+            "ERROR_INTERNAL_ERROR",
+            ErrorMessages.GENERIC_ERROR
+        )
         return uid
     }
 

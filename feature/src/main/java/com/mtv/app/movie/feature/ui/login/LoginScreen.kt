@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.ui.BaseTextInput
-import com.mtv.app.movie.common.ui.PrimaryButton
-import com.mtv.app.movie.common.ui.SocialButton
+import com.mtv.app.movie.common.ui.BasePrimaryButton
+import com.mtv.app.movie.common.ui.BaseSocialButton
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.feature.event.login.LoginDialog
 import com.mtv.app.movie.feature.event.login.LoginEventListener
@@ -164,7 +164,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            PrimaryButton(
+            BasePrimaryButton(
                 text = Constant.Title.LOGIN,
                 enabled = isFormValid.value,
                 onClick = {
@@ -189,7 +189,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                SocialButton(
+                BaseSocialButton(
                     text = Constant.Title.FACEBOOK,
                     iconRes = R.drawable.ic_facebook,
                     modifier = Modifier.weight(1f),
@@ -197,7 +197,7 @@ fun LoginScreen(
                         uiEvent.onLoginByFacebookClicked()
                     }
                 )
-                SocialButton(
+                BaseSocialButton(
                     text = Constant.Title.GOOGLE,
                     iconRes = R.drawable.ic_google,
                     modifier = Modifier.weight(1f),

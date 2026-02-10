@@ -8,8 +8,10 @@
 
 package com.mtv.app.movie.feature.presentation
 
+import android.util.Log
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
+import com.mtv.app.movie.common.Constant.Title.CHANGE_PASSWORD_VALIDATE
 import com.mtv.app.movie.common.ConstantPreferences
 import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.updateUiDataListener
@@ -59,6 +61,9 @@ class PasswordViewModel @Inject constructor(
         newPasswordConfirm: String
     ) {
         if (newPassword != newPasswordConfirm) {
+            uiState.update {
+                it.copy(activeDialog = PasswordDialog.Validate(CHANGE_PASSWORD_VALIDATE))
+            }
             return
         }
 
