@@ -34,14 +34,6 @@ class ProfileViewModel @Inject constructor(
 
     init {
         loadLocalProfile()
-
-        collectFieldSuccessFirebase(
-            parent = uiState,
-            selector = { it.onProfileState }
-        ) { data ->
-            securePrefs.putObject(ConstantPreferences.USER_ACCOUNT, data)
-            updateUiDataListener(uiData) { copy(userAccount = data) }
-        }
         refreshProfile()
     }
 
@@ -66,9 +58,14 @@ class ProfileViewModel @Inject constructor(
             ),
             block = {
                 getProfileUseCase(uid)
+            },
+            onSuccess = { data ->
+                securePrefs.putObject(ConstantPreferences.USER_ACCOUNT, data)
+                updateUiDataListener(uiData) { copy(userAccount = data) }
             }
         )
     }
+
     fun doOpenSetting() {
         uiState.update {
             it.copy(
