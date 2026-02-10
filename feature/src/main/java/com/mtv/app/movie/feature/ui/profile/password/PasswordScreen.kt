@@ -45,10 +45,10 @@ import com.mtv.app.movie.common.ui.BasePasswordInput
 import com.mtv.app.movie.common.ui.BaseTextInput
 import com.mtv.app.movie.common.ui.BaseToolbar
 import com.mtv.app.movie.common.ui.BasePrimaryButton
-import com.mtv.app.movie.feature.event.profile.PasswordDialog
-import com.mtv.app.movie.feature.event.profile.PasswordEventListener
-import com.mtv.app.movie.feature.event.profile.PasswordNavigationListener
-import com.mtv.app.movie.feature.event.profile.PasswordStateListener
+import com.mtv.app.movie.feature.contract.PasswordDialog
+import com.mtv.app.movie.feature.contract.PasswordEventListener
+import com.mtv.app.movie.feature.contract.PasswordNavigationListener
+import com.mtv.app.movie.feature.contract.PasswordStateListener
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType

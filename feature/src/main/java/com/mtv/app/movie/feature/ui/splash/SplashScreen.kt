@@ -1,6 +1,5 @@
 package com.mtv.app.movie.feature.ui.splash
 
-import android.content.res.Configuration
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -32,9 +31,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mtv.app.movie.feature.event.splash.SplashEventListener
-import com.mtv.app.movie.feature.event.splash.SplashNavigationListener
-import com.mtv.app.movie.feature.event.splash.SplashStateListener
+import com.mtv.app.movie.feature.contract.SplashEventListener
+import com.mtv.app.movie.feature.contract.SplashNavigationListener
+import com.mtv.app.movie.feature.contract.SplashStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import kotlin.random.Random
 

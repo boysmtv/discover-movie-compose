@@ -42,10 +42,10 @@ import com.mtv.app.movie.common.ui.BaseTextInput
 import com.mtv.app.movie.common.ui.BasePrimaryButton
 import com.mtv.app.movie.common.ui.BaseSocialButton
 import com.mtv.app.movie.data.model.response.LoginResponse
-import com.mtv.app.movie.feature.event.login.LoginDialog
-import com.mtv.app.movie.feature.event.login.LoginEventListener
-import com.mtv.app.movie.feature.event.login.LoginNavigationListener
-import com.mtv.app.movie.feature.event.login.LoginStateListener
+import com.mtv.app.movie.feature.contract.LoginDialog
+import com.mtv.app.movie.feature.contract.LoginEventListener
+import com.mtv.app.movie.feature.contract.LoginNavigationListener
+import com.mtv.app.movie.feature.contract.LoginStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1

@@ -1,4 +1,4 @@
-package com.mtv.app.movie.feature.route.movie
+package com.mtv.app.movie.feature.route
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState

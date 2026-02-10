@@ -8,7 +8,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.feature.route.EditProfileRoute
-import com.mtv.app.movie.feature.route.movie.MovieDetailRoute
+import com.mtv.app.movie.feature.route.MovieDetailRoute
 import com.mtv.app.movie.feature.route.HomeRoute
 import com.mtv.app.movie.feature.route.LikedRoute
 import com.mtv.app.movie.feature.route.LoginRoute
@@ -17,7 +17,7 @@ import com.mtv.app.movie.feature.route.ProfileRoute
 import com.mtv.app.movie.feature.route.RegisterRoute
 import com.mtv.app.movie.feature.route.ResetRoute
 import com.mtv.app.movie.feature.route.SplashRoute
-import com.mtv.app.movie.feature.route.movie.PlayMovieRoute
+import com.mtv.app.movie.feature.route.PlayMovieRoute
 import com.mtv.app.movie.feature.route.SearchRoute
 
 fun NavGraphBuilder.splashGraph(nav: NavHostController) {

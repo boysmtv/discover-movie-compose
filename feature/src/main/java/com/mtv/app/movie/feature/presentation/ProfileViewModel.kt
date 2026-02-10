@@ -9,9 +9,9 @@ import com.mtv.app.movie.common.updateUiDataListener
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.GetProfileUseCase
-import com.mtv.app.movie.feature.event.profile.ProfileDataListener
-import com.mtv.app.movie.feature.event.profile.ProfileDialog
-import com.mtv.app.movie.feature.event.profile.ProfileStateListener
+import com.mtv.app.movie.feature.contract.ProfileDataListener
+import com.mtv.app.movie.feature.contract.ProfileDialog
+import com.mtv.app.movie.feature.contract.ProfileStateListener
 import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,9 +70,7 @@ class ProfileViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 onSettingState = Resource.Success(Unit),
-                activeDialog = ProfileDialog.Maintenance(
-                    message = "Under maintenance"
-                )
+                activeDialog = ProfileDialog.Maintenance()
             )
         }
     }

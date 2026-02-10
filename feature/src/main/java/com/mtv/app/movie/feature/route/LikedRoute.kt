@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.liked.LikedDataListener
-import com.mtv.app.movie.feature.event.liked.LikedEventListener
-import com.mtv.app.movie.feature.event.liked.LikedNavigationListener
-import com.mtv.app.movie.feature.event.liked.LikedStateListener
+import com.mtv.app.movie.feature.contract.LikedDataListener
+import com.mtv.app.movie.feature.contract.LikedEventListener
+import com.mtv.app.movie.feature.contract.LikedNavigationListener
+import com.mtv.app.movie.feature.contract.LikedStateListener
 import com.mtv.app.movie.feature.presentation.LikedViewModel
 import com.mtv.app.movie.feature.ui.liked.LikedScreen
 import com.mtv.app.movie.nav.AppDestinations
@@ -38,7 +38,7 @@ private fun likedEvent(vm: LikedViewModel) = LikedEventListener(
     onLoadLikedMovies = { },
     onDeletedMovie = vm::doDeleteLikedMoviesById,
     onDeletedAllMovies = vm::doDeleteLikedMovies,
-    onDismissDeleteMovie = vm::onDismissDeleteMovie
+    onDismissActiveDialog = vm::doDismissActiveDialog
 )
 
 private fun likedNavigation(nav: NavController) = LikedNavigationListener(

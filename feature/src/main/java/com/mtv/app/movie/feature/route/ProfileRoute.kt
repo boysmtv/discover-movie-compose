@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.profile.ProfileDataListener
-import com.mtv.app.movie.feature.event.profile.ProfileEventListener
-import com.mtv.app.movie.feature.event.profile.ProfileNavigationListener
-import com.mtv.app.movie.feature.event.profile.ProfileStateListener
+import com.mtv.app.movie.feature.contract.ProfileDataListener
+import com.mtv.app.movie.feature.contract.ProfileEventListener
+import com.mtv.app.movie.feature.contract.ProfileNavigationListener
+import com.mtv.app.movie.feature.contract.ProfileStateListener
 import com.mtv.app.movie.feature.presentation.ProfileViewModel
 import com.mtv.app.movie.feature.ui.profile.ProfileScreen
 import com.mtv.app.movie.nav.AppDestinations

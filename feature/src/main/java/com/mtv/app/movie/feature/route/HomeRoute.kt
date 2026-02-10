@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.home.HomeDataListener
-import com.mtv.app.movie.feature.event.home.HomeEventListener
-import com.mtv.app.movie.feature.event.home.HomeNavigationListener
-import com.mtv.app.movie.feature.event.home.HomeStateListener
+import com.mtv.app.movie.feature.contract.HomeDataListener
+import com.mtv.app.movie.feature.contract.HomeEventListener
+import com.mtv.app.movie.feature.contract.HomeNavigationListener
+import com.mtv.app.movie.feature.contract.HomeStateListener
 import com.mtv.app.movie.feature.presentation.HomeViewModel
 import com.mtv.app.movie.feature.ui.home.HomeScreen
 import com.mtv.app.movie.nav.AppDestinations

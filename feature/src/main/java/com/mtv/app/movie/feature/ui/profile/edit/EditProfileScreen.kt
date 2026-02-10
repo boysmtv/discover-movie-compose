@@ -72,11 +72,11 @@ import com.mtv.app.movie.common.ui.BaseTextInput
 import com.mtv.app.movie.common.ui.BaseToolbar
 import com.mtv.app.movie.common.ui.BasePrimaryButton
 import com.mtv.app.movie.common.uriToBase64
-import com.mtv.app.movie.feature.event.profile.EditProfileDataListener
-import com.mtv.app.movie.feature.event.profile.EditProfileDialog
-import com.mtv.app.movie.feature.event.profile.EditProfileEventListener
-import com.mtv.app.movie.feature.event.profile.EditProfileNavigationListener
-import com.mtv.app.movie.feature.event.profile.EditProfileStateListener
+import com.mtv.app.movie.feature.contract.EditProfileDataListener
+import com.mtv.app.movie.feature.contract.EditProfileDialog
+import com.mtv.app.movie.feature.contract.EditProfileEventListener
+import com.mtv.app.movie.feature.contract.EditProfileNavigationListener
+import com.mtv.app.movie.feature.contract.EditProfileStateListener
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
