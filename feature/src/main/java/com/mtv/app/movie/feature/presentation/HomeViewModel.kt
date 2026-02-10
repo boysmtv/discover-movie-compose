@@ -56,13 +56,52 @@ class HomeViewModel @Inject constructor(
         updateUiDataListener(uiData) { copy(loginResponse = account) }
     }
 
-    /** CHECK USER */
-    fun doCheck(email: String) = launchFirebaseUseCase(
+    /** GET ALL MOVIES */
+    fun getMovies() {
+        getNowPlaying()
+        getPopular()
+        getTopRated()
+        getUpComing()
+    }
+
+    /** GET NOW PLAYING MOVIES */
+    fun getNowPlaying() = launchUseCase(
+        loading = false,
         target = uiState.valueFlowOf(
-            get = { it.checkState },
-            set = { state -> copy(checkState = state) }
+            get = { it.nowPlayingState },
+            set = { state -> copy(nowPlayingState = state) }
         ),
-        block = { checkUseCase(CheckRequest(email)) }
+        block = { getNowPlayingUseCase(Unit) }
+    )
+
+    /** GET POPULAR MOVIES */
+    fun getPopular() = launchUseCase(
+        loading = false,
+        target = uiState.valueFlowOf(
+            get = { it.popularState },
+            set = { state -> copy(popularState = state) }
+        ),
+        block = { getPopularUseCase(Unit) }
+    )
+
+    /** GET TOP RATED MOVIES */
+    fun getTopRated() = launchUseCase(
+        loading = false,
+        target = uiState.valueFlowOf(
+            get = { it.topRatedState },
+            set = { state -> copy(topRatedState = state) }
+        ),
+        block = { getTopRatedUseCase(Unit) }
+    )
+
+    /** GET UP COMING MOVIES */
+    fun getUpComing() = launchUseCase(
+        loading = false,
+        target = uiState.valueFlowOf(
+            get = { it.upComingState },
+            set = { state -> copy(upComingState = state) }
+        ),
+        block = { getUpComingUseCase(Unit) }
     )
 
     /** LOGOUT */
@@ -73,49 +112,5 @@ class HomeViewModel @Inject constructor(
         ),
         block = { logoutUseCase(LogoutRequest(email)) }
     )
-
-    /** GET NOW PLAYING MOVIES */
-    fun getNowPlaying() = launchUseCase(
-        target = uiState.valueFlowOf(
-            get = { it.nowPlayingState },
-            set = { state -> copy(nowPlayingState = state) }
-        ),
-        block = { getNowPlayingUseCase(Unit) }
-    )
-
-    /** GET POPULAR MOVIES */
-    fun getPopular() = launchUseCase(
-        target = uiState.valueFlowOf(
-            get = { it.popularState },
-            set = { state -> copy(popularState = state) }
-        ),
-        block = { getPopularUseCase(Unit) }
-    )
-
-    /** GET TOP RATED MOVIES */
-    fun getTopRated() = launchUseCase(
-        target = uiState.valueFlowOf(
-            get = { it.topRatedState },
-            set = { state -> copy(topRatedState = state) }
-        ),
-        block = { getTopRatedUseCase(Unit) }
-    )
-
-    /** GET UP COMING MOVIES */
-    fun getUpComing() = launchUseCase(
-        target = uiState.valueFlowOf(
-            get = { it.upComingState },
-            set = { state -> copy(upComingState = state) }
-        ),
-        block = { getUpComingUseCase(Unit) }
-    )
-
-    /** GET ALL MOVIES */
-    fun getMovies() {
-        getNowPlaying()
-        getPopular()
-        getTopRated()
-        getUpComing()
-    }
 
 }

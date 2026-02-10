@@ -36,7 +36,6 @@ fun HomeRoute(nav: NavController) {
 }
 
 private fun homeEvent(vm: HomeViewModel) = HomeEventListener(
-    onCheck = vm::doCheck,
     onLogout = vm::doLogout,
     onLoadMovies = vm::getMovies
 )

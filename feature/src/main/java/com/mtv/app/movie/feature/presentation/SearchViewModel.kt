@@ -55,6 +55,7 @@ class SearchViewModel @Inject constructor(
 
     private fun performSearch(query: String) {
         launchUseCase(
+            loading = false,
             target = uiState.valueFlowOf(
                 get = { it.searchState },
                 set = { state -> copy(searchState = state) }
@@ -70,6 +71,7 @@ class SearchViewModel @Inject constructor(
 
     private fun fetchUpComingMovies() {
         launchUseCase(
+            loading = false,
             target = uiState.valueFlowOf(
                 get = { it.upComingState },
                 set = { state -> copy(upComingState = state) }
