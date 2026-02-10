@@ -70,6 +70,11 @@ class Constant {
          * MESSAGE
          * ========================= */
         const val UNDER_MAINTENANCE = "Under Maintenance"
+
+        /* =========================
+         * NOTIFICATION
+         * ========================= */
+        const val NOTIFICATION = "Notification"
     }
 
 
