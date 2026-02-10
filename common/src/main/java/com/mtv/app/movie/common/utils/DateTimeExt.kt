@@ -2,6 +2,7 @@ package com.mtv.app.movie.common.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Date
@@ -58,3 +59,8 @@ fun nowIso(): String = isoFormat.format(Date())
 @RequiresApi(Build.VERSION_CODES.O)
 fun today(): LocalDate = LocalDate.now()
 
+fun stringToTimestamp(date: String): Timestamp {
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val parsedDate = sdf.parse(date) ?: Date()
+    return Timestamp(parsedDate)
+}
