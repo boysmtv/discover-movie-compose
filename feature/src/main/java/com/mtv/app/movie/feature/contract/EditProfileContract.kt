@@ -6,7 +6,7 @@
  * Last modified by Dedy Wijaya on 03/02/26 11.58
  */
 
-package com.mtv.app.movie.feature.event.profile
+package com.mtv.app.movie.feature.contract
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.Immutable

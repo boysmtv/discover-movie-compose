@@ -6,12 +6,9 @@ import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.SplashRequest
 import com.mtv.app.movie.domain.user.SplashUseCase
-import com.mtv.app.movie.feature.event.home.HomeDataListener
-import com.mtv.app.movie.feature.event.home.HomeStateListener
-import com.mtv.app.movie.feature.event.splash.SplashStateListener
+import com.mtv.app.movie.feature.contract.SplashStateListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel

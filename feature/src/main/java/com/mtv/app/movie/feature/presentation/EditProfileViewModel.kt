@@ -8,7 +8,6 @@
 
 package com.mtv.app.movie.feature.presentation
 
-import android.util.Log
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.core.provider.utils.SessionManager
@@ -19,9 +18,9 @@ import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.UpdateProfileRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.UpdateProfileUseCase
-import com.mtv.app.movie.feature.event.profile.EditProfileDataListener
-import com.mtv.app.movie.feature.event.profile.EditProfileDialog
-import com.mtv.app.movie.feature.event.profile.EditProfileStateListener
+import com.mtv.app.movie.feature.contract.EditProfileDataListener
+import com.mtv.app.movie.feature.contract.EditProfileDialog
+import com.mtv.app.movie.feature.contract.EditProfileStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

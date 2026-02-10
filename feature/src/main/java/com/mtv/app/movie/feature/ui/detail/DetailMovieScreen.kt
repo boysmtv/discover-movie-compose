@@ -31,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -44,22 +43,21 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mtv.app.movie.common.BuildConfig
 import com.mtv.app.movie.common.R
-import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.common.formatDateAutoLegacy
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
 import com.mtv.app.movie.data.model.movie.MovieVideoResponse
-import com.mtv.app.movie.feature.event.detail.DetailEventListener
-import com.mtv.app.movie.feature.event.detail.DetailNavigationListener
-import com.mtv.app.movie.feature.event.detail.DetailStateListener
+import com.mtv.app.movie.feature.contract.DetailDialog
+import com.mtv.app.movie.feature.contract.DetailEventListener
+import com.mtv.app.movie.feature.contract.DetailNavigationListener
+import com.mtv.app.movie.feature.contract.DetailStateListener
 import com.mtv.app.movie.feature.utils.previewMovieDetail
-import com.mtv.app.movie.feature.utils.previewVideoResponse
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
-import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.ERROR_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Composable
 fun DetailMovieScreen(
@@ -77,37 +75,47 @@ fun DetailMovieScreen(
         }
     }
 
-    HandleAddState(uiState.addMyListState, "Movie added to your list") { uiEvent.onDismissAddMyList() }
-    HandleAddState(uiState.addMyLikeState, "Movie added to your liked") { uiEvent.onDismissAddMyLike() }
+    uiState.activeDialog?.let { dialog ->
+        when (dialog) {
+            is DetailDialog.AddMyList -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.SUCCESS,
+                        title = stringResource(R.string.success),
+                        message = dialog.message,
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = { uiEvent.onDismissActiveDialog() }
+                )
+            }
+
+            is DetailDialog.Error -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.ERROR,
+                        title = ERROR_STRING,
+                        message = dialog.message,
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = { uiEvent.onDismissActiveDialog() }
+                )
+            }
+
+            is DetailDialog.Maintenance -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.WARNING,
+                        title = WARNING_STRING,
+                        message = dialog.message,
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = { uiEvent.onDismissActiveDialog() }
+                )
+            }
+        }
+    }
 
     DetailMovieContent(uiState, uiEvent, uiNavigation)
-}
-
-@Composable
-fun HandleAddState(state: StateMovieResult, successMessage: String, onDismiss: () -> Unit) {
-    when (state) {
-        is StateMovieResult.Success -> DialogCenterV1(
-            state = DialogStateV1(
-                type = DialogType.SUCCESS,
-                title = stringResource(R.string.success),
-                message = successMessage,
-                primaryButtonText = OK_STRING
-            ),
-            onDismiss = onDismiss
-        )
-
-        is StateMovieResult.Error -> DialogCenterV1(
-            state = DialogStateV1(
-                type = DialogType.ERROR,
-                title = ERROR_STRING,
-                message = state.message,
-                primaryButtonText = OK_STRING
-            ),
-            onDismiss = onDismiss
-        )
-
-        StateMovieResult.None -> {}
-    }
 }
 
 @Composable
@@ -252,7 +260,7 @@ fun SeriesDetailScreenPreview() {
                 )
             ),
             uiNavigation = DetailNavigationListener({}, {}),
-            uiEvent = DetailEventListener({}, {}, {}, {}, {}, {}, {}, {})
+            uiEvent = DetailEventListener({}, {}, {}, {}, {}, {}, {})
         )
     }
 }

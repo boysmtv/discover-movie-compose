@@ -61,11 +61,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.base64ToBitmap
-import com.mtv.app.movie.feature.event.profile.ProfileDataListener
-import com.mtv.app.movie.feature.event.profile.ProfileDialog
-import com.mtv.app.movie.feature.event.profile.ProfileEventListener
-import com.mtv.app.movie.feature.event.profile.ProfileNavigationListener
-import com.mtv.app.movie.feature.event.profile.ProfileStateListener
+import com.mtv.app.movie.feature.contract.ProfileDataListener
+import com.mtv.app.movie.feature.contract.ProfileDialog
+import com.mtv.app.movie.feature.contract.ProfileEventListener
+import com.mtv.app.movie.feature.contract.ProfileNavigationListener
+import com.mtv.app.movie.feature.contract.ProfileStateListener
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1

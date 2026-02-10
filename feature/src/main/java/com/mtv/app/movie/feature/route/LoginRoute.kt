@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.login.LoginEventListener
-import com.mtv.app.movie.feature.event.login.LoginNavigationListener
-import com.mtv.app.movie.feature.event.login.LoginStateListener
+import com.mtv.app.movie.feature.contract.LoginEventListener
+import com.mtv.app.movie.feature.contract.LoginNavigationListener
+import com.mtv.app.movie.feature.contract.LoginStateListener
 import com.mtv.app.movie.feature.presentation.LoginViewModel
 import com.mtv.app.movie.feature.ui.login.LoginScreen
 import com.mtv.app.movie.nav.AppDestinations

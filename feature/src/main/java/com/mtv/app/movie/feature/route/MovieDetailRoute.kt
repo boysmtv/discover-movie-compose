@@ -1,12 +1,12 @@
-package com.mtv.app.movie.feature.route.movie
+package com.mtv.app.movie.feature.route
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.detail.DetailEventListener
-import com.mtv.app.movie.feature.event.detail.DetailNavigationListener
-import com.mtv.app.movie.feature.event.detail.DetailStateListener
+import com.mtv.app.movie.feature.contract.DetailEventListener
+import com.mtv.app.movie.feature.contract.DetailNavigationListener
+import com.mtv.app.movie.feature.contract.DetailStateListener
 import com.mtv.app.movie.feature.presentation.MovieDetailViewModel
 import com.mtv.app.movie.feature.ui.detail.DetailMovieScreen
 import com.mtv.app.movie.nav.AppDestinations
@@ -25,14 +25,13 @@ fun MovieDetailRoute(nav: NavController) {
 }
 
 private fun detailEvent(vm: MovieDetailViewModel) = DetailEventListener(
-    onLoadMovies = vm::loadDetailMovies,
-    onPlayMovies = vm::loadDetailVideos,
-    onConsumePlayEvent = vm::onConsumePlayEvent,
-    onAddToMyList = vm::onAddToMyList,
-    onAddToMyLike = vm::onAddToMyLike,
-    onShareMovie = vm::onShareMovie,
-    onDismissAddMyList = vm::onDismissAddMyList,
-    onDismissAddMyLike = vm::onDismissAddMyLike,
+    onLoadMovies = vm::doLoadDetailMovies,
+    onPlayMovies = vm::doLoadDetailVideos,
+    onConsumePlayEvent = vm::doConsumePlayEvent,
+    onAddToMyList = vm::doAddToMyList,
+    onAddToMyLike = vm::doAddToMyLike,
+    onShareMovie = vm::doShareMovie,
+    onDismissActiveDialog = vm::doDismissActiveDialog,
 )
 
 private fun detailNavigation(nav: NavController) = DetailNavigationListener(

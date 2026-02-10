@@ -10,18 +10,18 @@ package com.mtv.app.movie.feature.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import com.mtv.app.core.provider.based.BaseViewModel
-import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.common.Constant
-import com.mtv.app.movie.common.ConstantPreferences.MOVIE_LIKED_LIST
 import com.mtv.app.movie.common.ConstantPreferences.MOVIE_SAVED_LIST
 import com.mtv.app.movie.common.UiOwner
-import com.mtv.app.movie.common.runStateWithActionMovieLocalManager
+import com.mtv.app.movie.common.runStateMovieLocalManager
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
 import com.mtv.app.movie.domain.movie.MoviesDetailUseCase
 import com.mtv.app.movie.domain.movie.MoviesVideosUseCase
-import com.mtv.app.movie.feature.event.detail.DetailStateListener
+import com.mtv.app.movie.feature.contract.DetailDialog
+import com.mtv.app.movie.feature.contract.DetailStateListener
 import com.mtv.app.movie.feature.utils.MovieLocalManager
+import com.mtv.based.core.network.utils.ErrorMessages
 import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +46,7 @@ class MovieDetailViewModel @Inject constructor(
     private val movieId: Int = checkNotNull(savedStateHandle[Constant.SharedParam.MOVIE_ID])
 
     /** GET DETAIL MOVIES */
-    fun loadDetailMovies() = launchUseCase(
+    fun doLoadDetailMovies() = launchUseCase(
         loading = false,
         target = uiState.valueFlowOf(
             get = { it.detailState },
@@ -56,7 +56,7 @@ class MovieDetailViewModel @Inject constructor(
     )
 
     /** GET DETAIL MOVIES */
-    fun loadDetailVideos() = launchUseCase(
+    fun doLoadDetailVideos() = launchUseCase(
         target = uiState.valueFlowOf(
             get = { it.videosState },
             set = { state -> copy(videosState = state) }
@@ -64,40 +64,59 @@ class MovieDetailViewModel @Inject constructor(
         block = { moviesVideosUseCase(movieId) }
     )
 
-    fun onConsumePlayEvent() {
+    fun doConsumePlayEvent() {
         uiState.update {
             it.copy(videosState = Resource.Loading)
         }
     }
 
-    fun onAddToMyList(movie: MovieDetailResponse) = uiState.runStateWithActionMovieLocalManager(
+    fun doAddToMyList(movie: MovieDetailResponse) = uiState.runStateMovieLocalManager(
         block = {
             movieLocalManager.addMovie(MOVIE_SAVED_LIST, movie)
         },
         reducer = { state, actionState ->
             state.copy(addMyListState = actionState)
-        }
-    )
-
-    fun onAddToMyLike(movie: MovieDetailResponse) = uiState.runStateWithActionMovieLocalManager(
-        block = {
-            movieLocalManager.addMovie(MOVIE_LIKED_LIST, movie)
         },
-        reducer = { state, actionState ->
-            state.copy(addMyLikeState = actionState)
+        onSuccess = {
+            uiState.update {
+                it.copy(
+                    activeDialog = DetailDialog.AddMyList("Movie added to your list")
+                )
+            }
+        },
+        onError = { throwable ->
+            uiState.update {
+                it.copy(
+                    activeDialog = DetailDialog.Error(
+                        message = throwable.message
+                            ?: ErrorMessages.GENERIC_ERROR
+                    )
+                )
+            }
         }
     )
 
-    fun onShareMovie(movie: MovieDetailResponse) {
-
+    fun doAddToMyLike(movie: MovieDetailResponse) = uiState.update {
+        it.copy(
+            addMyLikeState = Resource.Success(Unit),
+            activeDialog = DetailDialog.Maintenance()
+        )
     }
 
-    fun onDismissAddMyList() {
-        uiState.update { it.copy(addMyListState = StateMovieResult.None) }
+    fun doShareMovie(movie: MovieDetailResponse) = uiState.update {
+        it.copy(
+            onShareMovie = Resource.Success(Unit),
+            activeDialog = DetailDialog.Maintenance()
+        )
     }
 
-    fun onDismissAddMyLike() {
-        uiState.update { it.copy(addMyLikeState = StateMovieResult.None) }
+    fun doDismissActiveDialog() = uiState.update {
+        it.copy(
+            activeDialog = null,
+            addMyListState = Resource.Loading,
+            addMyLikeState = Resource.Loading,
+            onShareMovie = Resource.Loading,
+        )
     }
 
 }

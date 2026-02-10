@@ -75,10 +75,10 @@ import com.mtv.app.movie.common.ui.BasePasswordInput
 import com.mtv.app.movie.common.ui.BaseTextInput
 import com.mtv.app.movie.common.ui.BasePrimaryButton
 import com.mtv.app.movie.common.uriToBase64
-import com.mtv.app.movie.feature.event.register.RegisterDialog
-import com.mtv.app.movie.feature.event.register.RegisterEventListener
-import com.mtv.app.movie.feature.event.register.RegisterNavigationListener
-import com.mtv.app.movie.feature.event.register.RegisterStateListener
+import com.mtv.app.movie.feature.contract.RegisterDialog
+import com.mtv.app.movie.feature.contract.RegisterEventListener
+import com.mtv.app.movie.feature.contract.RegisterNavigationListener
+import com.mtv.app.movie.feature.contract.RegisterStateListener
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType

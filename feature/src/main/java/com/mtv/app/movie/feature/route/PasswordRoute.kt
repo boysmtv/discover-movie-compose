@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.profile.PasswordDataListener
-import com.mtv.app.movie.feature.event.profile.PasswordEventListener
-import com.mtv.app.movie.feature.event.profile.PasswordNavigationListener
-import com.mtv.app.movie.feature.event.profile.PasswordStateListener
+import com.mtv.app.movie.feature.contract.PasswordDataListener
+import com.mtv.app.movie.feature.contract.PasswordEventListener
+import com.mtv.app.movie.feature.contract.PasswordNavigationListener
+import com.mtv.app.movie.feature.contract.PasswordStateListener
 import com.mtv.app.movie.feature.presentation.PasswordViewModel
 import com.mtv.app.movie.feature.ui.profile.password.PasswordScreen
 

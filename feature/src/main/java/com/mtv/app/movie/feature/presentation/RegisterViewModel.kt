@@ -7,8 +7,8 @@ import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.RegisterRequest
 import com.mtv.app.movie.domain.user.RegisterUseCase
-import com.mtv.app.movie.feature.event.register.RegisterDialog
-import com.mtv.app.movie.feature.event.register.RegisterStateListener
+import com.mtv.app.movie.feature.contract.RegisterDialog
+import com.mtv.app.movie.feature.contract.RegisterStateListener
 import com.mtv.based.core.network.utils.Resource
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,9 +61,7 @@ class RegisterViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 registerByGoogleState = Resource.Success(Unit),
-                activeDialog = RegisterDialog.Maintenance(
-                    message = "Under maintenance"
-                )
+                activeDialog = RegisterDialog.Maintenance()
             )
         }
     }
@@ -73,9 +71,7 @@ class RegisterViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 registerByFacebookState = Resource.Success(Unit),
-                activeDialog = RegisterDialog.Maintenance(
-                    message = "Under maintenance"
-                )
+                activeDialog = RegisterDialog.Maintenance()
             )
         }
     }

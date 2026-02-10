@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
-import com.mtv.app.movie.feature.event.search.SearchDataListener
-import com.mtv.app.movie.feature.event.search.SearchEventListener
-import com.mtv.app.movie.feature.event.search.SearchNavigationListener
-import com.mtv.app.movie.feature.event.search.SearchStateListener
+import com.mtv.app.movie.feature.contract.SearchDataListener
+import com.mtv.app.movie.feature.contract.SearchEventListener
+import com.mtv.app.movie.feature.contract.SearchNavigationListener
+import com.mtv.app.movie.feature.contract.SearchStateListener
 import com.mtv.app.movie.feature.presentation.SearchViewModel
 import com.mtv.app.movie.feature.ui.search.SearchScreen
 import com.mtv.app.movie.nav.AppDestinations

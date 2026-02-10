@@ -35,9 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.common.R
-import com.mtv.app.movie.feature.event.reset.ResetEventListener
-import com.mtv.app.movie.feature.event.reset.ResetNavigationListener
-import com.mtv.app.movie.feature.event.reset.ResetStateListener
+import com.mtv.app.movie.feature.contract.ResetEventListener
+import com.mtv.app.movie.feature.contract.ResetNavigationListener
+import com.mtv.app.movie.feature.contract.ResetStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1

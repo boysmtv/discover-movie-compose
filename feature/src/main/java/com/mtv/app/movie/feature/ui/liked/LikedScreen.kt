@@ -15,23 +15,20 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.mtv.app.movie.common.DeleteTarget
 import com.mtv.app.movie.common.R
-import com.mtv.app.movie.common.StateMovieResult
-import com.mtv.app.movie.feature.event.liked.LikedDataListener
-import com.mtv.app.movie.feature.event.liked.LikedEventListener
-import com.mtv.app.movie.feature.event.liked.LikedNavigationListener
-import com.mtv.app.movie.feature.event.liked.LikedStateListener
+import com.mtv.app.movie.feature.contract.LikedDataListener
+import com.mtv.app.movie.feature.contract.LikedDialog
+import com.mtv.app.movie.feature.contract.LikedEventListener
+import com.mtv.app.movie.feature.contract.LikedNavigationListener
+import com.mtv.app.movie.feature.contract.LikedStateListener
 import com.mtv.app.movie.feature.utils.previewMovieDetail
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
@@ -46,32 +43,34 @@ fun LikedScreen(
     uiEvent: LikedEventListener,
     uiNavigation: LikedNavigationListener
 ) {
+    uiState.activeDialog?.let { dialog ->
+        when (dialog) {
+            is LikedDialog.Success -> {
+                if (uiState.deleteSource == DeleteTarget.ALL) {
+                    DialogCenterV1(
+                        state = DialogStateV1(
+                            type = DialogType.SUCCESS,
+                            title = stringResource(R.string.success),
+                            message = stringResource(R.string.success_clear_fav),
+                            primaryButtonText = OK_STRING
+                        ),
+                        onDismiss = { uiEvent.onDismissActiveDialog() }
+                    )
+                }
+            }
 
-    if (
-        uiState.stateMovieResult is StateMovieResult.Success &&
-        uiState.deleteSource == DeleteTarget.ALL
-    ) {
-        DialogCenterV1(
-            state = DialogStateV1(
-                type = DialogType.SUCCESS,
-                title = stringResource(R.string.success),
-                message = stringResource(R.string.success_clear_fav),
-                primaryButtonText = OK_STRING
-            ),
-            onDismiss = { uiEvent.onDismissDeleteMovie() }
-        )
-    }
-
-    (uiState.stateMovieResult as? StateMovieResult.Error)?.let {
-        DialogCenterV1(
-            state = DialogStateV1(
-                type = DialogType.ERROR,
-                title = WARNING_STRING,
-                message = "Error Message : ${it.message}",
-                primaryButtonText = OK_STRING
-            ),
-            onDismiss = { uiEvent.onDismissDeleteMovie() }
-        )
+            is LikedDialog.Error -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.ERROR,
+                        title = WARNING_STRING,
+                        message = dialog.message,
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = { uiEvent.onDismissActiveDialog() }
+                )
+            }
+        }
     }
 
     Column(

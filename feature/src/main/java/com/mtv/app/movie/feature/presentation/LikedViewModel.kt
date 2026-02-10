@@ -9,15 +9,17 @@
 package com.mtv.app.movie.feature.presentation
 
 import com.mtv.app.core.provider.based.BaseViewModel
-import com.mtv.app.movie.common.StateMovieResult
 import com.mtv.app.movie.common.ConstantPreferences.MOVIE_SAVED_LIST
 import com.mtv.app.movie.common.DeleteTarget
 import com.mtv.app.movie.common.UiOwner
-import com.mtv.app.movie.common.runStateWithActionMovieLocalManager
+import com.mtv.app.movie.common.runStateMovieLocalManager
 import com.mtv.app.movie.common.updateUiDataListener
-import com.mtv.app.movie.feature.event.liked.LikedDataListener
-import com.mtv.app.movie.feature.event.liked.LikedStateListener
+import com.mtv.app.movie.feature.contract.LikedDataListener
+import com.mtv.app.movie.feature.contract.LikedDialog
+import com.mtv.app.movie.feature.contract.LikedStateListener
 import com.mtv.app.movie.feature.utils.MovieLocalManager
+import com.mtv.based.core.network.utils.ErrorMessages
+import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -39,30 +41,47 @@ class LikedViewModel @Inject constructor(
         updateUiDataListener(uiData) { copy(movieLikedList = movieList) }
     }
 
-    fun doDeleteLikedMovies() = uiState.runStateWithActionMovieLocalManager(
+    fun doDeleteLikedMovies() = uiState.runStateMovieLocalManager(
         block = {
             movieLocalManager.clearMovies(MOVIE_SAVED_LIST)
         },
         reducer = { state, actionState ->
             state.copy(
-                stateMovieResult = actionState,
+                onDeleteState = actionState,
                 deleteSource = DeleteTarget.ALL
             )
         },
         onSuccess = {
             uiData.update {
-                it.copy(movieLikedList = emptyList())
+                it.copy(
+                    movieLikedList = emptyList()
+                )
+            }
+            uiState.update {
+                it.copy(
+                    activeDialog = LikedDialog.Success
+                )
+            }
+        },
+        onError = { throwable ->
+            uiState.update {
+                it.copy(
+                    activeDialog = LikedDialog.Error(
+                        message = throwable.message
+                            ?: ErrorMessages.GENERIC_ERROR
+                    )
+                )
             }
         }
     )
 
-    fun doDeleteLikedMoviesById(movieId: Int) = uiState.runStateWithActionMovieLocalManager(
+    fun doDeleteLikedMoviesById(movieId: Int) = uiState.runStateMovieLocalManager(
         block = {
             movieLocalManager.removeMovie(MOVIE_SAVED_LIST, movieId)
         },
         reducer = { state, actionState ->
             state.copy(
-                stateMovieResult = actionState,
+                onDeleteState = actionState,
                 deleteSource = DeleteTarget.SINGLE
             )
         },
@@ -74,17 +93,26 @@ class LikedViewModel @Inject constructor(
                     }
                 )
             }
+        },
+        onError = { throwable ->
+            uiState.update {
+                it.copy(
+                    activeDialog = LikedDialog.Error(
+                        message = throwable.message
+                            ?: ErrorMessages.GENERIC_ERROR
+                    )
+                )
+            }
         }
     )
 
-
-    fun onDismissDeleteMovie() {
+    fun doDismissActiveDialog() {
         uiState.update {
             it.copy(
-                stateMovieResult = StateMovieResult.None,
-                deleteSource = null
+                activeDialog = null,
+                deleteSource = null,
+                onDeleteState = Resource.Loading,
             )
         }
     }
-
 }

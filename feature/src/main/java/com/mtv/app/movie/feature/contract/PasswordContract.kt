@@ -6,7 +6,7 @@
  * Last modified by Dedy Wijaya on 09/02/26 16.01
  */
 
-package com.mtv.app.movie.feature.event.profile
+package com.mtv.app.movie.feature.contract
 
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.based.core.network.utils.ResourceFirebase

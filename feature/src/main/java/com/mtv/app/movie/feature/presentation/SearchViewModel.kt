@@ -14,8 +14,8 @@ import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.domain.movie.MoviesUpComingUseCase
 import com.mtv.app.movie.domain.movie.SearchMovieUseCase
-import com.mtv.app.movie.feature.event.search.SearchDataListener
-import com.mtv.app.movie.feature.event.search.SearchStateListener
+import com.mtv.app.movie.feature.contract.SearchDataListener
+import com.mtv.app.movie.feature.contract.SearchStateListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow

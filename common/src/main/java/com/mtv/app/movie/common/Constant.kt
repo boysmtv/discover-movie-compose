@@ -65,6 +65,11 @@ class Constant {
         const val OR_CONNECT_WITH = "or connect with"
         const val FACEBOOK = "Facebook"
         const val GOOGLE = "Google"
+
+        /* =========================
+         * MESSAGE
+         * ========================= */
+        const val UNDER_MAINTENANCE = "Under Maintenance"
     }
 
 

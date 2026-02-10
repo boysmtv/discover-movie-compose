@@ -14,7 +14,6 @@ import com.mtv.app.movie.common.ConstantPreferences
 import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.updateUiDataListener
 import com.mtv.app.movie.common.valueFlowOf
-import com.mtv.app.movie.data.model.request.CheckRequest
 import com.mtv.app.movie.data.model.request.LogoutRequest
 import com.mtv.app.movie.data.model.response.CheckResponse
 import com.mtv.app.movie.data.model.response.LoginResponse
@@ -25,8 +24,8 @@ import com.mtv.app.movie.domain.movie.MoviesTopRatedUseCase
 import com.mtv.app.movie.domain.movie.MoviesUpComingUseCase
 import com.mtv.app.movie.domain.user.CheckUseCase
 import com.mtv.app.movie.domain.user.LogoutUseCase
-import com.mtv.app.movie.feature.event.home.HomeDataListener
-import com.mtv.app.movie.feature.event.home.HomeStateListener
+import com.mtv.app.movie.feature.contract.HomeDataListener
+import com.mtv.app.movie.feature.contract.HomeStateListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

@@ -8,7 +8,6 @@
 
 package com.mtv.app.movie.feature.presentation
 
-import android.util.Log
 import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.core.provider.utils.SecurePrefs
 import com.mtv.app.movie.common.Constant.Title.CHANGE_PASSWORD_VALIDATE
@@ -19,9 +18,9 @@ import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.PasswordRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.PasswordUseCase
-import com.mtv.app.movie.feature.event.profile.PasswordDataListener
-import com.mtv.app.movie.feature.event.profile.PasswordDialog
-import com.mtv.app.movie.feature.event.profile.PasswordStateListener
+import com.mtv.app.movie.feature.contract.PasswordDataListener
+import com.mtv.app.movie.feature.contract.PasswordDialog
+import com.mtv.app.movie.feature.contract.PasswordStateListener
 import com.mtv.based.core.network.utils.ResourceFirebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -4,14 +4,12 @@ import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.movie.common.UiOwner
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.domain.user.ResetUseCase
-import com.mtv.app.movie.feature.event.reset.ResetStateListener
-import com.mtv.app.movie.feature.event.splash.SplashStateListener
+import com.mtv.app.movie.feature.contract.ResetStateListener
 import com.mtv.based.core.network.utils.ErrorMessages
 import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.core.network.utils.UiErrorFirebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 

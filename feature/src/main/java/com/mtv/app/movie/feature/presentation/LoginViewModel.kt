@@ -10,8 +10,8 @@ import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.request.LoginRequest
 import com.mtv.app.movie.data.model.response.LoginResponse
 import com.mtv.app.movie.domain.user.LoginUseCase
-import com.mtv.app.movie.feature.event.login.LoginDialog
-import com.mtv.app.movie.feature.event.login.LoginStateListener
+import com.mtv.app.movie.feature.contract.LoginDialog
+import com.mtv.app.movie.feature.contract.LoginStateListener
 import com.mtv.based.core.network.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,9 +62,7 @@ class LoginViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 loginByGoogleState = Resource.Success(Unit),
-                activeDialog = LoginDialog.Maintenance(
-                    message = "Under maintenance"
-                )
+                activeDialog = LoginDialog.Maintenance()
             )
         }
     }
@@ -74,9 +72,7 @@ class LoginViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 loginByFacebookState = Resource.Success(Unit),
-                activeDialog = LoginDialog.Maintenance(
-                    message = "Under maintenance"
-                )
+                activeDialog = LoginDialog.Maintenance()
             )
         }
     }
