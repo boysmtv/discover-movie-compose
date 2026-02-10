@@ -37,25 +37,15 @@ class SearchViewModel @Inject constructor(
     override val uiData = MutableStateFlow(SearchDataListener())
 
     init {
+        collectQuery()
+    }
+
+    fun collectQuery() {
         viewModelScope.launch {
             uiData.map { it.query }
                 .debounce(500)
                 .distinctUntilChanged()
                 .collect { query -> if (query.isNotBlank()) performSearch(query) else fetchUpComingMovies() }
-        }
-
-        collectFieldSuccessResource(
-            parent = uiState,
-            selector = { it.searchState }
-        ) { data ->
-            uiData.update { it.copy(query = it.query, movies = data.results) }
-        }
-
-        collectFieldSuccessResource(
-            parent = uiState,
-            selector = { it.upComingState }
-        ) { data ->
-            if (uiData.value.query.isBlank()) uiData.update { it.copy(query = it.query, movies = data.results) }
         }
     }
 
@@ -69,7 +59,12 @@ class SearchViewModel @Inject constructor(
                 get = { it.searchState },
                 set = { state -> copy(searchState = state) }
             ),
-            block = { searchMovieUseCase(query) }
+            block = {
+                searchMovieUseCase(query)
+            },
+            onSuccess = { data ->
+                uiData.update { it.copy(query = it.query, movies = data.results) }
+            }
         )
     }
 
@@ -79,7 +74,12 @@ class SearchViewModel @Inject constructor(
                 get = { it.upComingState },
                 set = { state -> copy(upComingState = state) }
             ),
-            block = { upComingUseCase(Unit) }
+            block = {
+                upComingUseCase(Unit)
+            },
+            onSuccess = { data ->
+                if (uiData.value.query.isBlank()) uiData.update { it.copy(query = it.query, movies = data.results) }
+            }
         )
     }
 

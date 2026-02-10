@@ -30,16 +30,6 @@ class LoginViewModel @Inject constructor(
     /** UI DATA : DATA PERSIST (Prefs) */
     override val uiData = MutableStateFlow(Unit)
 
-    /** INIT */
-    init {
-        collectFieldSuccessFirebase(
-            parent = uiState,
-            selector = { it.loginByEmailState }
-        ) { data ->
-            securePrefs.putObject(ConstantPreferences.USER_ACCOUNT, data)
-        }
-    }
-
     /** LOGIN */
     fun doLoginByEmail(username: String, password: String) {
         launchFirebaseUseCase(
@@ -56,6 +46,9 @@ class LoginViewModel @Inject constructor(
                         createdAt = System.currentTimeMillis().toString(),
                     )
                 )
+            },
+            onSuccess = { data ->
+                securePrefs.putObject(ConstantPreferences.USER_ACCOUNT, data)
             }
         )
     }

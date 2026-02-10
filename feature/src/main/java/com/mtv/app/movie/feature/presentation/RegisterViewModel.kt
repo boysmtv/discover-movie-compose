@@ -29,17 +29,6 @@ class RegisterViewModel @Inject constructor(
     /** UI DATA : DATA PERSIST (Prefs) */
     override val uiData = MutableStateFlow(Unit)
 
-    init {
-        collectFieldSuccessFirebase(
-            parent = uiState,
-            selector = { it.registerByEmailState }
-        ) { data ->
-            sessionManager.saveUid(data)
-            uiState.update { it.copy(activeDialog = RegisterDialog.Success) }
-        }
-
-    }
-
     /** REGISTER BY EMAIL */
     fun doRegisterByEmail(name: String, email: String, phone: String, password: String, photoBase64: String) =
         launchFirebaseUseCase(
@@ -60,6 +49,10 @@ class RegisterViewModel @Inject constructor(
                         createdAt = System.currentTimeMillis().toString()
                     )
                 )
+            },
+            onSuccess = { data ->
+                sessionManager.saveUid(data)
+                uiState.update { it.copy(activeDialog = RegisterDialog.Success) }
             }
         )
 

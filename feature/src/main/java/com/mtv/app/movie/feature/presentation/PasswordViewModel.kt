@@ -40,13 +40,6 @@ class PasswordViewModel @Inject constructor(
 
     init {
         loadLocalProfile()
-
-        collectFieldSuccessFirebase(
-            parent = uiState,
-            selector = { it.onSubmitPasswordState }
-        ) { _ ->
-            uiState.update { it.copy(activeDialog = PasswordDialog.Success) }
-        }
     }
 
     private fun loadLocalProfile() {
@@ -59,7 +52,6 @@ class PasswordViewModel @Inject constructor(
             copy(userAccount = localUser)
         }
     }
-
 
     fun doSubmitPassword(
         password: String,
@@ -85,6 +77,9 @@ class PasswordViewModel @Inject constructor(
                         newPassword = newPassword
                     )
                 )
+            },
+            onSuccess = { _ ->
+                uiState.update { it.copy(activeDialog = PasswordDialog.Success) }
             }
         )
     }
