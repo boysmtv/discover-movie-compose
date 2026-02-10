@@ -95,8 +95,6 @@ dependencies {
 //    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.androidx.material3)
-
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore-ktx")
@@ -112,11 +110,11 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(libs.androidx.material3)
     implementation(libs.ui)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.material.icons.extended)
-
     debugImplementation(libs.ui.tooling)
 
     /* Maven Local Libraries (Core) */

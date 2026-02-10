@@ -35,6 +35,7 @@ fun EditProfileRoute(nav: NavController) {
 
 private fun editProfileEvent(vm: EditProfileViewModel) = EditProfileEventListener(
     onSaveClicked = vm::doUpdateProfile,
+    onDismissActiveDialog = vm::doDismissActiveDialog
 )
 
 private fun editProfileNavigation(nav: NavController) = EditProfileNavigationListener(

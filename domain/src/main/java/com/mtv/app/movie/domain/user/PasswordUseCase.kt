@@ -11,15 +11,13 @@ package com.mtv.app.movie.domain.user
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.mtv.app.core.provider.based.BaseFirebaseUseCase
-import com.mtv.app.core.provider.utils.safeToDataClass
-import com.mtv.app.movie.common.login.mapFirebaseExceptionToUiError
 import com.mtv.app.movie.data.model.request.PasswordRequest
-import com.mtv.based.core.network.config.FirebaseConfig
-import com.mtv.based.core.network.datasource.FirebaseDataSource
 import com.mtv.based.core.network.di.IoDispatcher
 import com.mtv.based.core.network.utils.ErrorMessages
 import com.mtv.based.core.network.utils.ResourceFirebase
+import com.mtv.based.core.network.utils.mapFirebaseExceptionToUiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -37,7 +35,10 @@ class PasswordUseCase @Inject constructor(
         emit(ResourceFirebase.Loading)
 
         val user = FirebaseAuth.getInstance().currentUser
-            ?: throw FirebaseAuthException("ERROR_USER_NOT_FOUND", ErrorMessages.NOT_FOUND)
+            ?: throw FirebaseAuthInvalidUserException(
+                "ERROR_USER_NOT_FOUND",
+                ErrorMessages.NOT_FOUND
+            )
 
         val credential = EmailAuthProvider.getCredential(
             param.email,

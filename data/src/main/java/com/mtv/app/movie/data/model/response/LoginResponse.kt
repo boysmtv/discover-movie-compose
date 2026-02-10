@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginResponse(
+    val uid: String = EMPTY_STRING,
     val name: String = EMPTY_STRING,
     val email: String = EMPTY_STRING,
     val phone: String = EMPTY_STRING,

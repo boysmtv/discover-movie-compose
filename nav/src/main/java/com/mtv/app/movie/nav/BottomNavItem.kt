@@ -1,16 +1,16 @@
 package com.mtv.app.movie.nav
 
-import androidx.annotation.DrawableRes
-import com.mtv.app.movie.common.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavItem(
     val route: String,
-    @DrawableRes val icon: Int,
+    val icon: ImageVector,
     val label: String
 ) {
-    object Home : BottomNavItem("home", R.drawable.ic_avatar, "Home")
-    object Search : BottomNavItem("search", R.drawable.ic_avatar, "Search")
-    object Like : BottomNavItem("like", R.drawable.ic_avatar, "Like")
-    object Profile : BottomNavItem("profile", R.drawable.ic_avatar, "Profile")
+    object Home : BottomNavItem(route = "home", icon = Icons.Filled.Home, label = "Home")
+    object Search : BottomNavItem(route = "search", icon = Icons.Filled.Search, label = "Search")
+    object Like : BottomNavItem(route = "like", icon = Icons.Filled.Favorite, label = "Like")
+    object Profile : BottomNavItem(route = "profile", icon = Icons.Filled.Person, label = "Profile")
 }
-
