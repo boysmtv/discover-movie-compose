@@ -93,20 +93,19 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
-//    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
 
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.google.firebase.auth.ktx)
+    implementation(libs.firebase.messaging.ktx)
 
-    implementation("androidx.compose.material:material:1.6.7")
+    implementation(libs.androidx.compose.material)
 
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:13.0.0")
-    implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
+    implementation(libs.coil.compose)
+    implementation(libs.core)
+    implementation(libs.threetenabp)
 
     // Testing
     testImplementation(libs.junit)
