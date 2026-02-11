@@ -25,8 +25,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteSweep
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,12 +56,14 @@ import com.mtv.app.movie.feature.contract.NotificationNavigationListener
 import com.mtv.app.movie.feature.contract.NotificationStateListener
 import com.mtv.app.movie.feature.utils.NotificationItem
 import com.mtv.app.movie.feature.utils.previewNotification
+import com.mtv.based.core.network.utils.ResourceFirebase
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
 import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
 import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NotificationScreen(
     uiState: NotificationStateListener,
@@ -67,57 +73,62 @@ fun NotificationScreen(
 ) {
     ShowNotificationDialog(uiState, uiEvent)
 
-    Column(
+    val isRefreshing = uiState.notificationState is ResourceFirebase.Loading
+
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { uiEvent.onGetNotification() }
+    )
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
+            .pullRefresh(pullRefreshState)
             .background(Color(0xFFF2F2F2))
     ) {
 
-        BaseToolbar(
-            title = NOTIFICATION,
-            showRightIcon = true,
-            rightIcon = Icons.Default.DeleteSweep,
-            onLeftClick = { uiNavigation.onBack() },
-            onRightClick = { uiEvent.onClearNotification() }
-        )
+        Column(modifier = Modifier.fillMaxSize()) {
 
-        Text(
-            text = "Previously",
-            style = MaterialTheme.typography.titleSmall,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .padding(start = 16.dp, top = 16.dp),
-        )
+            BaseToolbar(
+                title = NOTIFICATION,
+                showRightIcon = true,
+                rightIcon = Icons.Default.DeleteSweep,
+                onLeftClick = { uiNavigation.onBack() },
+                onRightClick = { uiEvent.onClearNotification() }
+            )
 
-        if (uiData.localNotification.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFF5F5F5)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No notification",
-                    color = Color.DarkGray.copy(alpha = 0.7f)
-                )
-            }
-        } else {
+            Text(
+                text = "Previously",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp)
+            )
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(uiData.localNotification) { item ->
-                    NotificationItemCard(
-                        item = item,
-                        onClick = {
-                            uiEvent.onNotificationClicked(item)
-                        }
-                    )
+                if (uiData.localNotification.isEmpty()) {
+                    item {
+                        EmptyNotificationState()
+                    }
+                } else {
+                    items(uiData.localNotification) { item ->
+                        NotificationItemCard(
+                            item = item,
+                            onClick = { uiEvent.onNotificationClicked(item) }
+                        )
+                    }
                 }
             }
         }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -136,10 +147,7 @@ fun NotificationItemCard(
         verticalAlignment = Alignment.Top
     ) {
 
-        InitialAvatar(
-            text = item.signatureName,
-            size = 44.dp
-        )
+        InitialAvatar(text = item.signatureName, size = 44.dp)
 
         Spacer(modifier = Modifier.width(12.dp))
 
@@ -178,6 +186,21 @@ fun NotificationItemCard(
                 overflow = TextOverflow.Ellipsis
             )
         }
+    }
+}
+
+@Composable
+private fun EmptyNotificationState() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "No notification",
+            color = Color.DarkGray.copy(alpha = 0.7f)
+        )
     }
 }
 
@@ -226,7 +249,6 @@ fun UnreadDot() {
     )
 }
 
-
 @Composable
 fun InitialAvatar(
     text: String,
@@ -254,37 +276,21 @@ fun InitialAvatar(
     }
 }
 
-@Preview(
-    showBackground = true,
-    device = Devices.PIXEL_4
-)
+@Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
 fun NotificationItemPreview() {
     NotificationItemCard(item = previewNotification)
 }
 
-@Preview(
-    showBackground = true,
-    device = Devices.PIXEL_4
-)
+@Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
 fun NotificationScreenPreview() {
     NotificationScreen(
         uiState = NotificationStateListener(),
         uiData = NotificationDataListener(
-            localNotification = listOf(
-                previewNotification,
-                previewNotification,
-                previewNotification,
-                previewNotification,
-                previewNotification,
-                previewNotification,
-                previewNotification,
-                previewNotification,
-                previewNotification
-            )
+            localNotification = List(9) { previewNotification }
         ),
-        uiEvent = NotificationEventListener({}, {}, {}),
+        uiEvent = NotificationEventListener({}, {}, {}, {}),
         uiNavigation = NotificationNavigationListener {}
     )
 }

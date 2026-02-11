@@ -24,6 +24,7 @@ data class NotificationDataListener(
 
 data class NotificationEventListener(
     val onNotificationClicked: (item: NotificationItem) -> Unit,
+    val onGetNotification: () -> Unit,
     val onClearNotification: () -> Unit,
     val onDismissActiveDialog: () -> Unit,
 )
