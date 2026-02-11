@@ -12,6 +12,7 @@ import com.mtv.app.movie.feature.route.MovieDetailRoute
 import com.mtv.app.movie.feature.route.HomeRoute
 import com.mtv.app.movie.feature.route.LikedRoute
 import com.mtv.app.movie.feature.route.LoginRoute
+import com.mtv.app.movie.feature.route.NotificationRoute
 import com.mtv.app.movie.feature.route.PasswordRoute
 import com.mtv.app.movie.feature.route.ProfileRoute
 import com.mtv.app.movie.feature.route.RegisterRoute
@@ -56,6 +57,9 @@ fun NavGraphBuilder.homeGraph(nav: NavHostController) {
         }
         composable(BottomNavItem.Profile.route) {
             ProfileRoute(nav)
+        }
+        composable(AppDestinations.NOTIFICATION_GRAPH) {
+            NotificationRoute(nav)
         }
     }
 }

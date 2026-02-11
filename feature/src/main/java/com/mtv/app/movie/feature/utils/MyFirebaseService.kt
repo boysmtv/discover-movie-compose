@@ -17,36 +17,78 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mtv.app.core.provider.utils.SecurePrefs
-import com.mtv.app.movie.common.ConstantPreferences.KEY_NOTIFICATIONS
+import com.mtv.app.movie.common.ConstantPreferences.FCM_NOTIFICATION
+import com.mtv.app.movie.common.ConstantPreferences.FCM_STATUS
+import com.mtv.app.movie.common.ConstantPreferences.FCM_TOKEN
+import com.mtv.app.movie.common.R
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.EMPTY_STRING
 
-data class NotificationItem(val title: String, val body: String)
+data class NotificationItem(
+    val title: String,
+    val message: String,
+    val photo: String,
+    val signatureName: String,
+    val signatureDate: String,
+    val signatureTime: String,
+)
 
 class MyFirebaseService : FirebaseMessagingService() {
 
-    override fun onMessageReceived(message: RemoteMessage) {
-        val title = message.data["title"] ?: "No title"
-        val body = message.data["message"] ?: "No message"
+    private val repository by lazy { NotificationRepository(SecurePrefs(applicationContext)) }
 
-        Log.d("LOG-BOYS", "Message: ${message.data}")
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        val data = remoteMessage.data
+        val title = data["title"] ?: EMPTY_STRING
+        val message = data["message"] ?: EMPTY_STRING
+        val photo = data["photo"] ?: EMPTY_STRING
+        val signatureName = data["signature_name"] ?: EMPTY_STRING
+        val signatureDate = data["signature_date"] ?: EMPTY_STRING
+        val signatureTime = data["signature_time"] ?: EMPTY_STRING
 
-        saveNotification(SecurePrefs(applicationContext), title, body)
-        applicationContext.showNotification(title, body)
+        repository.saveNotification(
+            NotificationItem(
+                title = title,
+                message = message,
+                photo = photo,
+                signatureName = signatureName,
+                signatureDate = signatureDate,
+                signatureTime = signatureTime
+            )
+        )
+
+        applicationContext.showNotification(
+            title = title,
+            message = message
+        )
     }
 
     override fun onNewToken(token: String) {
-        Log.d("LOG-BOYS", "New token: $token")
+        repository.saveStatus(token.isEmpty())
+        repository.saveToken(token)
+        Log.e("LOG_BOYS_FCM", "Token-onNewToken: $token")
     }
 }
 
-fun saveNotification(securePrefs: SecurePrefs, title: String, body: String) {
-    val current = getAllNotifications(securePrefs).toMutableList()
-    current.add(0, NotificationItem(title, body))
-    securePrefs.putObject(KEY_NOTIFICATIONS, current.toTypedArray())
-}
+class NotificationRepository(private val securePrefs: SecurePrefs) {
 
-fun getAllNotifications(securePrefs: SecurePrefs): List<NotificationItem> {
-    return securePrefs.getObject(KEY_NOTIFICATIONS, Array<NotificationItem>::class.java)?.toList()
-        ?: emptyList()
+    fun saveStatus(status: Boolean) {
+        securePrefs.putBoolean(FCM_STATUS, status)
+    }
+
+    fun saveToken(token: String) {
+        securePrefs.putString(FCM_TOKEN, token)
+    }
+
+    fun saveNotification(item: NotificationItem) {
+        val current = getAllNotifications().toMutableList()
+        current.add(0, item)
+        securePrefs.putObject(FCM_NOTIFICATION, current.toTypedArray())
+    }
+
+    fun getAllNotifications(): List<NotificationItem> {
+        return securePrefs.getObject(FCM_NOTIFICATION, Array<NotificationItem>::class.java)?.toList()
+            ?: emptyList()
+    }
 }
 
 fun Context.showNotification(title: String, message: String, channelId: String = "default_channel") {
@@ -64,10 +106,9 @@ fun Context.showNotification(title: String, message: String, channelId: String =
     val notification = NotificationCompat.Builder(this, channelId)
         .setContentTitle(title)
         .setContentText(message)
-        .setSmallIcon(android.R.drawable.ic_dialog_info)
+        .setSmallIcon(R.drawable.icon_movie)
         .setAutoCancel(true)
         .build()
 
     notificationManager.notify(System.currentTimeMillis().toInt(), notification)
 }
-

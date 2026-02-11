@@ -22,8 +22,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -39,17 +43,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mtv.app.movie.common.Constant.Title.NOTIFICATION
+import com.mtv.app.movie.common.R
 import com.mtv.app.movie.common.ui.BaseToolbar
+import com.mtv.app.movie.feature.contract.NotificationDataListener
+import com.mtv.app.movie.feature.contract.NotificationDialog
 import com.mtv.app.movie.feature.contract.NotificationEventListener
 import com.mtv.app.movie.feature.contract.NotificationNavigationListener
 import com.mtv.app.movie.feature.contract.NotificationStateListener
+import com.mtv.app.movie.feature.utils.NotificationItem
+import com.mtv.app.movie.feature.utils.previewNotification
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogCenterV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogStateV1
+import com.mtv.based.uicomponent.core.component.dialog.dialogv1.DialogType
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.OK_STRING
+import com.mtv.based.uicomponent.core.ui.util.Constants.Companion.WARNING_STRING
 
 @Composable
 fun NotificationScreen(
     uiState: NotificationStateListener,
+    uiData: NotificationDataListener,
     uiEvent: NotificationEventListener,
     uiNavigation: NotificationNavigationListener
 ) {
+    ShowNotificationDialog(uiState, uiEvent)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,7 +75,10 @@ fun NotificationScreen(
 
         BaseToolbar(
             title = NOTIFICATION,
-            onLeftClick = { uiNavigation.onBack() }
+            showRightIcon = true,
+            rightIcon = Icons.Default.DeleteSweep,
+            onLeftClick = { uiNavigation.onBack() },
+            onRightClick = { uiEvent.onClearNotification() }
         )
 
         Text(
@@ -69,48 +89,65 @@ fun NotificationScreen(
                 .padding(start = 16.dp, top = 16.dp),
         )
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(5) {
-                NotificationItem()
+        if (uiData.localNotification.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFF5F5F5)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No notification",
+                    color = Color.DarkGray.copy(alpha = 0.7f)
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(uiData.localNotification) { item ->
+                    NotificationItemCard(
+                        item = item,
+                        onClick = {
+                            uiEvent.onNotificationClicked(item)
+                        }
+                    )
+                }
             }
         }
     }
 }
 
-
 @Composable
-fun NotificationItem() {
+fun NotificationItemCard(
+    item: NotificationItem,
+    onClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(Color.White)
-            .clickable { }
+            .clickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.Top
     ) {
 
         InitialAvatar(
-            text = "Vista rewards club",
+            text = item.signatureName,
             size = 44.dp
         )
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
+        Column(modifier = Modifier.weight(1f)) {
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Vista rewards club...",
+                    text = item.title,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
@@ -121,7 +158,7 @@ fun NotificationItem() {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "Dec 16, 2023",
+                    text = item.signatureDate,
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.Gray
                 )
@@ -134,12 +171,47 @@ fun NotificationItem() {
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = "Earn Points without making a purchase. Complete your first mission today!",
+                text = item.message,
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.DarkGray,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
+        }
+    }
+}
+
+
+@Composable
+private fun ShowNotificationDialog(
+    uiState: NotificationStateListener,
+    uiEvent: NotificationEventListener
+) {
+    uiState.activeDialog?.let { dialog ->
+        when (dialog) {
+            is NotificationDialog.Success -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.SUCCESS,
+                        title = stringResource(R.string.success),
+                        message = stringResource(R.string.success_clear_notif),
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = { uiEvent.onDismissActiveDialog() }
+                )
+            }
+
+            is NotificationDialog.Error -> {
+                DialogCenterV1(
+                    state = DialogStateV1(
+                        type = DialogType.ERROR,
+                        title = WARNING_STRING,
+                        message = dialog.message,
+                        primaryButtonText = OK_STRING
+                    ),
+                    onDismiss = { uiEvent.onDismissActiveDialog() }
+                )
+            }
         }
     }
 }
@@ -187,8 +259,8 @@ fun InitialAvatar(
     device = Devices.PIXEL_4
 )
 @Composable
-fun MovieItemNetflixPreview() {
-    NotificationItem()
+fun NotificationItemPreview() {
+    NotificationItemCard(item = previewNotification)
 }
 
 @Preview(
@@ -196,10 +268,23 @@ fun MovieItemNetflixPreview() {
     device = Devices.PIXEL_4
 )
 @Composable
-fun SearchScreenPreview() {
+fun NotificationScreenPreview() {
     NotificationScreen(
         uiState = NotificationStateListener(),
-        uiEvent = NotificationEventListener({}, {}),
-        uiNavigation = NotificationNavigationListener({})
+        uiData = NotificationDataListener(
+            localNotification = listOf(
+                previewNotification,
+                previewNotification,
+                previewNotification,
+                previewNotification,
+                previewNotification,
+                previewNotification,
+                previewNotification,
+                previewNotification,
+                previewNotification
+            )
+        ),
+        uiEvent = NotificationEventListener({}, {}, {}),
+        uiNavigation = NotificationNavigationListener {}
     )
 }

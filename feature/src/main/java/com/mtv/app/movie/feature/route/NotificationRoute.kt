@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.mtv.app.movie.common.BaseRoute
 import com.mtv.app.movie.common.based.BaseScreen
+import com.mtv.app.movie.feature.contract.NotificationDataListener
 import com.mtv.app.movie.feature.contract.NotificationEventListener
 import com.mtv.app.movie.feature.contract.NotificationNavigationListener
 import com.mtv.app.movie.feature.contract.NotificationStateListener
@@ -20,10 +21,11 @@ import com.mtv.app.movie.feature.ui.notif.NotificationScreen
 
 @Composable
 fun NotificationRoute(nav: NavController) {
-    BaseRoute<NotificationViewModel, NotificationStateListener, Unit> { vm, base, uiState, uiData ->
+    BaseRoute<NotificationViewModel, NotificationStateListener, NotificationDataListener> { vm, base, uiState, uiData ->
         BaseScreen(baseUiState = base, onDismissError = vm::dismissError) {
             NotificationScreen(
                 uiState = uiState,
+                uiData = uiData,
                 uiEvent = notificationEvent(vm),
                 uiNavigation = notificationNavigation(nav)
             )
@@ -33,7 +35,8 @@ fun NotificationRoute(nav: NavController) {
 
 private fun notificationEvent(vm: NotificationViewModel) = NotificationEventListener(
     onNotificationClicked = {},
-    onDismissActiveDialog = {}
+    onClearNotification = vm::doClearNotification,
+    onDismissActiveDialog = vm::doDismissActiveDialog
 )
 
 private fun notificationNavigation(nav: NavController) = NotificationNavigationListener(

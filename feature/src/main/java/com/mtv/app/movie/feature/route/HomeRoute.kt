@@ -46,5 +46,8 @@ private fun homeNavigation(nav: NavController) = HomeNavigationListener(
     },
     onNavigateToMovieDetail = { movie ->
         nav.navigate(AppDestinations.navigateToDetailMovies(movie.id))
+    },
+    onClickNotification = {
+        nav.navigate(AppDestinations.NOTIFICATION_GRAPH)
     }
 )

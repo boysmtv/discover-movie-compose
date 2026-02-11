@@ -12,7 +12,7 @@ import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.movie.common.ConstantPreferences.MOVIE_SAVED_LIST
 import com.mtv.app.movie.common.DeleteTarget
 import com.mtv.app.movie.common.UiOwner
-import com.mtv.app.movie.common.runStateMovieLocalManager
+import com.mtv.app.movie.common.runStateLocalManager
 import com.mtv.app.movie.common.updateUiDataListener
 import com.mtv.app.movie.feature.contract.LikedDataListener
 import com.mtv.app.movie.feature.contract.LikedDialog
@@ -41,7 +41,7 @@ class LikedViewModel @Inject constructor(
         updateUiDataListener(uiData) { copy(movieLikedList = movieList) }
     }
 
-    fun doDeleteLikedMovies() = uiState.runStateMovieLocalManager(
+    fun doDeleteLikedMovies() = uiState.runStateLocalManager(
         block = {
             movieLocalManager.clearMovies(MOVIE_SAVED_LIST)
         },
@@ -75,7 +75,7 @@ class LikedViewModel @Inject constructor(
         }
     )
 
-    fun doDeleteLikedMoviesById(movieId: Int) = uiState.runStateMovieLocalManager(
+    fun doDeleteLikedMoviesById(movieId: Int) = uiState.runStateLocalManager(
         block = {
             movieLocalManager.removeMovie(MOVIE_SAVED_LIST, movieId)
         },

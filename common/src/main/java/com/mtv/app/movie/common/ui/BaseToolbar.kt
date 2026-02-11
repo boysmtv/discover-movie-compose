@@ -42,7 +42,7 @@ fun BaseToolbar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(64.dp)
             .background(Color(0xFFF5F5F5))
     ) {
 

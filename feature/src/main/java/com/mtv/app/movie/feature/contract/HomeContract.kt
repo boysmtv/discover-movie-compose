@@ -34,5 +34,6 @@ data class HomeEventListener(
 
 data class HomeNavigationListener(
     val onNavigateToLogin: () -> Unit,
-    val onNavigateToMovieDetail: (movie: MoviesItemResponse) -> Unit
+    val onNavigateToMovieDetail: (movie: MoviesItemResponse) -> Unit,
+    val onClickNotification: () -> Unit,
 )

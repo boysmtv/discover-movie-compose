@@ -14,7 +14,7 @@ import com.mtv.based.core.network.utils.UiError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
-inline fun <T> MutableStateFlow<T>.runStateMovieLocalManager(
+inline fun <T> MutableStateFlow<T>.runStateLocalManager(
     crossinline block: () -> Unit,
     crossinline reducer: (T, Resource<Unit>) -> T,
     crossinline onSuccess: () -> Unit = {},
