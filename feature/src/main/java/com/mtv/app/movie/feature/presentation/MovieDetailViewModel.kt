@@ -13,7 +13,7 @@ import com.mtv.app.core.provider.based.BaseViewModel
 import com.mtv.app.movie.common.Constant
 import com.mtv.app.movie.common.ConstantPreferences.MOVIE_SAVED_LIST
 import com.mtv.app.movie.common.UiOwner
-import com.mtv.app.movie.common.runStateMovieLocalManager
+import com.mtv.app.movie.common.runStateLocalManager
 import com.mtv.app.movie.common.valueFlowOf
 import com.mtv.app.movie.data.model.movie.MovieDetailResponse
 import com.mtv.app.movie.domain.movie.MoviesDetailUseCase
@@ -70,7 +70,7 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    fun doAddToMyList(movie: MovieDetailResponse) = uiState.runStateMovieLocalManager(
+    fun doAddToMyList(movie: MovieDetailResponse) = uiState.runStateLocalManager(
         block = {
             movieLocalManager.addMovie(MOVIE_SAVED_LIST, movie)
         },

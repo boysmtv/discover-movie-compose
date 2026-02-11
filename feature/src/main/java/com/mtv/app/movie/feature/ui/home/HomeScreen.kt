@@ -66,6 +66,9 @@ fun HomeScreen(
         HomeHeader(
             userName = uiData.loginResponse?.name ?: EMPTY_STRING,
             photoBitmap = avatarBitmap.value,
+            onClickNotification = {
+                uiNavigation.onClickNotification()
+            }
         )
 
         Column(
@@ -146,10 +149,11 @@ fun PreviewHomeScreen() {
         ),
         uiEvent = HomeEventListener(
             onLogout = {},
-            onLoadMovies = {}
+            onLoadMovies = {},
         ),
         uiNavigation = HomeNavigationListener(
             onNavigateToLogin = {},
+            onClickNotification = {},
             onNavigateToMovieDetail = {},
         )
     )

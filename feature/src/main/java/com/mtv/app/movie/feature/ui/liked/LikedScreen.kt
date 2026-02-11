@@ -43,6 +43,36 @@ fun LikedScreen(
     uiEvent: LikedEventListener,
     uiNavigation: LikedNavigationListener
 ) {
+    ShowLikedDialog(uiState, uiEvent)
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5))
+    ) {
+        LikedHeader(
+            onDeletedAllMovies = uiEvent.onDeletedAllMovies
+        )
+
+        AnimatedVisibility(
+            visible = uiData.movieLikedList.isNotEmpty(),
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
+            LikedFeaturedSection(
+                movies = uiData.movieLikedList,
+                onClickDetail = uiNavigation.onNavigateToMovieDetail,
+                onClickDeleted = uiEvent.onDeletedMovie
+            )
+        }
+    }
+}
+
+@Composable
+private fun ShowLikedDialog(
+    uiState: LikedStateListener,
+    uiEvent: LikedEventListener
+) {
     uiState.activeDialog?.let { dialog ->
         when (dialog) {
             is LikedDialog.Success -> {
@@ -70,28 +100,6 @@ fun LikedScreen(
                     onDismiss = { uiEvent.onDismissActiveDialog() }
                 )
             }
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
-    ) {
-        LikedHeader(
-            onDeletedAllMovies = uiEvent.onDeletedAllMovies
-        )
-
-        AnimatedVisibility(
-            visible = uiData.movieLikedList.isNotEmpty(),
-            enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
-        ) {
-            LikedFeaturedSection(
-                movies = uiData.movieLikedList,
-                onClickDetail = uiNavigation.onNavigateToMovieDetail,
-                onClickDeleted = uiEvent.onDeletedMovie
-            )
         }
     }
 }

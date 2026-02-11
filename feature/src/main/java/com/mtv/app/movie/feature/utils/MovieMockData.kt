@@ -356,3 +356,12 @@ val mockSearchMovies = listOf(
         popularity = 180.0
     ),
 )
+
+val previewNotification = NotificationItem(
+    title = "Watch Fast & Furious 7",
+    message = "Ini masuk ke semua device yang subscribe topic",
+    photo = "https://i.pinimg.com/236x/94/25/fa/9425faaad20d8f527e178a34435734be.jpg",
+    signatureName = "Dsrv Developer",
+    signatureDate = "Feb 11, 2026",
+    signatureTime = "10.00"
+)
