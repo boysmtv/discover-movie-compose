@@ -102,8 +102,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
 
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("androidx.compose.material:material:1.6.7")
 
+    implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:13.0.0")
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
 

@@ -35,6 +35,7 @@ fun NotificationRoute(nav: NavController) {
 
 private fun notificationEvent(vm: NotificationViewModel) = NotificationEventListener(
     onNotificationClicked = {},
+    onGetNotification = vm::getLocalNotification,
     onClearNotification = vm::doClearNotification,
     onDismissActiveDialog = vm::doDismissActiveDialog
 )
